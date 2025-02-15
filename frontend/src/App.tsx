@@ -1,9 +1,9 @@
 import React, { useState, useEffect, JSX } from 'react';
-import { AlertCircle, Check, Loader2, FileText, Settings, List, Home, Bell, Search, User, X, Command, ArrowLeft, Save, ChevronDown, Upload } from 'lucide-react';
+import { AlertCircle, Check, Loader2, FileText, Settings, List, Home, Bell, Search, User, X, Command, ArrowLeft, Save, ChevronDown, Upload, BookOpen, Clock, Layout, Brain } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import logo from './serenity-logo.png';
 import { patients, Patient } from './Patient';
 import { createInterface } from 'readline';
+import './AnimatedGradient.css';
 
 const Alert = ({ children }: { children: React.ReactNode }) => <div className="bg-red-200 border-l-4 border-red-500 text-black p-4" role="alert">{children}</div>;
 const AlertS = ({ children }: { children: React.ReactNode }) => <div className="bg-green-200 border-l-4 border-green-500 text-black p-4" role="alert">{children}</div>;
@@ -110,7 +110,9 @@ const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
   return (
     <div className="min-h-screen w-full bg-[#FAF9F6] font-['Cooper_Hewitt']">
       <div className="w-full flex justify-center pt-8 mb-8">
-        <img src={logo} alt="Logo" className="h-16 w-auto" />
+        <span className="text-3xl font-semibold bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-transparent bg-clip-text">
+          superclassroom
+        </span>
       </div>
       
       <div className="flex items-center justify-center">
@@ -660,7 +662,9 @@ const LeftMenu: React.FC<{ activeTab: string; setActiveTab: (tab: string) => voi
   <div className="w-64 bg-[#f9fafb] h-screen p-6 flex flex-col border-r">
     {/* Logo Section */}
     <div className="mb-8">
-      <img src={logo} alt="Logo" className="h-8 w-auto" />
+      <span className="text-xl font-semibold bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-transparent bg-clip-text">
+        superclassroom
+      </span>
     </div>
 
     {/* Main Navigation */}
@@ -723,8 +727,8 @@ const LeftMenu: React.FC<{ activeTab: string; setActiveTab: (tab: string) => voi
       <button className="flex items-center space-x-3 w-full px-2 py-2 rounded-lg hover:bg-gray-100">
         <User className="h-6 w-6 text-gray-600" />
         <div className="text-sm text-left">
-          <p className="text-gray-900 font-medium">Student Name</p>
-          <p className="text-gray-500 text-xs">student@email.com</p>
+          <p className="text-gray-900 font-medium">Zachary Lee</p>
+          <p className="text-gray-500 text-xs">zaclee@uw.edu</p>
         </div>
       </button>
     </div>
@@ -745,17 +749,73 @@ const mockQuizScores = [
   { date: '7/4/24', value: 90 },
 ] as const;
 
+const DetailView: React.FC<{ 
+  title: string;
+  itemTitle: string;
+  onBack: () => void;
+}> = ({ title, itemTitle, onBack }) => {
+  return (
+    <div className="h-screen bg-gray-50">
+      <div className="p-6">
+        {/* Logo and back button row */}
+        <div className="flex items-center justify-between mb-8">
+          <span className="text-xl font-semibold bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-transparent bg-clip-text">
+            superclassroom
+          </span>
+          <button 
+            onClick={onBack}
+            className="flex items-center text-gray-600 hover:text-gray-800"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to {title}
+          </button>
+        </div>
+        
+        {/* Content */}
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-2xl font-bold mb-6">{itemTitle}</h1>
+          {/* Add your detail content here */}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ course, activeTab }) => {
   const [selectedTab, setSelectedTab] = useState(activeTab || 'upload');
+  const [selectedItem, setSelectedItem] = useState<null | { type: string; id: number; title: string }>(null);
   
-  // Tab configuration with icons and labels
+  if (selectedItem) {
+    return (
+      <DetailView
+        title={`${course} ${capitalizeFirstLetter(selectedItem.type)}`}
+        itemTitle={selectedItem.title}
+        onBack={() => setSelectedItem(null)}
+      />
+    );
+  }
+
+  // Updated tabs array: practice exam is now the last tab (on the very right)
   const tabs = [
-    { id: 'practice', label: 'Practice Exam', icon: <FileText className="h-4 w-4" /> },
     { id: 'upload', label: 'Upload Files', icon: <Command className="h-4 w-4" /> },
-    { id: 'notes', label: 'Golden Notes', icon: <Save className="h-4 w-4" /> },
+    { id: 'notes', label: 'SuperNotes', icon: <Save className="h-4 w-4" /> },
     { id: 'summaries', label: 'Summaries', icon: <List className="h-4 w-4" /> },
     { id: 'flashcards', label: 'Flashcards', icon: <Command className="h-4 w-4" /> },
+    { id: 'practice', label: 'Practice Exams', icon: <FileText className="h-4 w-4" /> },
   ];
+
+  // NEW: State to hold uploaded files
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
+  // NEW: Handler to add files (from drop or file input)
+  const handleFiles = (files: File[]) => {
+    setUploadedFiles(prevFiles => [...prevFiles, ...files]);
+  };
+
+  // NEW: Handler to remove a file by index
+  const removeFile = (index: number) => {
+    setUploadedFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+  };
 
   // Helper to get course details
   const getCourseDetails = (courseName: string) => {
@@ -777,8 +837,14 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
 
   return (
     <div>
+      {/* Course Title and Description - Moved above tabs */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-black">{courseDetails.title}</h2>
+        <p className="text-gray-400">{courseDetails.description}</p>
+      </div>
+      
       {/* Smaller Tab Bar with Icons */}
-      <div className="flex border-b mb-6 gap-2">
+      <div className="flex border-b mb-8 gap-2">
         {tabs.map((tab) => (
           <button 
             key={tab.id}
@@ -797,12 +863,6 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
         ))}
       </div>
       
-      {/* Course Title and Description */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-black">{courseDetails.title}</h2>
-        <p className="text-gray-400">{courseDetails.description}</p>
-      </div>
-      
       {/* Content Sections */}
       {selectedTab === 'upload' && (
         <div className="flex flex-col items-center justify-center max-w-2xl mx-auto">
@@ -817,7 +877,7 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
               e.stopPropagation();
               const files = Array.from(e.dataTransfer.files);
               console.log('Dropped files:', files);
-              // Handle file upload here
+              handleFiles(files);
             }}
           >
             <Upload className="h-16 w-16 text-gray-400 mb-4" />
@@ -833,7 +893,7 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
               onChange={(e) => {
                 const files = Array.from(e.target.files || []);
                 console.log('Selected files:', files);
-                // Handle file upload here
+                handleFiles(files);
               }}
             />
             <label
@@ -847,64 +907,243 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
             </p>
           </div>
           
-          {/* File List - Add this if you want to show uploaded files */}
-          <div className="w-full mt-8 space-y-3">
-            {/* Example uploaded files - replace with actual uploaded files state */}
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center space-x-3">
-                <FileText className="h-5 w-5 text-blue-500" />
-                <span className="text-sm text-gray-700">lecture_notes_week1.pdf</span>
-              </div>
-              <button className="text-gray-400 hover:text-gray-600">
-                <X className="h-4 w-4" />
-              </button>
+          {/* Render the uploaded files (if any) */}
+          {uploadedFiles.length > 0 && (
+            <div className="w-full mt-8 space-y-3">
+              {uploadedFiles.map((file, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <FileText className="h-5 w-5 text-blue-500" />
+                    <span className="text-sm text-gray-700">{file.name}</span>
+                  </div>
+                  <button onClick={() => removeFile(index)} className="text-gray-400 hover:text-gray-600">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
             </div>
-          </div>
+          )}
         </div>
       )}
       {selectedTab === 'practice' && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Practice Exam</CardTitle>
-            <CardDescription>Test your knowledge of {courseDetails.title}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {/* Practice exam content */}
-          </CardContent>
-        </Card>
+        <div className="grid gap-4">
+          {[
+            { 
+              id: 1, 
+              title: "Midterm Practice Exam", 
+              preview: "Comprehensive review of chapters 1-5",
+              questionCount: 50,
+              timeLimit: "90 min",
+              difficulty: "Medium",
+              lastScore: 85,
+              attempts: 2,
+              status: "Available"
+            },
+            { 
+              id: 2, 
+              title: "Quiz 1 Practice", 
+              preview: "Focus on fundamental concepts",
+              questionCount: 25,
+              timeLimit: "45 min",
+              difficulty: "Easy",
+              lastScore: 92,
+              attempts: 1,
+              status: "Available"
+            },
+            { 
+              id: 3, 
+              title: "Final Exam Practice", 
+              preview: "Complete course material coverage",
+              questionCount: 100,
+              timeLimit: "180 min",
+              difficulty: "Hard",
+              lastScore: null,
+              attempts: 0,
+              status: "Locked",
+              availableDate: "Dec 1, 2024"
+            }
+          ].map((exam) => (
+            <div
+              key={exam.id}
+              onClick={() => setSelectedItem({ type: 'practice', id: exam.id, title: exam.title })}
+              className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-100 group"
+            >
+              <div className="flex items-start space-x-4">
+                <div className="p-3 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors">
+                  <FileText className="h-6 w-6 text-red-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-1">
+                    <h3 className="text-lg font-semibold text-gray-900">{exam.title}</h3>
+                    <span className={`text-xs px-2 py-1 rounded-full ${
+                      exam.status === 'Locked' 
+                        ? 'bg-gray-100 text-gray-700' 
+                        : 'bg-green-50 text-green-700'
+                    }`}>
+                      {exam.status}
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-3">{exam.preview}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2">
+                        <List className="h-4 w-4 text-gray-400" />
+                        <span className="text-sm text-gray-500">{exam.questionCount} questions</span>
+                      </div>
+                      <span className="text-gray-300">|</span>
+                      <div className="flex items-center space-x-2">
+                        <Clock className="h-4 w-4 text-gray-400" />
+                        <span className="text-sm text-gray-500">{exam.timeLimit}</span>
+                      </div>
+                      <span className="text-gray-300">|</span>
+                      <div className="flex items-center space-x-2">
+                        <AlertCircle className="h-4 w-4 text-gray-400" />
+                        <span className="text-sm text-gray-500">{exam.difficulty}</span>
+                      </div>
+                    </div>
+                  </div>
+                  {exam.lastScore !== null && (
+                    <div className="mt-3 flex items-center justify-between border-t pt-3">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-gray-500">Last Score:</span>
+                        <span className="text-sm font-medium text-blue-600">{exam.lastScore}%</span>
+                      </div>
+                      <span className="text-sm text-gray-500">{exam.attempts} attempts</span>
+                    </div>
+                  )}
+                  {exam.status === 'Locked' && (
+                    <div className="mt-3 text-sm text-gray-500 border-t pt-3">
+                      Available from: {exam.availableDate}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
       {selectedTab === 'notes' && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Golden Notes</CardTitle>
-            <CardDescription>Curated notes for {courseDetails.title}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {/* Golden notes content */}
-          </CardContent>
-        </Card>
+        <div className="grid gap-4">
+          {[
+            { id: 1, title: "Chapter 1: Introduction", preview: "Key concepts and fundamental principles", progress: 85, lastUpdated: "2 days ago" },
+            { id: 2, title: "Chapter 2: Core Concepts", preview: "Deep dive into the core mechanisms", progress: 65, lastUpdated: "1 week ago" },
+            { id: 3, title: "Chapter 3: Advanced Topics", preview: "Exploring complex interactions", progress: 30, lastUpdated: "3 days ago" }
+          ].map((note) => (
+            <div
+              key={note.id}
+              onClick={() => setSelectedItem({ type: 'notes', id: note.id, title: note.title })}
+              className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-100 group"
+            >
+              <div className="flex items-start space-x-4">
+                <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
+                  <FileText className="h-6 w-6 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-1 text-gray-900">{note.title}</h3>
+                  <p className="text-gray-600 text-sm mb-3">{note.preview}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="w-32">
+                      <ProgressBar progress={note.progress} />
+                    </div>
+                    <span className="text-xs text-gray-500">Updated {note.lastUpdated}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
       {selectedTab === 'summaries' && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Summaries</CardTitle>
-            <CardDescription>Chapter summaries for {courseDetails.title}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {/* Summaries content */}
-          </CardContent>
-        </Card>
+        <div className="grid gap-4">
+          {[
+            { id: 1, title: "Week 1 Summary", preview: "Overview of introductory materials", wordCount: 1200, readTime: "5 min", status: "Complete" },
+            { id: 2, title: "Week 2 Summary", preview: "Summary of key theories", wordCount: 1500, readTime: "7 min", status: "In Progress" },
+            { id: 3, title: "Week 3 Summary", preview: "Analysis of major concepts", wordCount: 1800, readTime: "8 min", status: "Not Started" }
+          ].map((summary) => (
+            <div
+              key={summary.id}
+              onClick={() => setSelectedItem({ type: 'summaries', id: summary.id, title: summary.title })}
+              className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-100 group"
+            >
+              <div className="flex items-start space-x-4">
+                <div className="p-3 bg-purple-50 rounded-lg group-hover:bg-purple-100 transition-colors">
+                  <BookOpen className="h-6 w-6 text-purple-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-1">
+                    <h3 className="text-lg font-semibold text-gray-900">{summary.title}</h3>
+                    <span className={`text-xs px-2 py-1 rounded-full ${
+                      summary.status === 'Complete' ? 'bg-green-100 text-green-700' :
+                      summary.status === 'In Progress' ? 'bg-yellow-100 text-yellow-700' :
+                      'bg-gray-100 text-gray-700'
+                    }`}>
+                      {summary.status}
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-3">{summary.preview}</p>
+                  <div className="flex items-center space-x-4 text-sm text-gray-500">
+                    <span className="flex items-center">
+                      <FileText className="h-4 w-4 mr-1" />
+                      {summary.wordCount} words
+                    </span>
+                    <span>•</span>
+                    <span className="flex items-center">
+                      <Clock className="h-4 w-4 mr-1" />
+                      {summary.readTime} read
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
       {selectedTab === 'flashcards' && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Flashcards</CardTitle>
-            <CardDescription>Study flashcards for {courseDetails.title}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {/* Flashcards content */}
-          </CardContent>
-        </Card>
+        <div className="grid gap-4">
+          {[
+            { id: 1, title: "Basic Concepts", count: 24, preview: "Fundamental terms and definitions", mastery: 85, dueCards: 12, lastStudied: "Today" },
+            { id: 2, title: "Advanced Terms", count: 32, preview: "Complex terminology and applications", mastery: 65, dueCards: 8, lastStudied: "Yesterday" },
+            { id: 3, title: "Final Review", count: 45, preview: "Comprehensive review set", mastery: 45, dueCards: 15, lastStudied: "3 days ago" }
+          ].map((deck) => (
+            <div
+              key={deck.id}
+              onClick={() => setSelectedItem({ type: 'flashcards', id: deck.id, title: deck.title })}
+              className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-100 group"
+            >
+              <div className="flex items-start space-x-4">
+                <div className="p-3 bg-green-50 rounded-lg group-hover:bg-green-100 transition-colors">
+                  <Layout className="h-6 w-6 text-green-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-1">
+                    <h3 className="text-lg font-semibold text-gray-900">{deck.title}</h3>
+                    <span className="text-sm font-medium px-2 py-1 bg-green-50 text-green-700 rounded-full">
+                      {deck.count} cards
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-3">{deck.preview}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2">
+                        <Brain className="h-4 w-4 text-blue-500" />
+                        <span className="text-sm font-medium text-gray-700">{deck.mastery}% Mastery</span>
+                      </div>
+                      <span className="text-gray-300">|</span>
+                      <div className="flex items-center space-x-2">
+                        <Clock className="h-4 w-4 text-gray-400" />
+                        <span className="text-sm text-gray-500">Last studied {deck.lastStudied}</span>
+                      </div>
+                    </div>
+                    <span className="text-sm text-orange-600 font-medium flex items-center">
+                      <AlertCircle className="h-4 w-4 mr-1" />
+                      {deck.dueCards} due
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
