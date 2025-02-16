@@ -660,83 +660,143 @@ const RequestCard = ({ patient, service, date, status }: RequestCardProps) => (
   </Card>
 );
 
-const LeftMenu: React.FC<{ activeTab: string; setActiveTab: (tab: string) => void }> = ({ activeTab, setActiveTab }) => (
-  <div className="w-64 bg-[#f9fafb] h-screen p-6 flex flex-col border-r">
-    {/* Logo Section */}
-    <div className="mb-8">
-      <span className="text-2xl font-semibold bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-transparent bg-clip-text font-['Fago'] tracking-[-0.05em]">
-        superclassroom
-      </span>
-    </div>
+const LeftMenu: React.FC<{ 
+  activeTab: string; 
+  setActiveTab: (tab: string) => void;
+  onSaveProfile: () => void;
+}> = ({ activeTab, setActiveTab, onSaveProfile }) => {
+  const [showProfilePopup, setShowProfilePopup] = useState(false);
+  const [adaptiveNotes, setAdaptiveNotes] = useState('');
 
-    {/* Main Navigation */}
-    <nav className="space-y-6 flex-1">
-      <div>
-        <h2 className="text-xs uppercase text-gray-500 font-semibold mb-2">Main</h2>
-        <ul className="space-y-1">
-          {[
-            { id: 'courses', icon: Home, label: 'Home' },
-            { id: 'golden-notes', icon: BookOpen, label: 'SuperNotes' },
-            { id: 'summaries', icon: List, label: 'Simplified Summaries' },
-            { id: 'flashcards', icon: List, label: 'Flashcards' },
-            { id: 'practice_exams', icon: FileText, label: 'Practice Exams' }
-          ].map((item) => (
-            <li key={item.id}>
-              <button
-                onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center px-2 py-2 rounded-lg text-sm ${
-                  activeTab === item.id 
-                    ? 'bg-blue-100 text-blue-600' 
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                <item.icon className="h-4 w-4 mr-3" />
-                {item.label}
-              </button>
-            </li>
-          ))}
-        </ul>
+  const handleSave = () => {
+    setShowProfilePopup(false);
+    onSaveProfile();
+  };
+
+  return (
+    <div className="w-64 bg-[#f9fafb] h-screen p-6 flex flex-col border-r">
+      {/* Logo Section */}
+      <div className="mb-8">
+        <span className="text-2xl font-semibold bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-transparent bg-clip-text font-['Fago'] tracking-[-0.05em]">
+          superclassroom
+        </span>
       </div>
 
-      <div>
-        <h2 className="text-xs uppercase text-gray-500 font-semibold mb-2">Classes</h2>
-        <ul className="space-y-1">
-          {[
-            { id: 'biology', icon: FileText, label: 'CHEM240' },
-            { id: 'mathematics', icon: FileText, label: 'MATH206' },
-            { id: 'algorithms', icon: FileText, label: 'CSE421' },
-            { id: 'entrepreneurship', icon: FileText, label: 'ENTRE410' }
-          ].map((item) => (
-            <li key={item.id}>
-              <button
-                onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center px-2 py-2 rounded-lg text-sm ${
-                  activeTab === item.id 
-                    ? 'bg-blue-100 text-blue-600' 
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                <item.icon className="h-4 w-4 mr-3 flex-shrink-0" />
-                <span className="truncate">{item.label}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </nav>
-
-    {/* User Section */}
-    <div className="mt-auto pt-4 border-t">
-      <button className="flex items-center space-x-3 w-full px-2 py-2 rounded-lg hover:bg-gray-100">
-        <User className="h-6 w-6 text-gray-600" />
-        <div className="text-sm text-left">
-          <p className="text-gray-900 font-medium">Zachary Lee</p>
-          <p className="text-gray-500 text-xs">zaclee@uw.edu</p>
+      {/* Main Navigation */}
+      <nav className="space-y-6 flex-1">
+        <div>
+          <h2 className="text-xs uppercase text-gray-500 font-semibold mb-2">Main</h2>
+          <ul className="space-y-1">
+            {[
+              { id: 'courses', icon: Home, label: 'Home' },
+              { id: 'golden-notes', icon: BookOpen, label: 'SuperNotes' },
+              { id: 'summaries', icon: List, label: 'Simplified Summaries' },
+              { id: 'flashcards', icon: List, label: 'Flashcards' },
+              { id: 'practice_exams', icon: FileText, label: 'Practice Exams' }
+            ].map((item) => (
+              <li key={item.id}>
+                <button
+                  onClick={() => setActiveTab(item.id)}
+                  className={`w-full flex items-center px-2 py-2 rounded-lg text-sm ${
+                    activeTab === item.id 
+                      ? 'bg-blue-100 text-blue-600' 
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <item.icon className="h-4 w-4 mr-3" />
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
-      </button>
+
+        <div>
+          <h2 className="text-xs uppercase text-gray-500 font-semibold mb-2">Classes</h2>
+          <ul className="space-y-1">
+            {[
+              { id: 'biology', icon: FileText, label: 'CHEM240' },
+              { id: 'mathematics', icon: FileText, label: 'MATH206' },
+              { id: 'algorithms', icon: FileText, label: 'CSE421' },
+              { id: 'entrepreneurship', icon: FileText, label: 'ENTRE410' }
+            ].map((item) => (
+              <li key={item.id}>
+                <button
+                  onClick={() => setActiveTab(item.id)}
+                  className={`w-full flex items-center px-2 py-2 rounded-lg text-sm ${
+                    activeTab === item.id 
+                      ? 'bg-blue-100 text-blue-600' 
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <item.icon className="h-4 w-4 mr-3 flex-shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+
+      {/* User Section */}
+      <div className="mt-auto pt-6 border-t">
+        <button 
+          onClick={() => setShowProfilePopup(true)} 
+          className="flex items-center space-x-3 w-full px-2 py-2 rounded-lg hover:bg-gray-100"
+        >
+          <User className="h-6 w-6 text-gray-600" />
+          <div className="text-sm text-left">
+            <p className="text-gray-900 font-medium">Zachary Lee</p>
+            <p className="text-gray-500 text-xs">zaclee@uw.edu</p>
+          </div>
+        </button>
+      </div>
+
+      {/* Profile Popup */}
+      {showProfilePopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-96 relative">
+            <button 
+              onClick={() => setShowProfilePopup(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            
+            <div className="space-y-6">
+              <div className="text-center">
+                <div className="h-20 w-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mx-auto flex items-center justify-center">
+                  <span className="text-2xl font-semibold text-white">Z</span>
+                </div>
+                <h3 className="mt-4 text-xl font-semibold">Zachary</h3>
+                <p className="text-gray-500 text-sm">Student</p>
+              </div>
+              
+              <div className="space-y-4">
+                <h4 className="font-medium text-gray-700"></h4>
+                <textarea
+                  value={adaptiveNotes}
+                  onChange={(e) => setAdaptiveNotes(e.target.value)}
+                  placeholder="Add notes about learning style, preferences, or accommodations..."
+                  className="w-full h-32 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              
+              <div className="pt-4 border-t">
+                <button
+                  onClick={handleSave}
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 rounded-lg hover:opacity-90 transition-opacity"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-);
+  );
+};
 
 const mockStudyProgress = [
   { date: '7/1/24', value: 85 },
@@ -905,7 +965,7 @@ const CourseContent: React.FC<{
   activeTab?: string;
   onItemSelect: (item: { type: string; id: number; title: string }, course: string) => void;
 }> = ({ course, activeTab, onItemSelect }) => {
-  const [selectedTab, setSelectedTab] = useState(activeTab || 'upload');
+  const [selectedTab, setSelectedTab] = useState('notes');
   
   // Helper to get course details
   const getCourseDetails = (courseName: string) => {
@@ -1025,19 +1085,19 @@ const CourseContent: React.FC<{
       <div className="max-w-5xl mx-auto">
       {selectedTab === 'upload' && (
           <div className="flex flex-col items-center justify-center">
-            <div 
+          <div 
               className="w-full border-2 border-dashed border-gray-300 rounded-2xl p-12 flex flex-col items-center justify-center bg-white hover:border-blue-500 transition-all duration-300 hover:shadow-lg"
-              onDragOver={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              onDrop={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const files = Array.from(e.dataTransfer.files);
-                handleFiles(files);
-              }}
-            >
+            onDragOver={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const files = Array.from(e.dataTransfer.files);
+              handleFiles(files);
+            }}
+          >
               <div className="p-4 bg-blue-50 rounded-full mb-6">
                 <Upload className="h-8 w-8 text-blue-500" />
               </div>
@@ -1067,7 +1127,7 @@ const CourseContent: React.FC<{
           </div>
           
             {/* Enhanced uploaded files list */}
-            {uploadedFiles.length > 0 && (
+          {uploadedFiles.length > 0 && (
               <div className="w-full mt-8 space-y-3 bg-white rounded-2xl p-6 shadow-sm">
                 <div className="flex items-center justify-between pb-4 border-b border-gray-100">
                   <h4 className="text-lg font-medium text-gray-900">Uploaded Files</h4>
@@ -1079,12 +1139,12 @@ const CourseContent: React.FC<{
                   </button>
                 </div>
                 <div className="space-y-4 mt-4">
-                  {uploadedFiles.map((file, index) => (
+              {uploadedFiles.map((file, index) => (
                     <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                       <div className="flex items-center space-x-4">
                         <div className="p-2 bg-blue-100 rounded-lg">
                           <FileText className="h-5 w-5 text-blue-600" />
-                        </div>
+                  </div>
                         <div>
                           <span className="text-sm font-medium text-gray-900">{file.name}</span>
                           <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
@@ -1094,14 +1154,14 @@ const CourseContent: React.FC<{
                         onClick={() => removeFile(index)} 
                         className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                       >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))}
+                    <X className="h-4 w-4" />
+                  </button>
                 </div>
-              </div>
-            )}
-          </div>
+              ))}
+                </div>
+            </div>
+          )}
+        </div>
       )}
 
         {/* Other tab content remains the same but with added padding and spacing */}
@@ -1328,15 +1388,11 @@ const CourseContent: React.FC<{
   );
 };
 
-const Dashboard = ({ 
-  onSelectCourse, 
-  setActiveTab 
-}: { 
-  onSelectCourse: (course: string) => void;
-  setActiveTab: (tab: string) => void;
-}): JSX.Element => {
+const Dashboard = ({ onSelectCourse, setActiveTab }: { onSelectCourse: (course: string) => void; setActiveTab: (tab: string) => void; }): JSX.Element => {
   const [courseSearchInput, setCourseSearchInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [responseData, setResponseData] = useState<any>(null);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const handleCourseSearch = async () => {
     try {
@@ -1349,21 +1405,7 @@ const Dashboard = ({
         body: JSON.stringify({ prompt: courseSearchInput })
       });
       const data = await response.json();
-      
-      // Create a new note
-      const newNote = {
-        id: Date.now(),
-        title: courseSearchInput,
-        content: data.message,
-        course: data.course,
-        date: new Date().toLocaleDateString()
-      };
-      
-      // Navigate to the course and show notes
-      onSelectCourse(data.course);
-      setActiveTab('notes');
-      setCourseSearchInput("");
-      setIsLoading(false);
+      setResponseData(data);
       
     } catch (error) {
       console.error('Course search error:', error);
@@ -1371,19 +1413,34 @@ const Dashboard = ({
     }
   };
 
+  const handleLoadingFinish = () => {
+    setIsLoading(false);
+    if (responseData) {
+      // First select the course (biology for Organic Chemistry)
+      onSelectCourse('biology');
+      // Then navigate to the SuperNotes tab
+      setTimeout(() => {
+        setActiveTab('golden-notes');
+      }, 100);
+    }
+    setCourseSearchInput("");
+  };
+
   return (
     <div className="flex-1">
-      {isLoading && <LoadingScreen />}
+      {isLoading && <LoadingScreen onFinish={handleLoadingFinish} />}
       <h2 className="text-4xl font-semibold mb-8 mt-8 text-center">
         Hello, <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">Zachary</span>
       </h2>
-      <div className="h-24">  {/* Fixed height container */}
+      <div className="h-32">
         <div className="relative max-w-xl mx-auto">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Command className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
           <Input
             placeholder="course: topics..."
             className="pl-12 pr-4 py-5 w-full bg-white text-sm rounded-full border-gray-200"
             value={courseSearchInput}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setIsSearchFocused(false)}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCourseSearchInput(e.target.value)}
             onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
               if (e.key === 'Enter') {
@@ -1393,6 +1450,19 @@ const Dashboard = ({
               }
             }}
           />
+          <div className="absolute left-1/2 transform -translate-x-1/2" style={{ width: '200px', top: '80px' }}>
+            <button
+              onClick={() => {
+                handleCourseSearch();
+                setCourseSearchInput("");
+              }}
+              className={`w-full mt-12 bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-white py-3 px-6 rounded-full font-medium hover:opacity-90 transition-all duration-150 ${
+                isSearchFocused ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              Generate
+            </button>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 my-24 gap-6">
@@ -1401,8 +1471,13 @@ const Dashboard = ({
           onClick={() => onSelectCourse('biology')}
         >
           <CardHeader>
-            <CardTitle>CHEM240</CardTitle>
-            <CardDescription>Organic Chemistry</CardDescription>
+            <div className="flex items-center justify-between">
+              <CardTitle>Organic Chemistry</CardTitle>
+              <span className="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                CHEM240
+              </span>
+            </div>
+            <CardDescription>Introduction to Organic Chemistry</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
@@ -1420,8 +1495,13 @@ const Dashboard = ({
           onClick={() => onSelectCourse('mathematics')}
         >
           <CardHeader>
-            <CardTitle>MATH206</CardTitle>
-            <CardDescription>Advanced Calculus and Linear Algebra</CardDescription>
+            <div className="flex items-center justify-between">
+              <CardTitle>Advanced Calculus</CardTitle>
+              <span className="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                MATH206
+              </span>
+            </div>
+            <CardDescription>Calculus and Linear Algebra</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
@@ -1439,8 +1519,13 @@ const Dashboard = ({
           onClick={() => onSelectCourse('algorithms')}
         >
           <CardHeader>
-            <CardTitle>CSE421</CardTitle>
-            <CardDescription>Introduction to Algorithms</CardDescription>
+            <div className="flex items-center justify-between">
+              <CardTitle>Algorithms</CardTitle>
+              <span className="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                CSE421
+              </span>
+            </div>
+            <CardDescription>Design and Analysis of Algorithms</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
@@ -1458,8 +1543,13 @@ const Dashboard = ({
           onClick={() => onSelectCourse('entrepreneurship')}
         >
           <CardHeader>
-            <CardTitle>ENTRE440</CardTitle>
-            <CardDescription>Computer Science Entrepreneurship</CardDescription>
+            <div className="flex items-center justify-between">
+              <CardTitle>CS Entrepreneurship</CardTitle>
+              <span className="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                ENTRE440
+              </span>
+            </div>
+            <CardDescription>Business Fundamentals for Engineers</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
@@ -1586,10 +1676,12 @@ const SuperClassroomApp: React.FC = () => {
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<null | { type: string; id: number; title: string; course: string }>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
 
   const handleCourseSelect = (course: string) => {
     setSelectedCourse(course);
     setActiveTab('upload');
+
   };
 
   const handleItemSelect = (item: { type: string; id: number; title: string }, course: string) => {
@@ -1598,6 +1690,13 @@ const SuperClassroomApp: React.FC = () => {
 
   const handleBackFromDetail = () => {
     setSelectedItem(null);
+  };
+
+  const handleProfileSave = () => {
+    setShowSaveConfirmation(true);
+    setTimeout(() => {
+      setShowSaveConfirmation(false);
+    }, 2000);
   };
 
   const renderContent = () => {
@@ -1619,7 +1718,11 @@ const SuperClassroomApp: React.FC = () => {
       case 'courses':
         return (
           <div className="flex">
-            <LeftMenu activeTab={activeTab} setActiveTab={setActiveTab} />
+            <LeftMenu 
+              activeTab={activeTab} 
+              setActiveTab={setActiveTab}
+              onSaveProfile={handleProfileSave}
+            />
             <div className="flex-1 p-8">
               <Dashboard 
                 onSelectCourse={handleCourseSelect} 
@@ -1634,7 +1737,7 @@ const SuperClassroomApp: React.FC = () => {
       case 'upload':
         return (
           <div className="flex">
-            <LeftMenu activeTab={activeTab} setActiveTab={setActiveTab} />
+            <LeftMenu activeTab={activeTab} setActiveTab={setActiveTab} onSaveProfile={handleProfileSave} />
             <main className="flex-1 p-8 overflow-auto">
               {selectedCourse ? (
                 <CourseContent 
@@ -1653,7 +1756,7 @@ const SuperClassroomApp: React.FC = () => {
       default:
         return (
           <div className="flex">
-            <LeftMenu activeTab={activeTab} setActiveTab={setActiveTab} />
+            <LeftMenu activeTab={activeTab} setActiveTab={setActiveTab} onSaveProfile={handleProfileSave} />
             <div className="flex-1 p-8">
               <Dashboard 
                 onSelectCourse={handleCourseSelect} 
@@ -1667,6 +1770,12 @@ const SuperClassroomApp: React.FC = () => {
 
   return (
     <div className="h-screen bg-gray-50 text-black">
+      {showSaveConfirmation && (
+        <div className="fixed bottom-4 right-4 bg-green-100 text-green-700 px-4 py-2 rounded-lg shadow-lg flex items-center z-50">
+          <Check className="h-4 w-4 mr-2" />
+          Changes saved successfully
+        </div>
+      )}
       {renderContent()}
     </div>
   );
