@@ -5,6 +5,7 @@ from backend import iris_connection
 from PyPDF2 import PdfReader
 from sentence_transformers import SentenceTransformer
 import io
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -18,6 +19,9 @@ app.add_middleware(
 
 # Initialize model once at startup
 model = SentenceTransformer('all-MiniLM-L6-v2')
+
+class GenerateRequest(BaseModel):
+    prompt: str
 
 @app.on_event("startup")
 async def startup_event():
@@ -105,6 +109,12 @@ async def upload_file(
             {"status": "error", "message": str(e)},
             status_code=500
         )
+
+@app.post("/generate")
+async def generate_endpoint(request: GenerateRequest):
+    prompt = request.prompt
+    # TODO: Implement your logic to process the prompt here.
+    return {"status": "success", "message": f"Received prompt: {prompt}"}
 
 if __name__ == "__main__":
     import uvicorn

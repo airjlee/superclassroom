@@ -6,7 +6,7 @@ interface CourseContentProps {
   onItemSelect: (item: { type: string; id: number; title: string }, course: string) => void;
 }
 
-const CourseContent: React.FC<CourseContentProps> = ({ course, activeTab, onItemSelect }): JSX.Element => {
+const CourseContent: React.FC<CourseContentProps> = ({ course, activeTab, onItemSelect }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string>('');
 

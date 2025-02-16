@@ -1327,18 +1327,51 @@ const CourseContent: React.FC<{
 };
 
 const Dashboard = ({ onSelectCourse }: { onSelectCourse: (course: string) => void }): JSX.Element => {
+  const [courseSearchInput, setCourseSearchInput] = useState<string>("");
+  const [courseSearchResult, setCourseSearchResult] = useState<any>(null);
+
+  const handleCourseSearch = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ prompt: courseSearchInput })
+      });
+      const data = await response.json();
+      setCourseSearchResult(data);
+    } catch (error) {
+      console.error('Course search error:', error);
+    }
+  };
+
   return (
     <div className="flex-1">
       <h2 className="text-4xl font-semibold mb-8 mt-8 text-center">
         Hello, <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">Zachary</span>
       </h2>
-      <div className="relative max-w-xl mx-auto mt-4 mb-16">
+      <div className="relative max-w-xl mx-auto mt-12 mb-24">
         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
         <Input
           placeholder="Search..."
           className="pl-12 pr-4 py-5 w-full bg-white text-sm rounded-full border-gray-200"
+          value={courseSearchInput}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCourseSearchInput(e.target.value)}
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleCourseSearch();
+            }
+          }}
         />
       </div>
+      {/* {courseSearchResult && (
+        <div className="max-w-xl mx-auto mb-4 p-4 bg-gray-100 rounded">
+          <h3 className="text-lg font-medium mb-2">Course Search Results:</h3>
+          <pre className="text-sm text-gray-700">{JSON.stringify(courseSearchResult, null, 2)}</pre>
+        </div>
+      )} */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card
           className="cursor-pointer hover:shadow-lg transition-shadow bg-white"
