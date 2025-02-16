@@ -5,8 +5,13 @@ from backend import iris_connection
 from PyPDF2 import PdfReader
 from sentence_transformers import SentenceTransformer
 import io
+import numpy as np
 from pydantic import BaseModel
+import os
+from mistralai import Mistral
+from dotenv import load_dotenv
 
+load_dotenv() 
 app = FastAPI()
 
 app.add_middleware(
@@ -34,7 +39,7 @@ async def startup_event():
             id INT IDENTITY PRIMARY KEY,
             course VARCHAR(255),
             file_name VARCHAR(255),
-            file_blob BLOB,
+            file_txt TEXT,
             embedding VECTOR(DOUBLE, 384)
         )
         """
@@ -56,7 +61,7 @@ def process_pdf(file_bytes):
     # Simple chunking - adjust as needed
     chunks = [text[i:i+1000] for i in range(0, len(text), 1000)]
     embeddings = model.encode(chunks, normalize_embeddings=True)
-    return embeddings.mean(axis=0).tolist()  # Average of chunk embeddings
+    return [text,embeddings.mean(axis=0).tolist()]  # Average of chunk embeddings
 
 @app.post("/upload")
 async def upload_file(
@@ -64,6 +69,7 @@ async def upload_file(
     course: str = Form(...)
 ):
     print("Uploading file:", file.filename)
+    print("Course:", course)
     """Updated endpoint with embedding generation"""
     try:
         file_bytes = await file.read()
@@ -71,7 +77,10 @@ async def upload_file(
         # Process different file types
         if file.filename.lower().endswith('.pdf'):
             print("Processing PDF file")
-            embedding = process_pdf(file_bytes)
+            res = process_pdf(file_bytes)
+            embedding = res[1]
+            text = res[0]
+            print("Text:", text)
         elif file.filename.lower().endswith('.mp4'):
             # Placeholder for video processing
             embedding = model.encode(["video placeholder"]).tolist()[0]
@@ -86,10 +95,9 @@ async def upload_file(
         cursor = conn.cursor()
         try:
             print("Inserting into IRIS")
-            print(embedding)
             cursor.execute(
-                "INSERT INTO CourseMaterials (course, file_name, file_blob, embedding) VALUES (?, ?, ?, TO_VECTOR(?))",
-                [course, file.filename, file_bytes, str(embedding)]
+                "INSERT INTO CourseMaterials (course, file_name, file_txt, embedding) VALUES (?, ?, ?, TO_VECTOR(?))",
+                [course, file.filename, text, str(embedding)]
             )
             conn.commit()
             print("Inserted into IRIS")
@@ -112,9 +120,60 @@ async def upload_file(
 
 @app.post("/generate")
 async def generate_endpoint(request: GenerateRequest):
-    prompt = request.prompt
-    # TODO: Implement your logic to process the prompt here.
-    return {"status": "success", "message": f"Received prompt: {prompt}"}
+    searchPhrase = request.prompt
+    searchVector = model.encode(searchPhrase, normalize_embeddings=True).tolist()
+    
+    search_vector_np = np.array(searchVector)
+
+    courses = ["biology", "mathematics"]
+    course_embeddings = {}
+
+    for course in courses:
+        embedding = model.encode(course, normalize_embeddings=True)
+        course_embeddings[course] = np.array(embedding)
+
+    similarities = {}
+
+    for course, embedding in course_embeddings.items():
+        similarity = np.dot(search_vector_np, embedding)
+        similarities[course] = similarity
+
+    real_course = max(similarities, key=similarities.get)
+
+    sql = f"""
+        SELECT TOP ? file_txt
+        FROM CourseMaterials
+        WHERE course = ?
+        ORDER BY VECTOR_DOT_PRODUCT(embedding, TO_VECTOR(?, double, 384)) DESC
+    """
+    conn = iris_connection.get_connection()
+    cursor = conn.cursor()
+  
+    cursor.execute(sql, [5, real_course, str(searchVector)])
+
+   
+    results = cursor.fetchall()
+
+    
+    api_key = os.getenv("MISTRAL_API_KEY")
+    mistral_model= "mistral-large-latest"
+
+    client = Mistral(api_key=api_key)
+
+    # chat_response = client.chat.complete(
+    #     model = mistral_model,
+    #     messages = [
+    #         {
+    #             "role": "user",
+    #             "content": f"Use the following relevant information to generate notes for the user on the topic: {searchPhrase} : {str(results)}",
+    #         },
+    #     ]
+    # )
+
+        
+    
+    return {"status": "success", "course": real_course, "message": "hi"}
+
 
 if __name__ == "__main__":
     import uvicorn

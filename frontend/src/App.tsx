@@ -4,6 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { patients, Patient } from './Patient';
 import { createInterface } from 'readline';
 import './AnimatedGradient.css';
+import LoadingScreen from './components/LoadingScreen';
 /* tslint:disable */
 
 const Alert = ({ children }: { children: React.ReactNode }) => <div className="bg-red-200 border-l-4 border-red-500 text-black p-4" role="alert">{children}</div>;
@@ -674,10 +675,11 @@ const LeftMenu: React.FC<{ activeTab: string; setActiveTab: (tab: string) => voi
         <h2 className="text-xs uppercase text-gray-500 font-semibold mb-2">Main</h2>
         <ul className="space-y-1">
           {[
-            { id: 'courses', icon: Home, label: 'My Courses' },
-            { id: 'golden-notes', icon: FileText, label: 'Golden Notes' },
+            { id: 'courses', icon: Home, label: 'Home' },
+            { id: 'golden-notes', icon: BookOpen, label: 'SuperNotes' },
             { id: 'summaries', icon: List, label: 'Simplified Summaries' },
-            { id: 'flashcards', icon: Command, label: 'Flashcards' }
+            { id: 'flashcards', icon: List, label: 'Flashcards' },
+            { id: 'practice_exams', icon: FileText, label: 'Practice Exams' }
           ].map((item) => (
             <li key={item.id}>
               <button
@@ -700,10 +702,10 @@ const LeftMenu: React.FC<{ activeTab: string; setActiveTab: (tab: string) => voi
         <h2 className="text-xs uppercase text-gray-500 font-semibold mb-2">Classes</h2>
         <ul className="space-y-1">
           {[
-            { id: 'biology', icon: FileText, label: 'Biology 101' },
-            { id: 'mathematics', icon: FileText, label: 'Mathematics 201' },
-            { id: 'algorithms', icon: FileText, label: 'Intro to Algorithms' },
-            { id: 'entrepreneurship', icon: FileText, label: 'Entrepreneurship 101' }
+            { id: 'biology', icon: FileText, label: 'CHEM240' },
+            { id: 'mathematics', icon: FileText, label: 'MATH206' },
+            { id: 'algorithms', icon: FileText, label: 'CSE421' },
+            { id: 'entrepreneurship', icon: FileText, label: 'ENTRE410' }
           ].map((item) => (
             <li key={item.id}>
               <button
@@ -909,7 +911,7 @@ const CourseContent: React.FC<{
   const getCourseDetails = (courseName: string) => {
     const courseMap: { [key: string]: { title: string; description: string } } = {
       'biology': {
-        title: 'Biology 101',
+        title: 'Organic Chemistry',
         description: 'Introduction to Cell Biology and Genetics'
       },
       'mathematics': {
@@ -1326,12 +1328,19 @@ const CourseContent: React.FC<{
   );
 };
 
-const Dashboard = ({ onSelectCourse }: { onSelectCourse: (course: string) => void }): JSX.Element => {
+const Dashboard = ({ 
+  onSelectCourse, 
+  setActiveTab 
+}: { 
+  onSelectCourse: (course: string) => void;
+  setActiveTab: (tab: string) => void;
+}): JSX.Element => {
   const [courseSearchInput, setCourseSearchInput] = useState<string>("");
-  const [courseSearchResult, setCourseSearchResult] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleCourseSearch = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch('http://localhost:8000/generate', {
         method: 'POST',
         headers: {
@@ -1340,46 +1349,60 @@ const Dashboard = ({ onSelectCourse }: { onSelectCourse: (course: string) => voi
         body: JSON.stringify({ prompt: courseSearchInput })
       });
       const data = await response.json();
-      setCourseSearchResult(data);
+      
+      // Create a new note
+      const newNote = {
+        id: Date.now(),
+        title: courseSearchInput,
+        content: data.message,
+        course: data.course,
+        date: new Date().toLocaleDateString()
+      };
+      
+      // Navigate to the course and show notes
+      onSelectCourse(data.course);
+      setActiveTab('notes');
+      setCourseSearchInput("");
+      setIsLoading(false);
+      
     } catch (error) {
       console.error('Course search error:', error);
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="flex-1">
+      {isLoading && <LoadingScreen />}
       <h2 className="text-4xl font-semibold mb-8 mt-8 text-center">
         Hello, <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">Zachary</span>
       </h2>
-      <div className="relative max-w-xl mx-auto mt-12 mb-24">
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-        <Input
-          placeholder="Search..."
-          className="pl-12 pr-4 py-5 w-full bg-white text-sm rounded-full border-gray-200"
-          value={courseSearchInput}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCourseSearchInput(e.target.value)}
-          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              handleCourseSearch();
-            }
-          }}
-        />
-      </div>
-      {/* {courseSearchResult && (
-        <div className="max-w-xl mx-auto mb-4 p-4 bg-gray-100 rounded">
-          <h3 className="text-lg font-medium mb-2">Course Search Results:</h3>
-          <pre className="text-sm text-gray-700">{JSON.stringify(courseSearchResult, null, 2)}</pre>
+      <div className="h-24">  {/* Fixed height container */}
+        <div className="relative max-w-xl mx-auto">
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Input
+            placeholder="course: topics..."
+            className="pl-12 pr-4 py-5 w-full bg-white text-sm rounded-full border-gray-200"
+            value={courseSearchInput}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCourseSearchInput(e.target.value)}
+            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleCourseSearch();
+                setCourseSearchInput("");
+              }
+            }}
+          />
         </div>
-      )} */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 my-24 gap-6">
         <Card
           className="cursor-pointer hover:shadow-lg transition-shadow bg-white"
           onClick={() => onSelectCourse('biology')}
         >
           <CardHeader>
-            <CardTitle>Biology 101</CardTitle>
-            <CardDescription>Introduction to Cell Biology and Genetics</CardDescription>
+            <CardTitle>CHEM240</CardTitle>
+            <CardDescription>Organic Chemistry</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
@@ -1397,7 +1420,7 @@ const Dashboard = ({ onSelectCourse }: { onSelectCourse: (course: string) => voi
           onClick={() => onSelectCourse('mathematics')}
         >
           <CardHeader>
-            <CardTitle>Mathematics 201</CardTitle>
+            <CardTitle>MATH206</CardTitle>
             <CardDescription>Advanced Calculus and Linear Algebra</CardDescription>
           </CardHeader>
           <CardContent>
@@ -1416,8 +1439,8 @@ const Dashboard = ({ onSelectCourse }: { onSelectCourse: (course: string) => voi
           onClick={() => onSelectCourse('algorithms')}
         >
           <CardHeader>
-            <CardTitle>Introduction to Algorithms</CardTitle>
-            <CardDescription>Fundamentals of Algorithm Design and Analysis</CardDescription>
+            <CardTitle>CSE421</CardTitle>
+            <CardDescription>Introduction to Algorithms</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
@@ -1435,8 +1458,8 @@ const Dashboard = ({ onSelectCourse }: { onSelectCourse: (course: string) => voi
           onClick={() => onSelectCourse('entrepreneurship')}
         >
           <CardHeader>
-            <CardTitle>Entrepreneurship 101</CardTitle>
-            <CardDescription>Introduction to Business and Startups</CardDescription>
+            <CardTitle>ENTRE440</CardTitle>
+            <CardDescription>Computer Science Entrepreneurship</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
@@ -1598,7 +1621,10 @@ const SuperClassroomApp: React.FC = () => {
           <div className="flex">
             <LeftMenu activeTab={activeTab} setActiveTab={setActiveTab} />
             <div className="flex-1 p-8">
-              <Dashboard onSelectCourse={handleCourseSelect} />
+              <Dashboard 
+                onSelectCourse={handleCourseSelect} 
+                setActiveTab={setActiveTab}
+              />
             </div>
           </div>
         );
@@ -1629,7 +1655,10 @@ const SuperClassroomApp: React.FC = () => {
           <div className="flex">
             <LeftMenu activeTab={activeTab} setActiveTab={setActiveTab} />
             <div className="flex-1 p-8">
-              <Dashboard onSelectCourse={handleCourseSelect} />
+              <Dashboard 
+                onSelectCourse={handleCourseSelect} 
+                setActiveTab={setActiveTab}
+              />
             </div>
           </div>
         );
