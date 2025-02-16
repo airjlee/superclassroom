@@ -13,4 +13,12 @@
 .animated-gradient {
   background-size: 200% 200%;
   animation: gradientShift 3s ease infinite;
+}
+
+/* Add Fago font face */
+@font-face {
+  font-family: 'Fago';
+  src: url('../public/fonts/fago/fagoprobold.otf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
 } 

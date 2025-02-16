@@ -1,9 +1,10 @@
 import React, { useState, useEffect, JSX } from 'react';
-import { AlertCircle, Check, Loader2, FileText, Settings, List, Home, Bell, Search, User, X, Command, ArrowLeft, Save, ChevronDown, Upload, BookOpen, Clock, Layout, Brain } from 'lucide-react';
+import { AlertCircle, Check, Loader2, FileText, Settings, List, Home, Bell, Search, User, X, Command, ArrowLeft, Save, ChevronDown, Upload, BookOpen, Clock, Layout, Brain, Download, Video, Users, Share } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { patients, Patient } from './Patient';
 import { createInterface } from 'readline';
 import './AnimatedGradient.css';
+/* tslint:disable */
 
 const Alert = ({ children }: { children: React.ReactNode }) => <div className="bg-red-200 border-l-4 border-red-500 text-black p-4" role="alert">{children}</div>;
 const AlertS = ({ children }: { children: React.ReactNode }) => <div className="bg-green-200 border-l-4 border-green-500 text-black p-4" role="alert">{children}</div>;
@@ -110,7 +111,7 @@ const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
   return (
     <div className="min-h-screen w-full bg-[#FAF9F6] font-['Cooper_Hewitt']">
       <div className="w-full flex justify-center pt-8 mb-8">
-        <span className="text-3xl font-semibold bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-transparent bg-clip-text">
+        <span className="text-3xl font-semibold bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-transparent bg-clip-text font-['Fago'] tracking-[-0.05em]">
           superclassroom
         </span>
       </div>
@@ -662,7 +663,7 @@ const LeftMenu: React.FC<{ activeTab: string; setActiveTab: (tab: string) => voi
   <div className="w-64 bg-[#f9fafb] h-screen p-6 flex flex-col border-r">
     {/* Logo Section */}
     <div className="mb-8">
-      <span className="text-xl font-semibold bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-transparent bg-clip-text">
+      <span className="text-2xl font-semibold bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-transparent bg-clip-text font-['Fago'] tracking-[-0.05em]">
         superclassroom
       </span>
     </div>
@@ -755,45 +756,172 @@ const DetailView: React.FC<{
   onBack: () => void;
 }> = ({ title, itemTitle, onBack }) => {
   return (
-    <div className="h-screen bg-gray-50">
-      <div className="p-6">
-        {/* Logo and back button row */}
-        <div className="flex items-center justify-between mb-8">
-          <span className="text-xl font-semibold bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-transparent bg-clip-text">
+    <div className="min-h-screen bg-gray-50">
+      {/* Enhanced Header */}
+      <div className="bg-white border-b shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <span className="text-2xl font-semibold bg-gradient-to-r from-blue-500 to-purple-500 animated-gradient text-transparent bg-clip-text font-['Fago'] tracking-[-0.05em]">
             superclassroom
           </span>
           <button 
             onClick={onBack}
-            className="flex items-center text-gray-600 hover:text-gray-800"
+              className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to {title}
+              <span className="text-sm font-medium">Back to {title}</span>
           </button>
+          </div>
+        </div>
         </div>
         
-        {/* Content */}
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-2xl font-bold mb-6">{itemTitle}</h1>
-          {/* Add your detail content here */}
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Title Section */}
+        <div className="mb-8 bg-white rounded-2xl p-8 shadow-sm">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">{itemTitle}</h1>
+          <div className="flex items-center space-x-4 text-sm text-gray-500">
+            <span className="flex items-center">
+              <Clock className="h-4 w-4 mr-2" />
+              Last updated 2 days ago
+            </span>
+            <span>•</span>
+            <span className="flex items-center">
+              <User className="h-4 w-4 mr-2" />
+              Created by Dr. Smith
+            </span>
+          </div>
+        </div>
+
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content Area */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Content Preview */}
+            <div className="bg-white rounded-2xl p-8 shadow-sm">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Overview</h2>
+              <p className="text-gray-600 leading-relaxed">
+                This comprehensive material covers fundamental concepts and advanced applications.
+                Students will learn through interactive examples and practical demonstrations.
+              </p>
+              <div className="mt-6 flex items-center space-x-4">
+                <button className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  <FileText className="h-4 w-4 mr-2" />
+                  <span>View Full Content</span>
+                </button>
+                <button className="flex items-center px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                  <Download className="h-4 w-4 mr-2" />
+                  <span>Download</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Additional Resources */}
+            <div className="bg-white rounded-2xl p-8 shadow-sm">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Related Resources</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  { icon: BookOpen, title: "Study Guide", desc: "Comprehensive review materials" },
+                  { icon: Video, title: "Video Lectures", desc: "Recorded explanations" },
+                  { icon: FileText, title: "Practice Problems", desc: "Exercise sets with solutions" },
+                  { icon: Users, title: "Discussion Forum", desc: "Student Q&A platform" }
+                ].map((resource, index) => (
+                  <div key={index} className="flex items-start p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer">
+                    <div className="p-2 bg-blue-100 rounded-lg mr-4">
+                      <resource.icon className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-gray-900">{resource.title}</h3>
+                      <p className="text-sm text-gray-500">{resource.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Progress Card */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Your Progress</h2>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-gray-600">Completion</span>
+                    <span className="font-medium text-gray-900">75%</span>
+                  </div>
+                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-blue-500 rounded-full" style={{ width: '75%' }} />
+                  </div>
+                </div>
+                <div className="pt-4 border-t">
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <span>Time spent</span>
+                    <span>2.5 hours</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+              <div className="space-y-3">
+                <button className="w-full flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                  <div className="flex items-center">
+                    <Brain className="h-5 w-5 text-purple-500 mr-3" />
+                    <span className="font-medium text-gray-700">Start Quiz</span>
+                  </div>
+                  <ChevronDown className="h-4 w-4 text-gray-400" />
+                </button>
+                <button className="w-full flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                  <div className="flex items-center">
+                    <Save className="h-5 w-5 text-green-500 mr-3" />
+                    <span className="font-medium text-gray-700">Save Notes</span>
+                  </div>
+                  <ChevronDown className="h-4 w-4 text-gray-400" />
+                </button>
+                <button className="w-full flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                  <div className="flex items-center">
+                    <Share className="h-5 w-5 text-blue-500 mr-3" />
+                    <span className="font-medium text-gray-700">Share</span>
+                  </div>
+                  <ChevronDown className="h-4 w-4 text-gray-400" />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ course, activeTab }) => {
+const CourseContent: React.FC<{ 
+  course: string; 
+  activeTab?: string;
+  onItemSelect: (item: { type: string; id: number; title: string }, course: string) => void;
+}> = ({ course, activeTab, onItemSelect }) => {
   const [selectedTab, setSelectedTab] = useState(activeTab || 'upload');
-  const [selectedItem, setSelectedItem] = useState<null | { type: string; id: number; title: string }>(null);
   
-  if (selectedItem) {
-    return (
-      <DetailView
-        title={`${course} ${capitalizeFirstLetter(selectedItem.type)}`}
-        itemTitle={selectedItem.title}
-        onBack={() => setSelectedItem(null)}
-      />
-    );
-  }
+  // Helper to get course details
+  const getCourseDetails = (courseName: string) => {
+    const courseMap: { [key: string]: { title: string; description: string } } = {
+      'biology': {
+        title: 'Biology 101',
+        description: 'Introduction to Cell Biology and Genetics'
+      },
+      'mathematics': {
+        title: 'Mathematics 201',
+        description: 'Advanced Calculus and Linear Algebra'
+      },
+      // Add more courses as needed
+    };
+    return courseMap[courseName.toLowerCase()] || { title: courseName, description: '' };
+  };
+
+  const courseDetails = getCourseDetails(course);
 
   // Updated tabs array: practice exam is now the last tab (on the very right)
   const tabs = [
@@ -817,73 +945,103 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
     setUploadedFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
   };
 
-  // Helper to get course details
-  const getCourseDetails = (courseName: string) => {
-    const courseMap: { [key: string]: { title: string; description: string } } = {
-      'biology': {
-        title: 'Biology 101',
-        description: 'Introduction to Cell Biology and Genetics'
-      },
-      'mathematics': {
-        title: 'Mathematics 201',
-        description: 'Advanced Calculus and Linear Algebra'
-      },
-      // Add more courses as needed
-    };
-    return courseMap[courseName.toLowerCase()] || { title: courseName, description: '' };
+  const handleUploadAll = async () => {
+    if (!uploadedFiles.length) return;
+
+    const filesToUpload = [...uploadedFiles];
+    setUploadedFiles([]); // Clear the list immediately
+  
+    for (let i = 0; i < filesToUpload.length; i++) {
+      const formData = new FormData();
+      // Make sure to append the file first
+      formData.append('file', filesToUpload[i], filesToUpload[i].name);
+      formData.append('course', course || '');
+  
+      try {
+        const response = await fetch('http://localhost:8000/upload', {
+          method: 'POST',
+          body: formData,
+        });
+  
+        const result = await response.json();
+        if (!response.ok) {
+          console.error('Upload error:', result);
+          alert(`Failed to upload ${filesToUpload[i].name}: ${result.message || 'Unsupported file type'}`);
+          // Add failed files back to the list
+          setUploadedFiles(prev => [...prev, filesToUpload[i]]);
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+        const message = error instanceof Error ? error.message : 'Network error';
+        alert(`Failed to upload ${filesToUpload[i].name}: ${message}`);
+        // Add failed files back to the list
+        setUploadedFiles(prev => [...prev, filesToUpload[i]]);
+      }
+    }
+    
+    if (filesToUpload.length > 0) {
+      alert('Upload process completed');
+    }
   };
 
-  const courseDetails = getCourseDetails(course);
-
   return (
-    <div>
-      {/* Course Title and Description - Moved above tabs */}
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-black">{courseDetails.title}</h2>
-        <p className="text-gray-400">{courseDetails.description}</p>
+    <div className="max-w-7xl mx-auto px-4">
+      {/* Enhanced Course Title and Description */}
+      <div className="mb-12 text-center">
+        <h2 className="text-4xl font-bold text-gray-900 mb-3">{courseDetails.title}</h2>
+        <p className="text-lg text-gray-500 max-w-2xl mx-auto">{courseDetails.description}</p>
       </div>
       
-      {/* Smaller Tab Bar with Icons */}
-      <div className="flex border-b mb-8 gap-2">
+      {/* Enhanced Tab Bar */}
+      <div className="flex justify-center border-b border-gray-200 mb-12">
+        <div className="flex space-x-8">
         {tabs.map((tab) => (
           <button 
             key={tab.id}
             onClick={() => setSelectedTab(tab.id)}
             className={`
-              flex items-center gap-2 py-2 px-3 text-sm
+                flex items-center gap-3 py-4 px-4 relative
               ${selectedTab === tab.id 
-                ? 'border-b-2 border-blue-500 text-blue-500 font-medium' 
+                  ? 'text-blue-600' 
                 : 'text-gray-500 hover:text-gray-700'
               }
             `}
           >
+              <div className="flex items-center gap-2">
             {tab.icon}
-            <span>{tab.label}</span>
+                <span className="text-sm font-medium">{tab.label}</span>
+              </div>
+              {selectedTab === tab.id && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"></div>
+              )}
           </button>
         ))}
+        </div>
       </div>
       
-      {/* Content Sections */}
+      {/* Content Container with Max Width and Padding */}
+      <div className="max-w-5xl mx-auto">
       {selectedTab === 'upload' && (
-        <div className="flex flex-col items-center justify-center max-w-2xl mx-auto">
-          <div 
-            className="w-full border-2 border-dashed border-gray-300 rounded-lg p-12 flex flex-col items-center justify-center bg-white hover:border-blue-500 transition-colors duration-300"
-            onDragOver={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-            onDrop={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const files = Array.from(e.dataTransfer.files);
-              console.log('Dropped files:', files);
-              handleFiles(files);
-            }}
-          >
-            <Upload className="h-16 w-16 text-gray-400 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">Upload Course Materials</h3>
-            <p className="text-sm text-gray-500 text-center mb-6">
-              Drag and drop your files here, or click to select files
+          <div className="flex flex-col items-center justify-center">
+            <div 
+              className="w-full border-2 border-dashed border-gray-300 rounded-2xl p-12 flex flex-col items-center justify-center bg-white hover:border-blue-500 transition-all duration-300 hover:shadow-lg"
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const files = Array.from(e.dataTransfer.files);
+                handleFiles(files);
+              }}
+            >
+              <div className="p-4 bg-blue-50 rounded-full mb-6">
+                <Upload className="h-8 w-8 text-blue-500" />
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-800 mb-3">Upload Course Materials</h3>
+              <p className="text-gray-500 text-center mb-8 max-w-md">
+                Drag and drop your files here, or click to select files from your computer
             </p>
             <input
               type="file"
@@ -892,41 +1050,61 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
               id="file-upload"
               onChange={(e) => {
                 const files = Array.from(e.target.files || []);
-                console.log('Selected files:', files);
                 handleFiles(files);
               }}
             />
             <label
               htmlFor="file-upload"
-              className="px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer transition-colors duration-300"
+                className="px-6 py-3 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md"
             >
               Select Files
             </label>
-            <p className="text-xs text-gray-400 mt-4">
+              <p className="text-sm text-gray-400 mt-6">
               Supported files: PDF, DOC, DOCX, PPT, PPTX (up to 50MB each)
             </p>
           </div>
           
-          {/* Render the uploaded files (if any) */}
-          {uploadedFiles.length > 0 && (
-            <div className="w-full mt-8 space-y-3">
-              {uploadedFiles.map((file, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <FileText className="h-5 w-5 text-blue-500" />
-                    <span className="text-sm text-gray-700">{file.name}</span>
-                  </div>
-                  <button onClick={() => removeFile(index)} className="text-gray-400 hover:text-gray-600">
-                    <X className="h-4 w-4" />
+            {/* Enhanced uploaded files list */}
+            {uploadedFiles.length > 0 && (
+              <div className="w-full mt-8 space-y-3 bg-white rounded-2xl p-6 shadow-sm">
+                <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+                  <h4 className="text-lg font-medium text-gray-900">Uploaded Files</h4>
+                  <button 
+                    onClick={() => handleUploadAll()}
+                    className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  >
+                    Upload All Files
                   </button>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+                <div className="space-y-4 mt-4">
+                  {uploadedFiles.map((file, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center space-x-4">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <FileText className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <span className="text-sm font-medium text-gray-900">{file.name}</span>
+                          <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => removeFile(index)} 
+                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
       )}
+
+        {/* Other tab content remains the same but with added padding and spacing */}
       {selectedTab === 'practice' && (
-        <div className="grid gap-4">
+          <div className="grid gap-6">
           {[
             { 
               id: 1, 
@@ -965,7 +1143,7 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
           ].map((exam) => (
             <div
               key={exam.id}
-              onClick={() => setSelectedItem({ type: 'practice', id: exam.id, title: exam.title })}
+                onClick={() => onItemSelect({ type: 'practice', id: exam.id, title: exam.title }, course)}
               className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-100 group"
             >
               <div className="flex items-start space-x-4">
@@ -995,11 +1173,6 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
                         <Clock className="h-4 w-4 text-gray-400" />
                         <span className="text-sm text-gray-500">{exam.timeLimit}</span>
                       </div>
-                      <span className="text-gray-300">|</span>
-                      <div className="flex items-center space-x-2">
-                        <AlertCircle className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm text-gray-500">{exam.difficulty}</span>
-                      </div>
                     </div>
                   </div>
                   {exam.lastScore !== null && (
@@ -1022,8 +1195,9 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
           ))}
         </div>
       )}
+        
       {selectedTab === 'notes' && (
-        <div className="grid gap-4">
+          <div className="grid gap-6">
           {[
             { id: 1, title: "Chapter 1: Introduction", preview: "Key concepts and fundamental principles", progress: 85, lastUpdated: "2 days ago" },
             { id: 2, title: "Chapter 2: Core Concepts", preview: "Deep dive into the core mechanisms", progress: 65, lastUpdated: "1 week ago" },
@@ -1031,7 +1205,7 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
           ].map((note) => (
             <div
               key={note.id}
-              onClick={() => setSelectedItem({ type: 'notes', id: note.id, title: note.title })}
+                onClick={() => onItemSelect({ type: 'notes', id: note.id, title: note.title }, course)}
               className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-100 group"
             >
               <div className="flex items-start space-x-4">
@@ -1053,8 +1227,9 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
           ))}
         </div>
       )}
+        
       {selectedTab === 'summaries' && (
-        <div className="grid gap-4">
+          <div className="grid gap-6">
           {[
             { id: 1, title: "Week 1 Summary", preview: "Overview of introductory materials", wordCount: 1200, readTime: "5 min", status: "Complete" },
             { id: 2, title: "Week 2 Summary", preview: "Summary of key theories", wordCount: 1500, readTime: "7 min", status: "In Progress" },
@@ -1062,7 +1237,7 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
           ].map((summary) => (
             <div
               key={summary.id}
-              onClick={() => setSelectedItem({ type: 'summaries', id: summary.id, title: summary.title })}
+                onClick={() => onItemSelect({ type: 'summaries', id: summary.id, title: summary.title }, course)}
               className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-100 group"
             >
               <div className="flex items-start space-x-4">
@@ -1098,8 +1273,9 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
           ))}
         </div>
       )}
+        
       {selectedTab === 'flashcards' && (
-        <div className="grid gap-4">
+          <div className="grid gap-6">
           {[
             { id: 1, title: "Basic Concepts", count: 24, preview: "Fundamental terms and definitions", mastery: 85, dueCards: 12, lastStudied: "Today" },
             { id: 2, title: "Advanced Terms", count: 32, preview: "Complex terminology and applications", mastery: 65, dueCards: 8, lastStudied: "Yesterday" },
@@ -1107,7 +1283,7 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
           ].map((deck) => (
             <div
               key={deck.id}
-              onClick={() => setSelectedItem({ type: 'flashcards', id: deck.id, title: deck.title })}
+                onClick={() => onItemSelect({ type: 'flashcards', id: deck.id, title: deck.title }, course)}
               className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-100 group"
             >
               <div className="flex items-start space-x-4">
@@ -1145,6 +1321,7 @@ const CourseContent: React.FC<{ course: string; activeTab?: string }> = ({ cours
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 };
@@ -1351,6 +1528,7 @@ const ProgressBar: React.FC<{ progress: number }> = ({ progress }) => {
 const SuperClassroomApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState('courses');
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<null | { type: string; id: number; title: string; course: string }>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const handleCourseSelect = (course: string) => {
@@ -1358,9 +1536,27 @@ const SuperClassroomApp: React.FC = () => {
     setActiveTab('upload');
   };
 
+  const handleItemSelect = (item: { type: string; id: number; title: string }, course: string) => {
+    setSelectedItem({ ...item, course });
+  };
+
+  const handleBackFromDetail = () => {
+    setSelectedItem(null);
+  };
+
   const renderContent = () => {
     if (!isLoggedIn) {
       return <LoginPage onLogin={() => setIsLoggedIn(true)} />;
+    }
+
+    if (selectedItem) {
+      return (
+        <DetailView
+          title={`${selectedItem.course} ${capitalizeFirstLetter(selectedItem.type)}`}
+          itemTitle={selectedItem.title}
+          onBack={handleBackFromDetail}
+        />
+      );
     }
 
     switch (activeTab) {
@@ -1382,7 +1578,11 @@ const SuperClassroomApp: React.FC = () => {
             <LeftMenu activeTab={activeTab} setActiveTab={setActiveTab} />
             <main className="flex-1 p-8 overflow-auto">
               {selectedCourse ? (
-                <CourseContent course={selectedCourse} activeTab={activeTab} />
+                <CourseContent 
+                  course={selectedCourse} 
+                  activeTab={activeTab}
+                  onItemSelect={handleItemSelect}
+                />
               ) : (
                 <div className="text-center text-gray-600 mt-8">
                   Please select a course first
