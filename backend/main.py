@@ -31,7 +31,7 @@ async def startup_event():
             course VARCHAR(255),
             file_name VARCHAR(255),
             file_blob BLOB,
-            embedding VECTOR
+            embedding VECTOR(DOUBLE, 384)
         )
         """
         cursor.execute(create_table_sql)
@@ -82,11 +82,13 @@ async def upload_file(
         cursor = conn.cursor()
         try:
             print("Inserting into IRIS")
+            print(embedding)
             cursor.execute(
-                "INSERT INTO CourseMaterials (course, file_name, file_blob, embedding) VALUES (?, ?, ?, ?)",
-                [course, file.filename, file_bytes, embedding]
+                "INSERT INTO CourseMaterials (course, file_name, file_blob, embedding) VALUES (?, ?, ?, TO_VECTOR(?))",
+                [course, file.filename, file_bytes, str(embedding)]
             )
             conn.commit()
+            print("Inserted into IRIS")
 
         finally:
             cursor.close()
