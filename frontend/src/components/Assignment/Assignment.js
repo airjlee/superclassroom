@@ -10,7 +10,7 @@ const Assignment = () => {
   const [showChatbot, setShowChatbot] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([
-    { sender: 'ai', message: 'I noticed you got that one wrong. No worries! Let me help you understand this limit problem step by step.' }
+    { sender: 'ai', message: 'You answered that the limit approached infinity. Let me help you understand this limit problem step by step.' }
   ]);
   const [chatWidth, setChatWidth] = useState(400);
   const [isResizing, setIsResizing] = useState(false);
@@ -33,7 +33,7 @@ const Assignment = () => {
     if (chatMessage.trim() !== '') {
       setChatHistory([...chatHistory, 
         { sender: 'student', message: chatMessage },
-        { sender: 'ai', message: 'Great question! Let me help you think through this limit problem. What specific part would you like to explore?' }
+        { sender: 'ai', message: 'Great question! Infinity is not a real number, so it often means a value does not exist (DNE) in the usual sense. In limits, when we say a function approaches infinity, the limit technically does not exist, but we describe its behavior as diverging to infinity.' }
       ]);
       setChatMessage('');
     }
@@ -127,11 +127,9 @@ const Assignment = () => {
                 {justificationOptions.map((option) => (
                   <button
                     key={option.id}
-                    className={`option-button ${selectedJustification === option.id ? 'selected' : ''} ${
-                      isSubmitted && option.id === correctJustification ? 'correct' : ''
-                    } ${
-                      isSubmitted && selectedJustification === option.id && option.id !== correctJustification ? 'incorrect' : ''
-                    }`}
+                                      className={`option-button ${selectedJustification === option.id ? 'selected' : ''} ${
+                    isSubmitted && selectedJustification === option.id && option.id !== correctJustification ? 'incorrect' : ''
+                  }`}
                     onClick={() => setSelectedJustification(option.id)}
                     disabled={isSubmitted}
                   >
@@ -158,11 +156,9 @@ const Assignment = () => {
               <div className="feedback-container">
                 <div className={`feedback ${isFullyCorrect ? 'correct' : 'incorrect'}`}>
                   <span className="feedback-icon">{isFullyCorrect ? '✓' : '✗'}</span>
-                  <span className="feedback-text">
-                    {isFullyCorrect ? 'Correct!' : 'Incorrect.'}
-                    {!isLimitCorrect && ` The correct answer for the limit is ${correctLimitAnswer}.`}
-                    {!isJustificationCorrect && ` The correct justification is B.`}
-                  </span>
+                                  <span className="feedback-text">
+                  {isFullyCorrect ? 'Correct!' : 'Incorrect. Try again or ask for help!'}
+                </span>
                 </div>
                 <button className="next-button">
                   Next Question
@@ -184,8 +180,8 @@ const Assignment = () => {
         {showChatbot && (
           <div className="chatbot-container" style={{ width: chatWidth }}>
           <div className="chatbot-header">
-            <h3>Hello, Konnor</h3>
-            <p>I'm here to help.</p>
+            <h3>Hello, Ronald</h3>
+            <p>I'm here to guide you through this problem.</p>
           </div>
           
           <div className="chat-history">
