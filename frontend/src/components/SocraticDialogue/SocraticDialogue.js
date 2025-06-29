@@ -149,6 +149,14 @@ const SocraticDialogue = ({ onNavigateHome }) => {
                 </button>
               </div>
             </div>
+            
+            <div className="question-illustration">
+              <img 
+                src="/albert_einstein.svg" 
+                alt="Albert Einstein illustration" 
+                className="einstein-svg"
+              />
+            </div>
           </div>
         )}
 
