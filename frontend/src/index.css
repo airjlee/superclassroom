@@ -17,7 +17,14 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* Remove blue focus outline from all elements */
+  
 }
+
+input:focus {
+  outline: none;
+}
+
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

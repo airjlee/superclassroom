@@ -14,6 +14,9 @@ const Assignment = () => {
   ]);
   const [chatWidth, setChatWidth] = useState(400);
   const [isResizing, setIsResizing] = useState(false);
+  
+  // TODO: Remove this hardcoded loading state when implementing real chat loading
+  const [isChatLoading, setIsChatLoading] = useState(false);
 
   const handleSubmit = () => {
     if (limitAnswer.trim() !== '' && selectedJustification !== null) {
@@ -23,7 +26,13 @@ const Assignment = () => {
       const isJustificationCorrect = selectedJustification === correctJustification;
       const isFullyCorrect = isLimitCorrect && isJustificationCorrect;
       if (!isFullyCorrect) {
-        setShowChatbot(true);
+        // TODO: Replace this hardcoded loading simulation with real loading logic
+        setIsChatLoading(true);
+        // Simulate loading delay - remove this setTimeout when implementing real chat
+        setTimeout(() => {
+          setIsChatLoading(false);
+          setShowChatbot(true);
+        }, 1500); // 2 second loading animation
       }
     }
   };
@@ -127,7 +136,7 @@ const Assignment = () => {
                 {justificationOptions.map((option) => (
                   <button
                     key={option.id}
-                                      className={`option-button ${selectedJustification === option.id ? 'selected' : ''} ${
+                    className={`option-button ${selectedJustification === option.id ? 'selected' : ''} ${
                     isSubmitted && selectedJustification === option.id && option.id !== correctJustification ? 'incorrect' : ''
                   }`}
                     onClick={() => setSelectedJustification(option.id)}
@@ -156,9 +165,9 @@ const Assignment = () => {
               <div className="feedback-container">
                 <div className={`feedback ${isFullyCorrect ? 'correct' : 'incorrect'}`}>
                   <span className="feedback-icon">{isFullyCorrect ? '✓' : '✗'}</span>
-                                  <span className="feedback-text">
-                  {isFullyCorrect ? 'Correct!' : 'Incorrect. Try again or ask for help!'}
-                </span>
+                  <span className="feedback-text">
+                    {isFullyCorrect ? 'Correct!' : 'Incorrect. Try again or ask for help!'}
+                  </span>
                 </div>
                 <button className="next-button">
                   Next Question
@@ -167,6 +176,16 @@ const Assignment = () => {
             )}
           </div>
         </div>
+
+        {/* TODO: Remove this loading state when implementing real chat loading */}
+        {isChatLoading && (
+          <div className="chat-loading-container">
+            <div className="chat-loading-content">
+              <div className="loading-spinner"></div>
+              <p className="loading-text">Analyzing your answer...</p>
+            </div>
+          </div>
+        )}
 
         {/* Vertical Divider - only show when chatbot is visible */}
         {showChatbot && (
@@ -179,34 +198,34 @@ const Assignment = () => {
         {/* Chatbot Window - only show when student gets answer wrong */}
         {showChatbot && (
           <div className="chatbot-container" style={{ width: chatWidth }}>
-          <div className="chatbot-header">
-            <h3>Hello, Ronald</h3>
-            <p>I'm here to guide you through this problem.</p>
-          </div>
-          
-          <div className="chat-history">
-            {chatHistory.map((chat, index) => (
-              <div key={index} className={`chat-message ${chat.sender}`}>
-                <div className="message-content">
-                  {chat.message}
+            <div className="chatbot-header">
+              <h3>Hello, Ronald</h3>
+              <p>I'm here to guide you through this problem.</p>
+            </div>
+            
+            <div className="chat-history">
+              {chatHistory.map((chat, index) => (
+                <div key={index} className={`chat-message ${chat.sender}`}>
+                  <div className="message-content">
+                    {chat.message}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            
+            <form className="chat-input-form" onSubmit={handleChatSubmit}>
+              <input
+                type="text"
+                className="chat-input"
+                placeholder="What would you like help with?"
+                value={chatMessage}
+                onChange={(e) => setChatMessage(e.target.value)}
+              />
+              <button type="submit" className="chat-send-button">
+                Send
+              </button>
+            </form>
           </div>
-          
-          <form className="chat-input-form" onSubmit={handleChatSubmit}>
-            <input
-              type="text"
-              className="chat-input"
-              placeholder="What would you like help with?"
-              value={chatMessage}
-              onChange={(e) => setChatMessage(e.target.value)}
-            />
-            <button type="submit" className="chat-send-button">
-              Send
-            </button>
-          </form>
-        </div>
         )}
       </main>
     </div>
