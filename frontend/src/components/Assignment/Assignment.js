@@ -3,7 +3,7 @@ import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import './Assignment.css';
 
-const Assignment = () => {
+const Assignment = ({ onNavigateHome }) => {
   const [limitAnswer, setLimitAnswer] = useState('');
   const [selectedJustification, setSelectedJustification] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -87,6 +87,10 @@ const Assignment = () => {
       document.removeEventListener('mouseup', handleMouseUp);
     };
   }, [isResizing]);
+
+  const handleBackToHome = () => {
+    onNavigateHome();
+  };
   
   const limitExpression = "\\lim_{x \\to 3} \\frac{\\sqrt{x+9}-3}{x-3}";
   const correctLimitAnswer = 'DNE';
@@ -107,6 +111,9 @@ const Assignment = () => {
     <div className={`assignment-container ${isResizing ? 'resizing' : ''}`}>
       <header className="assignment-header">
         <div className="logo">superclassroom</div>
+        <button className="back-button" onClick={handleBackToHome}>
+          ← Back to Home
+        </button>
       </header>
       
       <main className="assignment-main">
