@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import './Assignment.css';
@@ -17,6 +17,7 @@ const Assignment = ({ onNavigateHome }) => {
   
   // TODO: Remove this hardcoded loading state when implementing real chat loading
   const [isChatLoading, setIsChatLoading] = useState(false);
+  const chatEndRef = useRef(null); // for autoscroll
 
   const handleSubmit = () => {
     if (limitAnswer.trim() !== '' && selectedJustification !== null) {
@@ -26,25 +27,40 @@ const Assignment = ({ onNavigateHome }) => {
       const isJustificationCorrect = selectedJustification === correctJustification;
       const isFullyCorrect = isLimitCorrect && isJustificationCorrect;
       if (!isFullyCorrect) {
-        // TODO: Replace this hardcoded loading simulation with real loading logic
         setIsChatLoading(true);
-        // Simulate loading delay - remove this setTimeout when implementing real chat
+        // Simulate random loading delay (1-3 seconds)
+        const randomDelay = 1000 + Math.random() * 2000;
         setTimeout(() => {
           setIsChatLoading(false);
           setShowChatbot(true);
-        }, 1500); // 2 second loading animation
+        }, randomDelay);
       }
     }
   };
 
+  // Auto-scroll chat to bottom when chatHistory or isChatLoading changes
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatHistory, isChatLoading]);
+
   const handleChatSubmit = (e) => {
     e.preventDefault();
-    if (chatMessage.trim() !== '') {
-      setChatHistory([...chatHistory, 
-        { sender: 'student', message: chatMessage },
-        { sender: 'ai', message: 'Great question! Infinity is not a real number, so it often means a value does not exist (DNE) in the usual sense. In limits, when we say a function approaches infinity, the limit technically does not exist, but we describe its behavior as diverging to infinity.' }
-      ]);
+    if (chatMessage.trim() !== '' && !isChatLoading) {
+      setIsChatLoading(true);
+      setChatHistory(prev => ([
+        ...prev,
+        { sender: 'student', message: chatMessage }
+      ]));
       setChatMessage('');
+      setTimeout(() => {
+        setChatHistory(prev => ([
+          ...prev,
+          { sender: 'ai', message: 'Great question! Infinity is not a real number, so it often means a value does not exist (DNE) in the usual sense. In limits, when we say a function approaches infinity, the limit technically does not exist, but we describe its behavior as diverging to infinity.' }
+        ]));
+        setIsChatLoading(false);
+      }, 1000 + Math.random() * 2000);
     }
   };
 
@@ -109,13 +125,6 @@ const Assignment = ({ onNavigateHome }) => {
 
   return (
     <div className={`assignment-container ${isResizing ? 'resizing' : ''}`}>
-      <header className="assignment-header">
-        <div className="logo">superclassroom</div>
-        <button className="back-button" onClick={handleBackToHome}>
-          ← Back to Home
-        </button>
-      </header>
-      
       <main className="assignment-main">
         {/* Assignment Content */}
         <div className="assignment-content">
@@ -209,8 +218,7 @@ const Assignment = ({ onNavigateHome }) => {
               <h3>Hello, Ronald</h3>
               <p>I'm here to guide you through this problem.</p>
             </div>
-            
-            <div className="chat-history">
+            <div className="chat-history" style={{ height: '350px', overflowY: 'auto' }}>
               {chatHistory.map((chat, index) => (
                 <div key={index} className={`chat-message ${chat.sender}`}>
                   <div className="message-content">
@@ -218,8 +226,8 @@ const Assignment = ({ onNavigateHome }) => {
                   </div>
                 </div>
               ))}
+              <div ref={chatEndRef} />
             </div>
-            
             <form className="chat-input-form" onSubmit={handleChatSubmit}>
               <input
                 type="text"
@@ -227,8 +235,14 @@ const Assignment = ({ onNavigateHome }) => {
                 placeholder="What would you like help with?"
                 value={chatMessage}
                 onChange={(e) => setChatMessage(e.target.value)}
+                disabled={isChatLoading}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !isChatLoading) {
+                    handleChatSubmit(e);
+                  }
+                }}
               />
-              <button type="submit" className="chat-send-button">
+              <button type="submit" className="chat-send-button" disabled={isChatLoading}>
                 Send
               </button>
             </form>
