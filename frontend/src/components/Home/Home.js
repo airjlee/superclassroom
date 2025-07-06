@@ -21,9 +21,6 @@ const Home = ({ onNavigateToAssignment }) => {
 
   return (
     <div className="home-container">
-      <header className="home-header">
-        <div className="logo">superclassroom</div>
-      </header>
       
       <main className="home-main">
         <div className="home-content">

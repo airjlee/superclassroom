@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './SocraticDialogue.css';
+import ProgressBar from 'progressbar.js';
 
 const SocraticDialogue = ({ onNavigateHome }) => {
   const [initialResponse, setInitialResponse] = useState('');
@@ -7,8 +8,98 @@ const SocraticDialogue = ({ onNavigateHome }) => {
   const [chatMessage, setChatMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [showChat, setShowChat] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(300); // 300 seconds = 5 minutes
+  const timerRef = useRef(null);
+  const [understandingScore, setUnderstandingScore] = useState(0);
+  const [isAITyping, setIsAITyping] = useState(false);
+  const [showEndModal, setShowEndModal] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const progressBarRef = useRef(null);
+  const progressBarInstance = useRef(null);
+  const [showProgress, setShowProgress] = useState(true); // controls progress bar/score visibility
+  const chatEndRef = useRef(null); // for autoscroll
 
   const conceptualQuestion = "Why do you think linear independence is important for general solutions when dealing with repeated roots in ODEs?";
+
+  // Start timer after first student message
+  useEffect(() => {
+    if (timerStarted && timeLeft > 0) {
+      timerRef.current = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+    }
+    return () => clearTimeout(timerRef.current);
+  }, [timerStarted, timeLeft]);
+
+  // Format timer as MM:SS
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
+
+  // Dummy understanding assessment (for demo only)
+  const assessUnderstanding = (userMessage) => {
+    let increment = 0;
+
+    // Increase score based on key terms
+    const lowerMessage = userMessage.toLowerCase();
+    if (lowerMessage.includes('initial condition')) increment += 10;
+    if (lowerMessage.includes('independent') || lowerMessage.includes('dependence')) increment += 10;
+    if (lowerMessage.includes('overdetermined') || lowerMessage.includes('system')) increment += 10;
+
+    // Small bonus for any message
+    increment += Math.random() * 10;
+
+    setUnderstandingScore(prev => Math.min(100, prev + increment));
+  };
+
+  // New: progress is always understandingScore / 100
+  useEffect(() => {
+    setProgress(understandingScore / 100);
+  }, [understandingScore]);
+
+  // Initialize and update progressbar.js - only update when progress changes significantly
+  useEffect(() => {
+    if (progressBarRef.current && showProgress) {
+      if (!progressBarInstance.current) {
+        progressBarInstance.current = new ProgressBar.Line(progressBarRef.current, {
+          easing: 'easeInOut',
+          duration: 800,
+          color: '#3b82f6',
+          trailColor: '#f1f5f9',
+          trailWidth: 4,
+          strokeWidth: 6,
+          svgStyle: { width: '100%', height: '100%' },
+        });
+      }
+      // Only animate if there's a significant change (more than 5%)
+      const currentProgress = progressBarInstance.current.value();
+      if (Math.abs(progress - currentProgress) > 0.05) {
+        progressBarInstance.current.animate(progress, { duration: 800 });
+      }
+    }
+  }, [progress, showProgress]);
+
+  // Timer/modal logic for session duration
+  useEffect(() => {
+    if (!showChat || !timerStarted || !showProgress) return;
+    
+    // If user has 100 understanding, allow session to end between 3-5 minutes (180-300 seconds)
+    if (understandingScore === 100 && timeLeft <= 180 && timeLeft >= 0) {
+      setShowEndModal(true);
+    }
+    // If user doesn't have 100, only show modal after 5 minutes (timeLeft === 0)
+    else if (understandingScore < 100 && timeLeft === 0) {
+      setShowEndModal(true);
+    }
+  }, [timeLeft, understandingScore, showChat, timerStarted, showProgress]);
+
+  // Auto-scroll chat to bottom when chatHistory or isAITyping changes
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatHistory, isAITyping]);
 
   const handleInitialSubmit = () => {
     if (initialResponse.trim() !== '') {
@@ -97,16 +188,16 @@ const SocraticDialogue = ({ onNavigateHome }) => {
   const handleChatSubmit = (e) => {
     e.preventDefault();
     if (chatMessage.trim() !== '') {
+      if (!timerStarted) setTimerStarted(true); // Start timer on first message
+      assessUnderstanding(chatMessage); // Assessment
       const aiResponse = getAIResponse(chatMessage, chatHistory.length);
-      
-      // Add new messages to chat history
-      const newMessages = [
-        { sender: 'student', message: chatMessage },
-        { sender: 'ai', message: aiResponse }
-      ];
-      
-      setChatHistory([...chatHistory, ...newMessages]);
+      setChatHistory([...chatHistory, { sender: 'student', message: chatMessage }]);
       setChatMessage('');
+      setIsAITyping(true);
+      setTimeout(() => {
+        setIsAITyping(false);
+        setChatHistory((prev) => [...prev, { sender: 'ai', message: aiResponse }]);
+      }, 1000 + Math.random() * 2000); // 1-3s delay
     }
   };
 
@@ -114,15 +205,18 @@ const SocraticDialogue = ({ onNavigateHome }) => {
     onNavigateHome();
   };
 
+  const handleContinue = () => {
+    setShowEndModal(false);
+    setShowProgress(false); // Hide progress bar and score
+  };
+
+  const handleGoHome = () => {
+    setShowEndModal(false);
+    onNavigateHome();
+  };
+
   return (
     <div className="socratic-container">
-      <header className="socratic-header">
-        <div className="logo">superclassroom</div>
-        <button className="back-button" onClick={handleBackToHome}>
-          ← Back to Home
-        </button>
-      </header>
-      
       <main className="socratic-main">
         {/* Initial Question Phase */}
         {!hasSubmittedInitial && (
@@ -163,11 +257,25 @@ const SocraticDialogue = ({ onNavigateHome }) => {
         {/* Chat Phase */}
         {showChat && (
           <div className="socratic-chat-container">
-            <div className="chat-header">
-              <h3>Socratic Exploration</h3>
-              <p>Let's explore this concept together through questions and dialogue.</p>
+            <div className="chat-header modern-flex-header no-icon">
+              <div className="header-main">
+                <h3 className="header-title">Socratic Exploration</h3>
+                <p className="header-subtitle">
+                  {showProgress 
+                    ? "Let's explore this concept together through questions and dialogue."
+                    : "Continue exploring - no time limits, just learning!"
+                  }
+                </p>
+              </div>
+              {showProgress && (
+                <div className="progress-section">
+                  <div className="progress-bar-container">
+                    <div ref={progressBarRef} className="progress-bar-element" />
+                  </div>
+                  <div className="progress-label">{Math.round(progress * 100)}%</div>
+                </div>
+              )}
             </div>
-            
             <div className="chat-history">
               {chatHistory.map((chat, index) => (
                 <div key={index} className={`chat-message ${chat.sender}`}>
@@ -176,20 +284,53 @@ const SocraticDialogue = ({ onNavigateHome }) => {
                   </div>
                 </div>
               ))}
+              {isAITyping && (
+                <div className="chat-message ai typing-indicator">
+                  <div className="message-content">
+                    <span className="typing-dots">
+                      <span>.</span><span>.</span><span>.</span>
+                    </span>
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
             </div>
-            
-            <form className="chat-input-form" onSubmit={handleChatSubmit}>
+            <div className="chat-input-form">
               <input
                 type="text"
                 className="chat-input"
                 placeholder="Continue the dialogue..."
                 value={chatMessage}
                 onChange={(e) => setChatMessage(e.target.value)}
+                disabled={isAITyping}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !isAITyping) {
+                    handleChatSubmit(e);
+                  }
+                }}
               />
-              <button type="submit" className="chat-send-button">
+              <button onClick={handleChatSubmit} className="chat-send-button" disabled={isAITyping}>
                 Send
               </button>
-            </form>
+            </div>
+            {showEndModal && (
+              <div className="end-modal-overlay">
+                <div className="end-modal-content">
+                  <h2>Session Complete</h2>
+                  <p>Your understanding score: <b>{understandingScore}/100</b></p>
+                  <p>
+                    {understandingScore === 100 
+                      ? "Excellent work! You've mastered this concept."
+                      : "Good progress! You can continue exploring or try again later."
+                    }
+                  </p>
+                  <div className="end-modal-buttons">
+                    <button className="continue-btn" onClick={handleContinue}>Continue Chatting</button>
+                    <button className="home-btn" onClick={handleGoHome}>Go Back Home</button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </main>
@@ -197,4 +338,4 @@ const SocraticDialogue = ({ onNavigateHome }) => {
   );
 };
 
-export default SocraticDialogue; 
+export default SocraticDialogue;
