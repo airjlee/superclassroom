@@ -19,6 +19,7 @@ const SocraticDialogue = ({ onNavigateHome }) => {
   const progressBarInstance = useRef(null);
   const [showProgress, setShowProgress] = useState(true); // controls progress bar/score visibility
   const chatEndRef = useRef(null); // for autoscroll
+  const chatInputRef = useRef(null); // for auto-focusing input
 
   const conceptualQuestion = "Why do you think linear independence is important for general solutions when dealing with repeated roots in ODEs?";
 
@@ -100,6 +101,18 @@ const SocraticDialogue = ({ onNavigateHome }) => {
       chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [chatHistory, isAITyping]);
+
+  // Auto-focus chat input after AI responses and when chat first shows
+  useEffect(() => {
+    if (showChat && chatInputRef.current && !isAITyping) {
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        if (chatInputRef.current) {
+          chatInputRef.current.focus();
+        }
+      }, 100);
+    }
+  }, [showChat, isAITyping]);
 
   const handleInitialSubmit = () => {
     if (initialResponse.trim() !== '') {
@@ -297,6 +310,7 @@ const SocraticDialogue = ({ onNavigateHome }) => {
             </div>
             <div className="chat-input-form">
               <input
+                ref={chatInputRef}
                 type="text"
                 className="chat-input"
                 placeholder="Continue the dialogue..."
