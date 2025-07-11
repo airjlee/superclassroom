@@ -272,7 +272,7 @@ const SocraticDialogue = ({ onNavigateHome }) => {
           <div className="socratic-chat-container">
             <div className="chat-header modern-flex-header no-icon">
               <div className="header-main">
-                <h3 className="header-title">Socratic Exploration</h3>
+                <h3 className="header-title">Socratic Dialogue</h3>
                 <p className="header-subtitle">
                   {showProgress 
                     ? "Let's explore this concept together through questions and dialogue."
