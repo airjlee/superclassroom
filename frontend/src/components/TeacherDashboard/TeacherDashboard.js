@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './TeacherDashboard.css';
 
 const TeacherDashboard = ({ onNavigateToCourse }) => {
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Mock courses data - in real app this would come from API
   const courses = [
@@ -95,8 +96,21 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
       
       <div className="main-content">
         <div className="content-header">
-          <h1>Dashboard</h1>
-          <p>Welcome back, Professor! Here's an overview of your courses.</p>
+          <h1>Hello, <span className="gradient-name">Jordan</span></h1>
+          {/* <p>Welcome back! Here's an overview of your courses.</p> */}
+          
+          <div className="search-container">
+            <div className="search-bar">
+              <span className="search-icon">⌘</span>
+              <input
+                type="text"
+                placeholder="Search courses, assignments, or students..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+            </div>
+          </div>
         </div>
         
         <div className="courses-grid">
