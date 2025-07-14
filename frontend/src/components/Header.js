@@ -37,12 +37,10 @@ const Header = ({ currentPage, onNavigateHome, onNavigateToCreator, onNavigateTo
         {showCreateButton && (
           <div className="create-dropdown-container">
             <button 
-              className="create-button"
+              className="create-button-circular"
               onClick={onShowCreateDropdown}
             >
-              <span className="create-icon">+</span>
-              Create
-              <span className="dropdown-arrow">▾</span>
+              +
             </button>
             
             {showCreateDropdown && (
@@ -73,9 +71,9 @@ const Header = ({ currentPage, onNavigateHome, onNavigateToCreator, onNavigateTo
         )}
         
         {showBackButton && (
-          <button className="back-button" onClick={onNavigateHome}>
-            ← Back to Home
-          </button>
+          <div className="profile-avatar">
+            PA
+          </div>
         )}
       </div>
     </header>

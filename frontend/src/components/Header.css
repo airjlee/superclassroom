@@ -12,27 +12,37 @@
   flex-shrink: 0;
 }
 
+.logo-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.logo-button:hover {
+  opacity: 0.8;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.back-button {
-  background: none;
-  border: none;
-  color: #007bff;
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #805ad5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 8px 16px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-}
-
-.back-button:hover {
-  background-color: #f8f9ff;
-  color: #0056b3;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .create-button {
@@ -67,6 +77,29 @@
 .dashboard-button:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.create-button-circular {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3182ce 0%, #805ad5 100%);
+  color: white;
+  border: none;
+  font-size: 1.75rem;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.create-button-circular:hover {
+  background: linear-gradient(135deg, #2c5aa0 0%, #6b46c1 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
 }
 
 .create-dropdown-container {

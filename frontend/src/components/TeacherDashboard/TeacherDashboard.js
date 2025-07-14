@@ -8,29 +8,29 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
   const courses = [
     {
       id: 1,
-      name: 'Calculus I',
+      name: 'Linear Algebra',
       subject: 'Mathematics',
       students: 28,
       color: '#4A90E2'
     },
     {
       id: 2,
-      name: 'Biology 101',
-      subject: 'Science',
+      name: 'Calculus II',
+      subject: 'Mathematics',
       students: 35,
       color: '#7ED321'
     },
     {
       id: 3,
-      name: 'World History',
-      subject: 'Social Studies',
+      name: 'Calculus III',
+      subject: 'Mathematics',
       students: 32,
       color: '#F5A623'
     },
     {
       id: 4,
-      name: 'English Literature',
-      subject: 'Language Arts',
+      name: 'Differential Equations',
+      subject: 'Mathematics',
       students: 25,
       color: '#9013FE'
     }
@@ -96,7 +96,7 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
       
       <div className="main-content">
         <div className="content-header">
-          <h1>Hello, <span className="gradient-name">Jordan</span></h1>
+          <h1>Hello, <span className="gradient-name">Dr. Averbeck</span></h1>
           {/* <p>Welcome back! Here's an overview of your courses.</p> */}
           
           <div className="search-container">
