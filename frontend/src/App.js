@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Home from './components/Home/Home';
 import Assignment from './components/Assignment/Assignment';
@@ -11,6 +11,17 @@ import Header from './components/Header';
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [currentCourseId, setCurrentCourseId] = useState(null);
+  const [showCreateDropdown, setShowCreateDropdown] = useState(false);
+
+  const handleCreateSelection = (type) => {
+    setShowCreateDropdown(false);
+    setCurrentPage('create-assignment');
+  };
+
+  // Close dropdown when clicking outside or changing pages
+  useEffect(() => {
+    setShowCreateDropdown(false);
+  }, [currentPage]);
 
   const renderPage = () => {
     switch(currentPage) {
@@ -42,8 +53,10 @@ function App() {
         <Header 
           currentPage={currentPage} 
           onNavigateHome={() => setCurrentPage('home')} 
-          onNavigateToCreator={() => setCurrentPage('create-assignment')}
+          onNavigateToCreator={handleCreateSelection}
           onNavigateToDashboard={() => setCurrentPage('dashboard')}
+          onShowCreateDropdown={() => setShowCreateDropdown(!showCreateDropdown)}
+          showCreateDropdown={showCreateDropdown}
         />
       )}
       {renderPage()}
