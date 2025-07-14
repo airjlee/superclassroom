@@ -6,6 +6,7 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
   const [assignmentFilter, setAssignmentFilter] = useState('all');
   const [feedFilter, setFeedFilter] = useState('all');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [buttonPosition, setButtonPosition] = useState(32); // 2rem = 32px
 
   // Mock course data - in real app this would come from API
   const courseData = {
@@ -57,6 +58,16 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
     onNavigateBack();
   };
 
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const relativeY = e.clientY - rect.top;
+    // Constrain the button position to stay within reasonable bounds
+    const minY = 24; // 1.5rem
+    const maxY = rect.height - 24; // 1.5rem from bottom
+    const constrainedY = Math.max(minY, Math.min(maxY, relativeY));
+    setButtonPosition(constrainedY);
+  };
+
   if (!course) {
     return <div>Course not found</div>;
   }
@@ -67,8 +78,12 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
         <div 
           className="sidebar-border-hover"
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          onMouseMove={handleMouseMove}
         >
-          <button className="collapse-btn">
+          <button 
+            className="collapse-btn"
+            style={{ top: `${buttonPosition}px` }}
+          >
             <span className="material-icons">
               {sidebarCollapsed ? 'chevron_right' : 'chevron_left'}
             </span>
