@@ -1,30 +1,91 @@
 .teacher-dashboard {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  display: flex;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: #f8f9fa;
 }
 
-.dashboard-header {
-  text-align: center;
-  margin-bottom: 3rem;
+.sidebar {
+  width: 280px;
+  background: #f8f9fa;
+  border-right: 1px solid #e2e8f0;
+  padding: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.dashboard-header h1 {
-  font-family: 'Fago Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 2.5rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.sidebar-nav {
+  flex: 1;
+  padding: 1.5rem 0;
+}
+
+.nav-section {
+  margin-bottom: 2rem;
+}
+
+.nav-section-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  color: #4a5568;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 0.875rem;
+}
+
+.nav-item:hover {
+  background-color: #e2e8f0;
+  color: #1a202c;
+}
+
+.nav-item.active {
+  background-color: #3182ce;
+  color: white;
+}
+
+.nav-icon {
+  margin-right: 0.75rem;
+  font-size: 1rem;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.content-header {
+  margin-bottom: 2rem;
+}
+
+.content-header h1 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1a202c;
   margin-bottom: 0.5rem;
 }
 
-.dashboard-header p {
-  font-size: 1.1rem;
-  color: #6b7280;
+.content-header p {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 1rem;
+  color: #718096;
   font-weight: 400;
 }
 
@@ -68,7 +129,7 @@
 }
 
 .course-header h3 {
-  font-family: 'Fago Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   color: #1f2937;
@@ -115,7 +176,7 @@
 }
 
 .quick-actions h2 {
-  font-family: 'Fago Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
   color: #1f2937;
@@ -133,19 +194,20 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3182ce;
   color: white;
   border: none;
-  border-radius: 12px;
-  font-family: 'Fago Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  border-radius: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .action-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px -4px rgba(102, 126, 234, 0.4);
+  background: #2c5aa0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
 }
 
 .action-icon {
@@ -154,19 +216,20 @@
 
 @media (max-width: 768px) {
   .teacher-dashboard {
-    padding: 1rem;
+    flex-direction: column;
   }
   
-  .dashboard-header h1 {
-    font-size: 2rem;
+  .sidebar {
+    width: 100%;
+    height: auto;
+  }
+  
+  .main-content {
+    padding: 1rem;
   }
   
   .courses-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
-  }
-  
-  .action-buttons {
-    grid-template-columns: 1fr;
   }
 } 

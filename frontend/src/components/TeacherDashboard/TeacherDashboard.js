@@ -41,48 +41,84 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
 
   return (
     <div className="teacher-dashboard">
-      <div className="dashboard-header">
-        <h1>Welcome back, Professor!</h1>
-        <p>Select a course to get started</p>
-      </div>
-      
-      <div className="courses-grid">
-        {courses.map(course => (
-          <div 
-            key={course.id}
-            className="course-card"
-            onClick={() => handleCourseClick(course.id)}
-            style={{ '--course-color': course.color }}
-          >
-            <div className="course-header">
-              <h3>{course.name}</h3>
-              <span className="course-subject">{course.subject}</span>
-            </div>
-            <div className="course-stats">
-              <span className="student-count">{course.students} students</span>
-            </div>
-            <div className="course-actions">
-              <span className="view-course">View Course →</span>
-            </div>
+      <div className="sidebar">
+        <nav className="sidebar-nav">
+          <div className="nav-section">
+            <div className="nav-section-title">Teaching</div>
+            <button className="nav-item active">
+              <span className="nav-icon">🏠</span>
+              Dashboard
+            </button>
+            <button className="nav-item">
+              <span className="nav-icon">📚</span>
+              All Courses
+            </button>
+            <button className="nav-item">
+              <span className="nav-icon">📝</span>
+              Assignments
+            </button>
+            <button className="nav-item">
+              <span className="nav-icon">📊</span>
+              Gradebook
+            </button>
           </div>
-        ))}
+          
+          <div className="nav-section">
+            <div className="nav-section-title">Management</div>
+            <button className="nav-item">
+              <span className="nav-icon">👥</span>
+              Students
+            </button>
+            <button className="nav-item">
+              <span className="nav-icon">📈</span>
+              Analytics
+            </button>
+            <button className="nav-item">
+              <span className="nav-icon">💬</span>
+              Messages
+            </button>
+          </div>
+          
+          <div className="nav-section">
+            <div className="nav-section-title">Account</div>
+            <button className="nav-item">
+              <span className="nav-icon">⚙️</span>
+              Settings
+            </button>
+            <button className="nav-item">
+              <span className="nav-icon">❓</span>
+              Help
+            </button>
+          </div>
+        </nav>
       </div>
       
-      <div className="quick-actions">
-        <h2>Quick Actions</h2>
-        <div className="action-buttons">
-          <button className="action-btn">
-            <span className="action-icon">📊</span>
-            <span>View Analytics</span>
-          </button>
-          <button className="action-btn">
-            <span className="action-icon">👥</span>
-            <span>Manage Students</span>
-          </button>
-          <button className="action-btn">
-            <span className="action-icon">⚙️</span>
-            <span>Settings</span>
-          </button>
+      <div className="main-content">
+        <div className="content-header">
+          <h1>Dashboard</h1>
+          <p>Welcome back, Professor! Here's an overview of your courses.</p>
+        </div>
+        
+        <div className="courses-grid">
+          {courses.map(course => (
+            <div 
+              key={course.id}
+              className="course-card"
+              onClick={() => handleCourseClick(course.id)}
+              style={{ '--course-color': course.color }}
+            >
+              <div className="course-header">
+                <h3>{course.name}</h3>
+                <span className="course-subject">{course.subject}</span>
+              </div>
+              <div className="course-stats">
+                <span className="student-count">{course.students} students</span>
+              </div>
+              <div className="course-actions">
+                <span className="view-course">View Course →</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
