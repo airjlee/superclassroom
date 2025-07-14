@@ -1,5 +1,32 @@
+/* App.css - Global Layout */
 .App {
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-} 
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure header is always at the top and visible */
+.App > header {
+  position: relative;
+  z-index: 1000;
+  flex-shrink: 0;
+}
+
+/* Main content area should take remaining space */
+.App > div:not(header) {
+  flex: 1;
+  min-height: 0; /* Important for proper flex behavior */
+}
+
+/* Reset any problematic styles */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}

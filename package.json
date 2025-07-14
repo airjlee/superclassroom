@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@chatscope/chat-ui-kit-react": "^2.1.1",
+    "progressbar.js": "^1.1.1"
+  }
+}
