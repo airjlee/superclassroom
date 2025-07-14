@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './CourseDashboard.css';
 
 const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
-  const [showCreateDropdown, setShowCreateDropdown] = useState(false);
 
   // Mock course data - in real app this would come from API
   const courseData = {
@@ -21,10 +20,7 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
     { id: 3, title: 'Chain Rule Practice', type: 'SuperQuiz', dueDate: '2024-01-22', submissions: 20 },
   ];
 
-  const handleCreateSelection = (type) => {
-    setShowCreateDropdown(false);
-    onNavigateToCreate(type);
-  };
+
 
   const handleBackToDashboard = () => {
     onNavigateBack();
@@ -99,44 +95,6 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
             <div className="course-meta">
               <span className="course-subject">{course.subject}</span>
               <span className="student-count">{course.students} students</span>
-            </div>
-          </div>
-
-          <div className="create-section">
-            <div className="create-dropdown-container">
-              <button 
-                className="create-btn"
-                onClick={() => setShowCreateDropdown(!showCreateDropdown)}
-              >
-                <span className="create-icon">+</span>
-                Create
-                <span className="dropdown-arrow">▾</span>
-              </button>
-              
-              {showCreateDropdown && (
-                <div className="create-dropdown">
-                  <button 
-                    className="dropdown-item"
-                    onClick={() => handleCreateSelection('SuperConcept')}
-                  >
-                    <span className="item-icon">📚</span>
-                    <div className="item-content">
-                      <span className="item-title">SuperConcept</span>
-                      <span className="item-description">Interactive lesson with AI guidance</span>
-                    </div>
-                  </button>
-                  <button 
-                    className="dropdown-item"
-                    onClick={() => handleCreateSelection('SuperQuiz')}
-                  >
-                    <span className="item-icon">📝</span>
-                    <div className="item-content">
-                      <span className="item-title">SuperQuiz</span>
-                      <span className="item-description">Assessment with intelligent feedback</span>
-                    </div>
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         </div>

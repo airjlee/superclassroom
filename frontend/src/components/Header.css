@@ -67,6 +67,77 @@
   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
+.create-dropdown-container {
+  position: relative;
+}
+
+.create-icon {
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.dropdown-arrow {
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.create-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  z-index: 10;
+  min-width: 280px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f9fafb;
+}
+
+.dropdown-item:not(:last-child) {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.item-icon {
+  font-size: 1.5rem;
+}
+
+.item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.item-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.item-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
 .logo {
   font-family: "Fago Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
