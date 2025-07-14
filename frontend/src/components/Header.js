@@ -1,7 +1,7 @@
 import React from 'react';
 import './Header.css';
 
-const Header = ({ currentPage, onNavigateHome }) => {
+const Header = ({ currentPage, onNavigateHome, onNavigateToCreator, onNavigateToDashboard }) => {
   // Show Back Home button if not on the home page
   const showBackButton = currentPage !== 'home';
 
@@ -14,11 +14,28 @@ const Header = ({ currentPage, onNavigateHome }) => {
         >
         <span className="logo">superclassroom</span>
         </button>
-      {showBackButton && (
-        <button className="back-button" onClick={onNavigateHome}>
-          ← Back to Home
-        </button>
-      )}
+      
+      <div className="header-actions">
+        {currentPage === 'home' && (
+          <>
+            {onNavigateToCreator && (
+              <button className="create-button" onClick={onNavigateToCreator}>
+                Create Assignment
+              </button>
+            )}
+            {onNavigateToDashboard && (
+              <button className="dashboard-button" onClick={onNavigateToDashboard}>
+                Teacher Dashboard
+              </button>
+            )}
+          </>
+        )}
+        {showBackButton && (
+          <button className="back-button" onClick={onNavigateHome}>
+            ← Back to Home
+          </button>
+        )}
+      </div>
     </header>
   );
 };
