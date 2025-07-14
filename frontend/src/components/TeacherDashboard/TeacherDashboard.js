@@ -4,6 +4,7 @@ import './TeacherDashboard.css';
 const TeacherDashboard = ({ onNavigateToCourse }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [buttonPosition, setButtonPosition] = useState(32); // 2rem = 32px
   
   // Mock courses data - in real app this would come from API
   const courses = [
@@ -41,14 +42,28 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
     onNavigateToCourse(courseId);
   };
 
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const relativeY = e.clientY - rect.top;
+    // Constrain the button position to stay within reasonable bounds
+    const minY = 24; // 1.5rem
+    const maxY = rect.height - 24; // 1.5rem from bottom
+    const constrainedY = Math.max(minY, Math.min(maxY, relativeY));
+    setButtonPosition(constrainedY);
+  };
+
   return (
     <div className="teacher-dashboard">
       <div className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
         <div 
           className="sidebar-border-hover"
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          onMouseMove={handleMouseMove}
         >
-          <button className="collapse-btn">
+          <button 
+            className="collapse-btn"
+            style={{ top: `${buttonPosition}px` }}
+          >
             <span className="material-icons">
               {sidebarCollapsed ? 'chevron_right' : 'chevron_left'}
             </span>
