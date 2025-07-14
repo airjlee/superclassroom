@@ -4,6 +4,8 @@ import './CourseDashboard.css';
 const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
   const [activeTab, setActiveTab] = useState('feed');
   const [assignmentFilter, setAssignmentFilter] = useState('all');
+  const [feedFilter, setFeedFilter] = useState('all');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Mock course data - in real app this would come from API
   const courseData = {
@@ -23,12 +25,29 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
     { id: 4, title: 'Integration Basics', type: 'SuperConcept', dueDate: '2024-01-25', submissions: 0, status: 'draft' },
   ];
 
+  // Mock feed data
+  const feedItems = [
+    { id: 1, type: 'announcement', title: 'Welcome to Calculus I', content: 'Looking forward to a great semester! Please review the syllabus.', time: '2 hours ago', source: 'instructor' },
+    { id: 2, type: 'assignment', title: 'New Assignment Posted', content: 'Limits and Continuity quiz has been assigned.', time: '1 day ago', source: 'instructor' },
+    { id: 3, type: 'grade', title: 'Assignment Graded', content: 'Derivative Rules assignment has been graded. Average score: 87%', time: '2 days ago', source: 'instructor' },
+    { id: 4, type: 'question', title: 'Question about Homework', content: 'Can someone explain problem #5 from the derivative worksheet?', time: '3 hours ago', source: 'student', author: 'Alice Brown' },
+    { id: 5, type: 'discussion', title: 'Study Group Formation', content: 'Anyone interested in forming a study group for the midterm?', time: '5 hours ago', source: 'student', author: 'John Doe' },
+  ];
+
   // Filter assignments based on selected filter
   const filteredAssignments = assignments.filter(assignment => {
     if (assignmentFilter === 'all') return true;
     if (assignmentFilter === 'pending') return assignment.status === 'pending';
     if (assignmentFilter === 'completed') return assignment.status === 'completed';
     if (assignmentFilter === 'drafts') return assignment.status === 'draft';
+    return true;
+  });
+
+  // Filter feed items based on selected filter
+  const filteredFeedItems = feedItems.filter(item => {
+    if (feedFilter === 'all') return true;
+    if (feedFilter === 'instructors') return item.source === 'instructor';
+    if (feedFilter === 'students') return item.source === 'student';
     return true;
   });
 
@@ -44,57 +63,67 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
 
   return (
     <div className="course-dashboard">
-      <div className="sidebar">
+      <div className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+        <div 
+          className="sidebar-border-hover"
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+        >
+          <button className="collapse-btn">
+            <span className="material-icons">
+              {sidebarCollapsed ? 'chevron_right' : 'chevron_left'}
+            </span>
+          </button>
+        </div>
         <nav className="sidebar-nav">
           <div className="nav-section">
-            <div className="nav-section-title">Teaching</div>
-            <button className="nav-item" onClick={handleBackToDashboard}>
-              <span className="nav-icon">🏠</span>
-              Dashboard
+            {!sidebarCollapsed && <div className="nav-section-title">Teaching</div>}
+            <button className="nav-item" onClick={handleBackToDashboard} title="Dashboard">
+              <span className="nav-icon material-icons">dashboard</span>
+              {!sidebarCollapsed && <span>Dashboard</span>}
             </button>
-            <button className="nav-item active">
-              <span className="nav-icon">📚</span>
-              {course.name}
+            <button className="nav-item active" title={course.name}>
+              <span className="nav-icon material-icons">school</span>
+              {!sidebarCollapsed && <span>{course.name}</span>}
             </button>
-            <button className="nav-item">
-              <span className="nav-icon">📝</span>
-              Assignments
+            <button className="nav-item" title="Assignments">
+              <span className="nav-icon material-icons">assignment</span>
+              {!sidebarCollapsed && <span>Assignments</span>}
             </button>
-            <button className="nav-item">
-              <span className="nav-icon">📊</span>
-              Gradebook
-            </button>
-          </div>
-          
-          <div className="nav-section">
-            <div className="nav-section-title">Course Tools</div>
-            <button className="nav-item">
-              <span className="nav-icon">👥</span>
-              People
-            </button>
-            <button className="nav-item">
-              <span className="nav-icon">📈</span>
-              Analytics
-            </button>
-            <button className="nav-item">
-              <span className="nav-icon">💬</span>
-              Discussions
-            </button>
-            <button className="nav-item">
-              <span className="nav-icon">📎</span>
-              Files
+            <button className="nav-item" title="Gradebook">
+              <span className="nav-icon material-icons">grade</span>
+              {!sidebarCollapsed && <span>Gradebook</span>}
             </button>
           </div>
           
           <div className="nav-section">
-            <div className="nav-section-title">Account</div>
-            <button className="nav-item">
-              <span className="nav-icon">⚙️</span>
-              Settings
+            {!sidebarCollapsed && <div className="nav-section-title">Course Tools</div>}
+            <button className="nav-item" title="People">
+              <span className="nav-icon material-icons">group</span>
+              {!sidebarCollapsed && <span>People</span>}
             </button>
-            <button className="nav-item">
-              <span className="nav-icon">❓</span>
-              Help
+            <button className="nav-item" title="Analytics">
+              <span className="nav-icon material-icons">analytics</span>
+              {!sidebarCollapsed && <span>Analytics</span>}
+            </button>
+            <button className="nav-item" title="Discussions">
+              <span className="nav-icon material-icons">forum</span>
+              {!sidebarCollapsed && <span>Discussions</span>}
+            </button>
+            <button className="nav-item" title="Files">
+              <span className="nav-icon material-icons">folder</span>
+              {!sidebarCollapsed && <span>Files</span>}
+            </button>
+          </div>
+          
+          <div className="nav-section">
+            {!sidebarCollapsed && <div className="nav-section-title">Account</div>}
+            <button className="nav-item" title="Settings">
+              <span className="nav-icon material-icons">settings</span>
+              {!sidebarCollapsed && <span>Settings</span>}
+            </button>
+            <button className="nav-item" title="Help">
+              <span className="nav-icon material-icons">help</span>
+              {!sidebarCollapsed && <span>Help</span>}
             </button>
           </div>
         </nav>
@@ -137,28 +166,41 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
             <div className="tab-content">
               {activeTab === 'feed' && (
                 <div className="feed-content">
-                  <div className="feed-item">
-                    <div className="feed-header">
-                      <h3>New Assignment Posted</h3>
-                      <span className="feed-time">2 hours ago</span>
+                  <div className="assignments-section">
+                    <div className="assignment-filters">
+                      <button 
+                        className={`filter-button ${feedFilter === 'all' ? 'active' : ''}`}
+                        onClick={() => setFeedFilter('all')}
+                      >
+                        All
+                      </button>
+                      <button 
+                        className={`filter-button ${feedFilter === 'instructors' ? 'active' : ''}`}
+                        onClick={() => setFeedFilter('instructors')}
+                      >
+                        Instructors
+                      </button>
+                      <button 
+                        className={`filter-button ${feedFilter === 'students' ? 'active' : ''}`}
+                        onClick={() => setFeedFilter('students')}
+                      >
+                        Students
+                      </button>
                     </div>
-                    <p>Limits and Continuity assignment has been posted. Due date: January 15th</p>
-                  </div>
-                  
-                  <div className="feed-item">
-                    <div className="feed-header">
-                      <h3>Class Announcement</h3>
-                      <span className="feed-time">1 day ago</span>
+                    <div className="feed-items">
+                      {filteredFeedItems.map(item => (
+                        <div key={item.id} className="feed-item">
+                          <div className="feed-header">
+                            <h3>{item.title}</h3>
+                            <div className="feed-meta">
+                              {item.author && <span className="feed-author">{item.author}</span>}
+                              <span className="feed-time">{item.time}</span>
+                            </div>
+                          </div>
+                          <p>{item.content}</p>
+                        </div>
+                      ))}
                     </div>
-                    <p>Office hours this week will be moved to Thursday 2-4 PM instead of Wednesday.</p>
-                  </div>
-                  
-                  <div className="feed-item">
-                    <div className="feed-header">
-                      <h3>Assignment Graded</h3>
-                      <span className="feed-time">3 days ago</span>
-                    </div>
-                    <p>Derivative Rules assignment has been graded. Average score: 87%</p>
                   </div>
                 </div>
               )}

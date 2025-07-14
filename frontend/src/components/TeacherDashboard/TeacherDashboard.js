@@ -3,6 +3,7 @@ import './TeacherDashboard.css';
 
 const TeacherDashboard = ({ onNavigateToCourse }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   // Mock courses data - in real app this would come from API
   const courses = [
@@ -31,7 +32,7 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
       id: 4,
       name: 'Differential Equations',
       subject: 'Mathematics',
-      students: 25
+      students: 25,
       color: '#9013FE'
     }
   ];
@@ -42,53 +43,63 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
 
   return (
     <div className="teacher-dashboard">
-      <div className="sidebar">
+      <div className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+        <div 
+          className="sidebar-border-hover"
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+        >
+          <button className="collapse-btn">
+            <span className="material-icons">
+              {sidebarCollapsed ? 'chevron_right' : 'chevron_left'}
+            </span>
+          </button>
+        </div>
         <nav className="sidebar-nav">
           <div className="nav-section">
-            <div className="nav-section-title">Teaching</div>
-            <button className="nav-item active">
-              <span className="nav-icon">🏠</span>
-              Dashboard
+            {!sidebarCollapsed && <div className="nav-section-title">Teaching</div>}
+            <button className="nav-item active" title="Dashboard">
+              <span className="nav-icon material-icons">dashboard</span>
+              {!sidebarCollapsed && <span>Dashboard</span>}
             </button>
-            <button className="nav-item">
-              <span className="nav-icon">📚</span>
-              All Courses
+            <button className="nav-item" title="All Courses">
+              <span className="nav-icon material-icons">school</span>
+              {!sidebarCollapsed && <span>All Courses</span>}
             </button>
-            <button className="nav-item">
-              <span className="nav-icon">📝</span>
-              Assignments
+            <button className="nav-item" title="Assignments">
+              <span className="nav-icon material-icons">assignment</span>
+              {!sidebarCollapsed && <span>Assignments</span>}
             </button>
-            <button className="nav-item">
-              <span className="nav-icon">📊</span>
-              Gradebook
-            </button>
-          </div>
-          
-          <div className="nav-section">
-            <div className="nav-section-title">Management</div>
-            <button className="nav-item">
-              <span className="nav-icon">👥</span>
-              Students
-            </button>
-            <button className="nav-item">
-              <span className="nav-icon">📈</span>
-              Analytics
-            </button>
-            <button className="nav-item">
-              <span className="nav-icon">💬</span>
-              Messages
+            <button className="nav-item" title="Gradebook">
+              <span className="nav-icon material-icons">grade</span>
+              {!sidebarCollapsed && <span>Gradebook</span>}
             </button>
           </div>
           
           <div className="nav-section">
-            <div className="nav-section-title">Account</div>
-            <button className="nav-item">
-              <span className="nav-icon">⚙️</span>
-              Settings
+            {!sidebarCollapsed && <div className="nav-section-title">Management</div>}
+            <button className="nav-item" title="Students">
+              <span className="nav-icon material-icons">group</span>
+              {!sidebarCollapsed && <span>Students</span>}
             </button>
-            <button className="nav-item">
-              <span className="nav-icon">❓</span>
-              Help
+            <button className="nav-item" title="Analytics">
+              <span className="nav-icon material-icons">analytics</span>
+              {!sidebarCollapsed && <span>Analytics</span>}
+            </button>
+            <button className="nav-item" title="Messages">
+              <span className="nav-icon material-icons">message</span>
+              {!sidebarCollapsed && <span>Messages</span>}
+            </button>
+          </div>
+          
+          <div className="nav-section">
+            {!sidebarCollapsed && <div className="nav-section-title">Account</div>}
+            <button className="nav-item" title="Settings">
+              <span className="nav-icon material-icons">settings</span>
+              {!sidebarCollapsed && <span>Settings</span>}
+            </button>
+            <button className="nav-item" title="Help">
+              <span className="nav-icon material-icons">help</span>
+              {!sidebarCollapsed && <span>Help</span>}
             </button>
           </div>
         </nav>
