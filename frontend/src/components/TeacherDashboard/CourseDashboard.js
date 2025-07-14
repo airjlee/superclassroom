@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './CourseDashboard.css';
 
 const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
+  const [activeTab, setActiveTab] = useState('feed');
+  const [assignmentFilter, setAssignmentFilter] = useState('all');
 
   // Mock course data - in real app this would come from API
   const courseData = {
@@ -15,10 +17,20 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
 
   // Mock assignments data
   const assignments = [
-    { id: 1, title: 'Limits and Continuity', type: 'SuperQuiz', dueDate: '2024-01-15', submissions: 23 },
-    { id: 2, title: 'Derivative Rules', type: 'SuperConcept', dueDate: '2024-01-18', submissions: 25 },
-    { id: 3, title: 'Chain Rule Practice', type: 'SuperQuiz', dueDate: '2024-01-22', submissions: 20 },
+    { id: 1, title: 'Limits and Continuity', type: 'SuperQuiz', dueDate: '2024-01-15', submissions: 23, status: 'completed' },
+    { id: 2, title: 'Derivative Rules', type: 'SuperConcept', dueDate: '2024-01-18', submissions: 25, status: 'pending' },
+    { id: 3, title: 'Chain Rule Practice', type: 'SuperQuiz', dueDate: '2024-01-22', submissions: 20, status: 'pending' },
+    { id: 4, title: 'Integration Basics', type: 'SuperConcept', dueDate: '2024-01-25', submissions: 0, status: 'draft' },
   ];
+
+  // Filter assignments based on selected filter
+  const filteredAssignments = assignments.filter(assignment => {
+    if (assignmentFilter === 'all') return true;
+    if (assignmentFilter === 'pending') return assignment.status === 'pending';
+    if (assignmentFilter === 'completed') return assignment.status === 'completed';
+    if (assignmentFilter === 'drafts') return assignment.status === 'draft';
+    return true;
+  });
 
 
 
@@ -91,7 +103,7 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
       <div className="main-content">
         <div className="course-header">
           <div className="course-info">
-            <h1>{course.name}</h1>
+            <h1><span className="gradient-course-name">Dr. Averbeck's</span> {course.name}</h1>
             <div className="course-meta">
               <span className="course-subject">{course.subject}</span>
               <span className="student-count">{course.students} students</span>
@@ -100,51 +112,157 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
         </div>
 
         <div className="dashboard-content">
-          <div className="assignments-section">
-            <h2>Recent Assignments</h2>
-            <div className="assignments-grid">
-              {assignments.map(assignment => (
-                <div key={assignment.id} className="assignment-card">
-                  <div className="assignment-header">
-                    <h3>{assignment.title}</h3>
-                    <span className={`assignment-type ${assignment.type.toLowerCase()}`}>
-                      {assignment.type}
-                    </span>
-                  </div>
-                  <div className="assignment-stats">
-                    <div className="stat">
-                      <span className="stat-label">Due Date</span>
-                      <span className="stat-value">{assignment.dueDate}</span>
+          <div className="tabs-container">
+            <div className="tabs-header">
+              <button 
+                className={`tab-button ${activeTab === 'feed' ? 'active' : ''}`}
+                onClick={() => setActiveTab('feed')}
+              >
+                Feed
+              </button>
+              <button 
+                className={`tab-button ${activeTab === 'assignments' ? 'active' : ''}`}
+                onClick={() => setActiveTab('assignments')}
+              >
+                Assignments
+              </button>
+              <button 
+                className={`tab-button ${activeTab === 'students' ? 'active' : ''}`}
+                onClick={() => setActiveTab('students')}
+              >
+                Students
+              </button>
+            </div>
+            
+            <div className="tab-content">
+              {activeTab === 'feed' && (
+                <div className="feed-content">
+                  <div className="feed-item">
+                    <div className="feed-header">
+                      <h3>New Assignment Posted</h3>
+                      <span className="feed-time">2 hours ago</span>
                     </div>
-                    <div className="stat">
-                      <span className="stat-label">Submissions</span>
-                      <span className="stat-value">{assignment.submissions}/{course.students}</span>
-                    </div>
+                    <p>Limits and Continuity assignment has been posted. Due date: January 15th</p>
                   </div>
-                  <div className="assignment-actions">
-                    <button className="action-btn secondary">View Results</button>
-                    <button className="action-btn primary">Edit</button>
+                  
+                  <div className="feed-item">
+                    <div className="feed-header">
+                      <h3>Class Announcement</h3>
+                      <span className="feed-time">1 day ago</span>
+                    </div>
+                    <p>Office hours this week will be moved to Thursday 2-4 PM instead of Wednesday.</p>
+                  </div>
+                  
+                  <div className="feed-item">
+                    <div className="feed-header">
+                      <h3>Assignment Graded</h3>
+                      <span className="feed-time">3 days ago</span>
+                    </div>
+                    <p>Derivative Rules assignment has been graded. Average score: 87%</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="stats-section">
-            <h2>Course Analytics</h2>
-            <div className="stats-grid">
-              <div className="stat-card">
-                <h3>Average Score</h3>
-                <div className="stat-number">85%</div>
-              </div>
-              <div className="stat-card">
-                <h3>Completion Rate</h3>
-                <div className="stat-number">92%</div>
-              </div>
-              <div className="stat-card">
-                <h3>Active Students</h3>
-                <div className="stat-number">26/28</div>
-              </div>
+              )}
+              
+              {activeTab === 'assignments' && (
+                <div className="assignments-content">
+                  <div className="assignments-section">
+                    <div className="assignment-filters">
+                      <button 
+                        className={`filter-button ${assignmentFilter === 'all' ? 'active' : ''}`}
+                        onClick={() => setAssignmentFilter('all')}
+                      >
+                        All
+                      </button>
+                      <button 
+                        className={`filter-button ${assignmentFilter === 'pending' ? 'active' : ''}`}
+                        onClick={() => setAssignmentFilter('pending')}
+                      >
+                        Pending to Grade
+                      </button>
+                      <button 
+                        className={`filter-button ${assignmentFilter === 'completed' ? 'active' : ''}`}
+                        onClick={() => setAssignmentFilter('completed')}
+                      >
+                        Completed
+                      </button>
+                      <button 
+                        className={`filter-button ${assignmentFilter === 'drafts' ? 'active' : ''}`}
+                        onClick={() => setAssignmentFilter('drafts')}
+                      >
+                        Drafts
+                      </button>
+                    </div>
+                    <div className="assignments-grid">
+                      {filteredAssignments.map(assignment => (
+                      <div key={assignment.id} className="assignment-card">
+                        <div className="assignment-header">
+                          <h3>{assignment.title}</h3>
+                          <span className={`assignment-type ${assignment.type.toLowerCase()}`}>
+                            {assignment.type}
+                          </span>
+                        </div>
+                        <div className="assignment-stats">
+                          <div className="stat">
+                            <span className="stat-label">Due Date</span>
+                            <span className="stat-value">{assignment.dueDate}</span>
+                          </div>
+                          <div className="stat">
+                            <span className="stat-label">Submissions</span>
+                            <span className="stat-value">{assignment.submissions}/{course.students}</span>
+                          </div>
+                        </div>
+                        <div className="assignment-actions">
+                          <button className="action-btn secondary">View Results</button>
+                          <button className="action-btn primary">Edit</button>
+                        </div>
+                      </div>
+                    ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {activeTab === 'students' && (
+                <div className="students-content">
+                  <div className="students-grid">
+                    <div className="student-card">
+                      <div className="student-avatar">AB</div>
+                      <div className="student-info">
+                        <h3>Alice Brown</h3>
+                        <p>alice.brown@university.edu</p>
+                        <span className="student-score">Average: 92%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="student-card">
+                      <div className="student-avatar">JD</div>
+                      <div className="student-info">
+                        <h3>John Davis</h3>
+                        <p>john.davis@university.edu</p>
+                        <span className="student-score">Average: 87%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="student-card">
+                      <div className="student-avatar">SM</div>
+                      <div className="student-info">
+                        <h3>Sarah Miller</h3>
+                        <p>sarah.miller@university.edu</p>
+                        <span className="student-score">Average: 95%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="student-card">
+                      <div className="student-avatar">MW</div>
+                      <div className="student-info">
+                        <h3>Mike Wilson</h3>
+                        <p>mike.wilson@university.edu</p>
+                        <span className="student-score">Average: 84%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
