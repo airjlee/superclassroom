@@ -31,7 +31,7 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
       id: 4,
       name: 'Differential Equations',
       subject: 'Mathematics',
-      students: 25,
+      students: 25
       color: '#9013FE'
     }
   ];
