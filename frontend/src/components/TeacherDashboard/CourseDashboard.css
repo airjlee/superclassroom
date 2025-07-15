@@ -137,9 +137,9 @@
   margin-right: 0;
 }
 
-.course-header {
+.course-dashboard-header {
   background: #f8f9fa;
-  padding: 1.5rem 2rem;
+  padding: 0.25rem 2rem 1.5rem 2rem;
   margin-bottom: 2rem;
 }
 
@@ -694,7 +694,7 @@
     height: auto;
   }
   
-  .course-header {
+  .course-dashboard-header {
     padding: 1rem;
     flex-direction: column;
     align-items: flex-start;

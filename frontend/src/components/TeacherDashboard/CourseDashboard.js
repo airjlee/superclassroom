@@ -145,7 +145,7 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
       </div>
 
       <div className="main-content">
-        <div className="course-header">
+        <div className="course-dashboard-header">
           <div className="course-info">
             <h1><span className="gradient-course-name">Dr. Averbeck's</span> {course.name}</h1>
             <div className="course-meta">
