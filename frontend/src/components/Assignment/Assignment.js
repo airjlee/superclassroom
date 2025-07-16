@@ -15,40 +15,40 @@ const Assignment = ({ onNavigateHome }) => {
   const [chatWidth, setChatWidth] = useState(400);
   const [isResizing, setIsResizing] = useState(false);
   
-  // TODO: Remove this hardcoded loading state when implementing real chat loading
-  const [isChatLoading, setIsChatLoading] = useState(false);
+  // Replace isChatLoading with isAITyping for inline loading
+  const [isAITyping, setIsAITyping] = useState(false);
   const chatEndRef = useRef(null); // for autoscroll
 
   const handleSubmit = () => {
     if (limitAnswer.trim() !== '' && selectedJustification !== null) {
       setIsSubmitted(true);
-      // Show chatbot only if the answer is incorrect
+      // Show chatbot immediately if the answer is incorrect
       const isLimitCorrect = limitAnswer.trim().toUpperCase() === correctLimitAnswer;
       const isJustificationCorrect = selectedJustification === correctJustification;
       const isFullyCorrect = isLimitCorrect && isJustificationCorrect;
       if (!isFullyCorrect) {
-        setIsChatLoading(true);
-        // Simulate random loading delay (1-3 seconds)
-        const randomDelay = 1000 + Math.random() * 2000;
+        // Show chat immediately with typing indicator
+        setShowChatbot(true);
+        setIsAITyping(true);
+        // Simulate AI response delay with typing indicator
         setTimeout(() => {
-          setIsChatLoading(false);
-          setShowChatbot(true);
-        }, randomDelay);
+          setIsAITyping(false);
+        }, 1000 + Math.random() * 2000);
       }
     }
   };
 
-  // Auto-scroll chat to bottom when chatHistory or isChatLoading changes
+  // Auto-scroll chat to bottom when chatHistory or isAITyping changes
   useEffect(() => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [chatHistory, isChatLoading]);
+  }, [chatHistory, isAITyping]);
 
   const handleChatSubmit = (e) => {
     e.preventDefault();
-    if (chatMessage.trim() !== '' && !isChatLoading) {
-      setIsChatLoading(true);
+    if (chatMessage.trim() !== '' && !isAITyping) {
+      setIsAITyping(true);
       setChatHistory(prev => ([
         ...prev,
         { sender: 'student', message: chatMessage }
@@ -59,7 +59,7 @@ const Assignment = ({ onNavigateHome }) => {
           ...prev,
           { sender: 'ai', message: 'Great question! Infinity is not a real number, so it often means a value does not exist (DNE) in the usual sense. In limits, when we say a function approaches infinity, the limit technically does not exist, but we describe its behavior as diverging to infinity.' }
         ]));
-        setIsChatLoading(false);
+        setIsAITyping(false);
       }, 1000 + Math.random() * 2000);
     }
   };
@@ -193,16 +193,6 @@ const Assignment = ({ onNavigateHome }) => {
           </div>
         </div>
 
-        {/* TODO: Remove this loading state when implementing real chat loading */}
-        {isChatLoading && (
-          <div className="chat-loading-container">
-            <div className="chat-loading-content">
-              <div className="loading-spinner"></div>
-              <p className="loading-text">Analyzing your answer...</p>
-            </div>
-          </div>
-        )}
-
         {/* Vertical Divider - only show when chatbot is visible */}
         {showChatbot && (
           <div 
@@ -211,7 +201,7 @@ const Assignment = ({ onNavigateHome }) => {
           ></div>
         )}
 
-        {/* Chatbot Window - only show when student gets answer wrong */}
+        {/* Chatbot Window - show immediately when answer is wrong */}
         {showChatbot && (
           <div className="chatbot-container" style={{ width: chatWidth }}>
             <div className="chatbot-header">
@@ -226,6 +216,16 @@ const Assignment = ({ onNavigateHome }) => {
                   </div>
                 </div>
               ))}
+              {/* Add typing indicator like SocraticDialogue */}
+              {isAITyping && (
+                <div className="chat-message ai typing-indicator">
+                  <div className="message-content">
+                    <span className="typing-dots">
+                      <span>.</span><span>.</span><span>.</span>
+                    </span>
+                  </div>
+                </div>
+              )}
               <div ref={chatEndRef} />
             </div>
             <form className="chat-input-form" onSubmit={handleChatSubmit}>
@@ -235,14 +235,14 @@ const Assignment = ({ onNavigateHome }) => {
                 placeholder="What would you like help with?"
                 value={chatMessage}
                 onChange={(e) => setChatMessage(e.target.value)}
-                disabled={isChatLoading}
+                disabled={isAITyping}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !isChatLoading) {
+                  if (e.key === 'Enter' && !isAITyping) {
                     handleChatSubmit(e);
                   }
                 }}
               />
-              <button type="submit" className="chat-send-button" disabled={isChatLoading}>
+              <button type="submit" className="chat-send-button" disabled={isAITyping}>
                 Send
               </button>
             </form>
