@@ -32,12 +32,20 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
     }
   };
 
+  // Helper function to get submission status color
+  const getSubmissionStatus = (submissions, total) => {
+    const percentage = submissions / total;
+    if (submissions === total) return 'complete';
+    if (percentage >= 0.5) return 'partial';
+    return 'low';
+  };
+
   // Mock assignments data
   const assignments = [
-    { id: 1, title: 'Limits and Continuity', type: 'SuperQuiz', dueDate: '2024-01-15', submissions: 23, status: 'completed' },
-    { id: 2, title: 'Derivative Rules', type: 'SuperConcept', dueDate: '2024-01-18', submissions: 25, status: 'pending' },
-    { id: 3, title: 'Chain Rule Practice', type: 'SuperQuiz', dueDate: '2024-01-22', submissions: 20, status: 'pending' },
-    { id: 4, title: 'Integration Basics', type: 'SuperConcept', dueDate: '2024-01-25', submissions: 0, status: 'draft' },
+    { id: 1, title: 'Limits and Continuity', type: 'SuperQuiz', startDate: '2024-01-10', dueDate: '2024-01-15', submissions: 23, totalStudents: 28, status: 'completed' },
+    { id: 2, title: 'Derivative Rules', type: 'SuperConcept', startDate: '2024-01-12', dueDate: '2024-01-18', submissions: 25, totalStudents: 28, status: 'pending' },
+    { id: 3, title: 'Chain Rule Practice', type: 'SuperQuiz', startDate: '2024-01-15', dueDate: '2024-01-22', submissions: 20, totalStudents: 28, status: 'pending' },
+    { id: 4, title: 'Integration Basics', type: 'SuperConcept', startDate: '2024-01-20', dueDate: '2024-01-25', submissions: 0, totalStudents: 28, status: 'draft' },
   ];
 
   // Mock feed data
@@ -268,31 +276,42 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
                         Drafts
                       </button>
                     </div>
-                    <div className="assignments-grid">
-                      {filteredAssignments.map(assignment => (
-                      <div key={assignment.id} className="assignment-card">
-                        <div className="assignment-header">
-                          <h3>{assignment.title}</h3>
-                          <span className={`assignment-type ${assignment.type.toLowerCase()}`}>
-                            {assignment.type}
-                          </span>
-                        </div>
-                        <div className="assignment-stats">
-                          <div className="stat">
-                            <span className="stat-label">Due Date</span>
-                            <span className="stat-value">{assignment.dueDate}</span>
-                          </div>
-                          <div className="stat">
-                            <span className="stat-label">Submissions</span>
-                            <span className="stat-value">{assignment.submissions}/{course.students}</span>
-                          </div>
-                        </div>
-                        <div className="assignment-actions">
-                          <button className="action-btn secondary">View Results</button>
-                          <button className="action-btn primary">Edit</button>
-                        </div>
-                      </div>
-                    ))}
+                    <div className="assignments-table-container">
+                      <table className="assignments-table">
+                        <thead>
+                          <tr>
+                            <th>Assignment</th>
+                            <th>Start date</th>
+                            <th>Due date</th>
+                            <th>Turned in</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredAssignments.map(assignment => (
+                            <tr key={assignment.id}>
+                              <td>
+                                <div className="assignment-info">
+                                  <h4>{assignment.title}</h4>
+                                  <span className={`assignment-type ${assignment.type.toLowerCase()}`}>
+                                    {assignment.type}
+                                  </span>
+                                </div>
+                              </td>
+                              <td>{assignment.startDate}</td>
+                              <td>{assignment.dueDate}</td>
+                              <td>
+                                <span className={`submissions-count ${getSubmissionStatus(assignment.submissions, assignment.totalStudents)}`}>
+                                  {assignment.submissions} of {assignment.totalStudents}
+                                </span>
+                              </td>
+                              <td>
+                                <button className="action-btn primary table-edit-btn">Edit</button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
