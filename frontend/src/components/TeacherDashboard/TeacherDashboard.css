@@ -251,13 +251,13 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: var(--course-color);
+  background: linear-gradient(90deg, var(--course-color-light, var(--course-color)), var(--course-color-dark, var(--course-color)));
 }
 
 .course-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.15);
-  border-color: var(--course-color);
+  border-color: var(--course-color-dark, var(--course-color));
 }
 
 .course-header {
@@ -294,7 +294,7 @@
 }
 
 .view-course {
-  color: var(--course-color);
+  color: var(--course-color-dark, var(--course-color));
   font-weight: 600;
   font-size: 0.875rem;
   transition: color 0.2s ease;
