@@ -721,6 +721,97 @@
   color: #3182ce;
 }
 
+.assignments-table-container {
+  margin-top: 1rem;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.assignments-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.assignments-table th {
+  background: #f9fafb;
+  padding: 1rem;
+  text-align: left;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.assignments-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.assignments-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.assignment-info h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.assignment-type {
+  padding: 0.125rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.assignment-type.superquiz {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.assignment-type.superconcept {
+  background-color: #f3e8ff;
+  color: #7c3aed;
+}
+
+.submissions-count {
+  font-weight: 500;
+  color: #374151;
+}
+
+.submissions-count.low {
+  color: #dc2626; /* Red */
+}
+
+.submissions-count.partial {
+  color: #d97706; /* Yellow/Orange */
+}
+
+.submissions-count.complete {
+  color: #059669; /* Green */
+}
+
+.table-edit-btn {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  border-radius: 6px;
+}
+
+.assignments-table th:last-child,
+.assignments-table td:last-child {
+  text-align: center;
+  width: 100px;
+}
+
 @media (max-width: 768px) {
   .course-dashboard {
     flex-direction: column;
