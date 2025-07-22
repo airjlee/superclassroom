@@ -155,7 +155,7 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
               <span className="search-icon">⌘</span>
               <input
                 type="text"
-                placeholder="Search courses, assignments, or students..."
+                placeholder="Ask anything or @mention a specific course..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input"
