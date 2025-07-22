@@ -1,6 +1,31 @@
 import React, { useState } from 'react';
 import './TeacherDashboard.css';
 
+// Utility functions to lighten or darken a hex color
+const adjustColor = (hex, amt) => {
+  let usePound = false;
+  let color = hex;
+  if (color[0] === '#') {
+    color = color.slice(1);
+    usePound = true;
+  }
+
+  let num = parseInt(color, 16);
+  let r = (num >> 16) + amt;
+  let g = (num >> 8 & 0x00ff) + amt;
+  let b = (num & 0x0000ff) + amt;
+
+  r = Math.max(Math.min(255, r), 0);
+  g = Math.max(Math.min(255, g), 0);
+  b = Math.max(Math.min(255, b), 0);
+
+  const newColor = (r << 16) | (g << 8) | b;
+  return (usePound ? '#' : '') + newColor.toString(16).padStart(6, '0');
+};
+
+const lightenColor = (hex, percent = 20) => adjustColor(hex, Math.round(2.55 * percent));
+const darkenColor = (hex, percent = 20) => adjustColor(hex, -Math.round(2.55 * percent));
+
 const TeacherDashboard = ({ onNavigateToCourse }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -145,7 +170,7 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
               key={course.id}
               className="course-card"
               onClick={() => handleCourseClick(course.id)}
-              style={{ '--course-color': course.color }}
+              style={{ '--course-color': course.color, '--course-color-light': lightenColor(course.color, 30), '--course-color-dark': darkenColor(course.color, 20) }}
             >
               <div className="course-header">
                 <h3>{course.name}</h3>
