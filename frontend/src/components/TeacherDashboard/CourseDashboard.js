@@ -18,6 +18,20 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
 
   const course = courseData[courseId];
 
+  // Helper function to get icon for feed item type
+  const getFeedIcon = (type) => {
+    switch (type) {
+      case 'announcement':
+        return 'campaign'; // speaker/megaphone icon
+      case 'assignment':
+        return 'assignment'; // assignment icon
+      case 'question':
+        return 'quiz'; // question icon
+      default:
+        return 'info';
+    }
+  };
+
   // Mock assignments data
   const assignments = [
     { id: 1, title: 'Limits and Continuity', type: 'SuperQuiz', dueDate: '2024-01-15', submissions: 23, status: 'completed' },
@@ -28,11 +42,11 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
 
   // Mock feed data
   const feedItems = [
-    { id: 1, type: 'announcement', title: 'Welcome to Calculus I', content: 'Looking forward to a great semester! Please review the syllabus.', time: '2 hours ago', source: 'instructor' },
-    { id: 2, type: 'assignment', title: 'New Assignment Posted', content: 'Limits and Continuity quiz has been assigned.', time: '1 day ago', source: 'instructor' },
-    { id: 3, type: 'grade', title: 'Assignment Graded', content: 'Derivative Rules assignment has been graded. Average score: 87%', time: '2 days ago', source: 'instructor' },
-    { id: 4, type: 'question', title: 'Question about Homework', content: 'Can someone explain problem #5 from the derivative worksheet?', time: '3 hours ago', source: 'student', author: 'Alice Brown' },
-    { id: 5, type: 'discussion', title: 'Study Group Formation', content: 'Anyone interested in forming a study group for the midterm?', time: '5 hours ago', source: 'student', author: 'John Doe' },
+    { id: 1, type: 'announcement', title: 'Welcome to Calculus I', content: 'Looking forward to a great semester! Please review the syllabus.', time: '5 days ago', timestamp: Date.now() - 5 * 24 * 60 * 60 * 1000, source: 'instructor', replies: 15 },
+    { id: 2, type: 'assignment', title: 'New Assignment Posted', content: 'Limits and Continuity quiz has been assigned.', time: '2 hours ago', timestamp: Date.now() - 2 * 60 * 60 * 1000, source: 'instructor', replies: 3 },
+    { id: 3, type: 'assignment', title: 'Assignment Graded', content: 'Derivative Rules assignment has been graded. Average score: 87%', time: '1 day ago', timestamp: Date.now() - 24 * 60 * 60 * 1000, source: 'instructor', replies: 8 },
+    { id: 4, type: 'question', title: 'Question about Homework', content: 'Can someone explain problem #5 from the derivative worksheet?', time: '3 hours ago', timestamp: Date.now() - 3 * 60 * 60 * 1000, source: 'student', author: 'Alice Brown', replies: 12 },
+    { id: 5, type: 'question', title: 'Study Group Formation', content: 'Anyone interested in forming a study group for the midterm?', time: '6 hours ago', timestamp: Date.now() - 6 * 60 * 60 * 1000, source: 'student', author: 'John Doe', replies: 7 },
   ];
 
   // Filter assignments based on selected filter
@@ -50,8 +64,7 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
     if (feedFilter === 'instructors') return item.source === 'instructor';
     if (feedFilter === 'students') return item.source === 'student';
     return true;
-  });
-
+  }).sort((a, b) => b.timestamp - a.timestamp); // Sort by timestamp, newest first
 
 
   const handleBackToDashboard = () => {
@@ -206,13 +219,19 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
                       {filteredFeedItems.map(item => (
                         <div key={item.id} className="feed-item">
                           <div className="feed-header">
-                            <h3>{item.title}</h3>
+                            <div className="feed-title-container">
+                              <span className="material-icons feed-icon">{getFeedIcon(item.type)}</span>
+                              <h3>{item.title}</h3>
+                            </div>
                             <div className="feed-meta">
                               {item.author && <span className="feed-author">{item.author}</span>}
                               <span className="feed-time">{item.time}</span>
                             </div>
                           </div>
                           <p>{item.content}</p>
+                          <div className="feed-footer">
+                            <span className="feed-replies">{item.replies} {item.replies === 1 ? 'reply' : 'replies'}</span>
+                          </div>
                         </div>
                       ))}
                     </div>
