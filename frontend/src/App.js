@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import Home from './components/Home/Home';
 import Assignment from './components/Assignment/Assignment';
+import MultiPartAssignment from './components/MultiPartAssignment/MultiPartAssignment';
 import SocraticDialogue from './components/SocraticDialogue/SocraticDialogue';
 import AssignmentCreator from './components/AssignmentCreator/AssignmentCreator';
 import TeacherDashboard from './components/TeacherDashboard/TeacherDashboard';
@@ -27,6 +28,8 @@ function App() {
     switch(currentPage) {
       case 'assignment':
         return <Assignment onNavigateHome={() => setCurrentPage('home')} />;
+      case 'multi-part-assignment':
+        return <MultiPartAssignment onNavigateHome={() => setCurrentPage('home')} />;
       case 'socratic':
         return <SocraticDialogue onNavigateHome={() => setCurrentPage('home')} />;
       case 'create-assignment':
