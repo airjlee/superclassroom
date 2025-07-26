@@ -11,6 +11,13 @@ const Home = ({ onNavigateToAssignment }) => {
       difficulty: 'Intermediate'
     },
     {
+      id: 'multi-part-assignment',
+      title: 'Multi-Part: Differential Equations',
+      description: 'Solve a complete Laplace transform problem with guided parts',
+      subject: 'Differential Equations',
+      difficulty: 'Advanced'
+    },
+    {
       id: 'socratic',
       title: 'Socratic Dialogue',
       description: 'Explore linear independence in ODEs through guided questioning',
