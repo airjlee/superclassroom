@@ -124,8 +124,8 @@
 }
 
 .nav-item.active {
-  background-color: #3182ce;
-  color: white;
+  background: rgba(59, 130, 246, 0.15);
+  color: #2563eb;
 }
 
 .nav-icon {
