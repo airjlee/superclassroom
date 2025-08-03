@@ -362,7 +362,7 @@
 
 .tab-button.active {
   background: none;
-  color: #2563eb;
+  color: #000000;
   font-weight: 600;
 }
 
@@ -372,10 +372,12 @@
   bottom: -2px;
   left: 0;
   right: 0;
-  height: 2px;
-  background: #2563eb;
-  border-radius: 1px;
+  height: 3px;
+  background: linear-gradient(135deg, #4C05FF 0%, #C820C8 100%);
+  border-radius: 12px;
 }
+
+
 
 .tab-content {
   padding: 1rem 2rem 2rem 2rem;
@@ -607,22 +609,23 @@
 }
 
 .assignment-type {
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
+  padding: 0;
+  border-radius: 0;
   font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  color: #6b7280;
 }
 
 .assignment-type.superconcept {
-  background-color: #dbeafe;
-  color: #1e40af;
+  background-color: transparent;
+  color: #6b7280;
 }
 
 .assignment-type.superquiz {
-  background-color: #f3e8ff;
-  color: #7c3aed;
+  background-color: transparent;
+  color: #6b7280;
 }
 
 .assignment-stats {
@@ -764,22 +767,23 @@
 }
 
 .assignment-type {
-  padding: 0.125rem 0.5rem;
-  border-radius: 12px;
+  padding: 0;
+  border-radius: 0;
   font-size: 0.75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  color: #6b7280;
 }
 
 .assignment-type.superquiz {
-  background-color: #dbeafe;
-  color: #1e40af;
+  background-color: transparent;
+  color: #6b7280;
 }
 
 .assignment-type.superconcept {
-  background-color: #f3e8ff;
-  color: #7c3aed;
+  background-color: transparent;
+  color: #6b7280;
 }
 
 .submissions-count {

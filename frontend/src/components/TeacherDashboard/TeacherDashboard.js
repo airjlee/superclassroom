@@ -117,7 +117,7 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
           
           <div className="nav-section">
             {!sidebarCollapsed && <div className="nav-section-title">Management</div>}
-            <button className="nav-item" title="Students">
+            <button className="nav-item" title="Course Members">
               <span className="nav-icon material-icons">group</span>
               {!sidebarCollapsed && <span>Students</span>}
             </button>
