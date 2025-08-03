@@ -198,14 +198,26 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavig
                 <div className="analytics-trend positive">↑ 12% from last month</div>
               </div>
             </div>
-            <div className="analytics-card">
-              <div className="analytics-icon">
-                <span className="material-icons">chat</span>
-              </div>
+            <div className="analytics-card pie-chart-card">
               <div className="analytics-content">
-                <h3>Avg. Interactions per Question</h3>
-                <div className="analytics-value">4.2</div>
-                <div className="analytics-trend positive">↑ 0.8 from last month</div>
+                <h3>Assignment Distribution</h3>
+                <div className="pie-chart-container">
+                  <div className="pie-chart"></div>
+                  <div className="pie-legend">
+                    <div className="legend-item">
+                      <div className="legend-color quiz"></div>
+                      <span>SuperQuiz (60%)</span>
+                    </div>
+                    <div className="legend-item">
+                      <div className="legend-color concept"></div>
+                      <span>SuperConcept (30%)</span>
+                    </div>
+                    <div className="legend-item">
+                      <div className="legend-color other"></div>
+                      <span>Other (10%)</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="analytics-card">

@@ -138,29 +138,24 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
   return (
     <div className="assignment-page">
       <div className="assignment-page-header">
-        <div className="header-top">
-          <button className="back-button" onClick={onNavigateBack}>
-            <span className="material-icons">arrow_back</span>
-            Back to Course
-          </button>
-          <div className="header-actions">
-            <button className="action-button secondary">
-              <span className="material-icons">edit</span>
-              Edit
-            </button>
-            <button className="action-button primary">
-              <span className="material-icons">share</span>
-              Share
-            </button>
-          </div>
-        </div>
-        
         <div className="assignment-header-info">
           <div className="assignment-title-section">
-            <h1 className="assignment-title">{assignment.title}</h1>
-            <span className={`assignment-type-badge ${assignment.type.toLowerCase()}`}>
-              {assignment.type}
-            </span>
+            <div className="title-and-badge">
+              <h1 className="assignment-title">{assignment.title}</h1>
+              <span className={`assignment-type-badge ${assignment.type.toLowerCase()}`}>
+                {assignment.type}
+              </span>
+            </div>
+            <div className="header-actions">
+              <button className="action-button secondary">
+                <span className="material-icons">edit</span>
+                Edit
+              </button>
+              <button className="action-button primary">
+                <span className="material-icons">share</span>
+                Share
+              </button>
+            </div>
           </div>
           <p className="assignment-course">{assignment.courseTitle}</p>
           <p className="assignment-description">{assignment.description}</p>
@@ -185,24 +180,26 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
       </div>
 
       <div className="assignment-page-tabs">
-        <button 
-          className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
-          onClick={() => setActiveTab('overview')}
-        >
-          Overview
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'submissions' ? 'active' : ''}`}
-          onClick={() => setActiveTab('submissions')}
-        >
-          Submissions
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'analytics' ? 'active' : ''}`}
-          onClick={() => setActiveTab('analytics')}
-        >
-          Analytics
-        </button>
+        <div className="assignment-page-tabs-inner">
+          <button 
+            className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('overview')}
+          >
+            Overview
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'submissions' ? 'active' : ''}`}
+            onClick={() => setActiveTab('submissions')}
+          >
+            Submissions
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'analytics' ? 'active' : ''}`}
+            onClick={() => setActiveTab('analytics')}
+          >
+            Analytics
+          </button>
+        </div>
       </div>
 
       <div className="assignment-page-content">
