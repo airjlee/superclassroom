@@ -52,10 +52,10 @@
 .main-content-area {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 40px 24px;
+  align-items: center;
+  padding: 20px 24px;
   background-color: #f8f9fa;
-  overflow-y: auto;
+  overflow: hidden;
   min-height: 0;
 }
 
@@ -63,6 +63,10 @@
   max-width: 800px;
   width: 100%;
   background-color: #f8f9fa;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Chat Divider */
