@@ -3,6 +3,7 @@ import { InlineMath, BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import { validateTextAnswer, validateMultipleChoice, getHintForPart } from '../utils/partValidation';
 import './PartContent.css';
+import '../../../shared/components.css';
 
 const PartContent = ({ 
   part, 
@@ -116,7 +117,7 @@ const PartContent = ({
             onClick={() => !part.completed && handleAnswerChange(option.id)}
           >
             <div className="option-header">
-              <span className="option-letter">{option.id}</span>
+              <span className="option-letter-base option-letter-circular">{option.id}</span>
               <span className="option-label">{option.label}</span>
             </div>
             
@@ -202,7 +203,7 @@ const PartContent = ({
             <div className="submit-section">
               <button
                 type="submit"
-                className={`submit-button ${localAnswer ? 'active' : ''}`}
+                className={`btn-submit ${localAnswer ? 'active' : ''}`}
                 disabled={!localAnswer}
               >
                 Submit Answer
@@ -213,13 +214,11 @@ const PartContent = ({
 
         {/* Feedback */}
         {feedback && (
-          <div className={`feedback-container ${feedback.isCorrect ? 'success' : 'error'}`}>
-            <div className="feedback-content">
-              <span className="feedback-icon">
-                {feedback.isCorrect ? '✓' : '✗'}
-              </span>
-              <span className="feedback-text">{feedback.feedback}</span>
-            </div>
+          <div className={`feedback-base ${feedback.isCorrect ? 'feedback-success' : 'feedback-error'}`}>
+            <span className="feedback-icon">
+              {feedback.isCorrect ? '✓' : '✗'}
+            </span>
+            <span className="feedback-text">{feedback.feedback}</span>
           </div>
         )}
 

@@ -211,14 +211,14 @@
 }
 
 .option-card:hover:not(.disabled) {
-  border-color: #007bff;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .option-card.selected {
-  border-color: #007bff;
+  border-color: transparent;
   background-color: #f8f9ff;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .option-card.disabled {
@@ -233,18 +233,7 @@
   margin-bottom: 16px;
 }
 
-.option-letter {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #007bff;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 14px;
-}
+/* Option Letter Styles - Now using shared .option-letter-base + .option-letter-circular from components.css */
 
 .option-label {
   font-size: 16px;
@@ -297,67 +286,9 @@
   text-align: center;
 }
 
-.submit-button {
-  width: 100%;
-  padding: 16px 24px;
-  background-color: #e1e5e9;
-  color: #6c757d;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+/* Submit Button Styles - Now using shared .btn-submit from components.css */
 
-.submit-button.active {
-  background-color: #007bff;
-  color: #ffffff;
-}
-
-.submit-button.active:hover {
-  background-color: #0056b3;
-}
-
-.submit-button:disabled {
-  cursor: not-allowed;
-}
-
-/* Feedback - Match Assignment.js feedback styles */
-.feedback-container {
-  margin: 24px 0;
-  padding: 16px 20px;
-  border-radius: 8px;
-  border: 1px solid;
-}
-
-.feedback-container.success {
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-  color: #155724;
-}
-
-.feedback-container.error {
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  color: #721c24;
-}
-
-.feedback-content {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.feedback-icon {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.feedback-text {
-  font-size: 16px;
-  font-weight: 500;
-}
+/* Feedback Styles - Now using shared .feedback-base + .feedback-success/.feedback-error from components.css */
 
 /* Hints */
 .hint-section {

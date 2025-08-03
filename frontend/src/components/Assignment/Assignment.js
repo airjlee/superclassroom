@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import './Assignment.css';
+import '../../shared/components.css';
 
 const Assignment = ({ onNavigateHome }) => {
   const [limitAnswer, setLimitAnswer] = useState('');
@@ -158,7 +159,7 @@ const Assignment = ({ onNavigateHome }) => {
                     onClick={() => setSelectedJustification(option.id)}
                     disabled={isSubmitted}
                   >
-                    <span className="option-letter">{option.id}.</span>
+                    <span className="option-letter-base option-letter-simple">{option.id}.</span>
                     <span className="option-text">
                       {option.text_start}
                       <InlineMath math={option.math} />
@@ -171,7 +172,7 @@ const Assignment = ({ onNavigateHome }) => {
             
             {!isSubmitted ? (
               <button
-                className={`submit-button ${limitAnswer.trim() !== '' && selectedJustification !== null ? 'active' : ''}`}
+                className={`btn-submit ${limitAnswer.trim() !== '' && selectedJustification !== null ? 'active' : ''}`}
                 onClick={handleSubmit}
                 disabled={limitAnswer.trim() === '' || selectedJustification === null}
               >
@@ -179,13 +180,13 @@ const Assignment = ({ onNavigateHome }) => {
               </button>
             ) : (
               <div className="feedback-container">
-                <div className={`feedback ${isFullyCorrect ? 'correct' : 'incorrect'}`}>
+                <div className={`feedback-base ${isFullyCorrect ? 'feedback-success' : 'feedback-error'}`}>
                   <span className="feedback-icon">{isFullyCorrect ? '✓' : '✗'}</span>
                   <span className="feedback-text">
                     {isFullyCorrect ? 'Correct!' : 'Incorrect. Try again or ask for help!'}
                   </span>
                 </div>
-                <button className="next-button">
+                <button className="btn-next">
                   Next Question
                 </button>
               </div>
