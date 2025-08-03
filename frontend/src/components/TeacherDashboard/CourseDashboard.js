@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './CourseDashboard.css';
 
-const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
+const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavigateToAssignment }) => {
   const [activeTab, setActiveTab] = useState('feed');
   const [assignmentFilter, setAssignmentFilter] = useState('all');
   const [feedFilter, setFeedFilter] = useState('all');
@@ -177,6 +177,49 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
         </div>
 
         <div className="dashboard-content">
+          <div className="analytics-summary">
+            <div className="analytics-card">
+              <div className="analytics-icon">
+                <span className="material-icons">stars</span>
+              </div>
+              <div className="analytics-content">
+                <h3>Superscore</h3>
+                <div className="analytics-value">84%</div>
+                <div className="analytics-trend positive">↑ 6% from last month</div>
+              </div>
+            </div>
+            <div className="analytics-card">
+              <div className="analytics-icon">
+                <span className="material-icons">psychology</span>
+              </div>
+              <div className="analytics-content">
+                <h3>AI Engagement Rate</h3>
+                <div className="analytics-value">87%</div>
+                <div className="analytics-trend positive">↑ 12% from last month</div>
+              </div>
+            </div>
+            <div className="analytics-card">
+              <div className="analytics-icon">
+                <span className="material-icons">chat</span>
+              </div>
+              <div className="analytics-content">
+                <h3>Avg. Interactions per Question</h3>
+                <div className="analytics-value">4.2</div>
+                <div className="analytics-trend positive">↑ 0.8 from last month</div>
+              </div>
+            </div>
+            <div className="analytics-card">
+              <div className="analytics-icon">
+                <span className="material-icons">grade</span>
+              </div>
+              <div className="analytics-content">
+                <h3>Class Average</h3>
+                <div className="analytics-value">88%</div>
+                <div className="analytics-trend positive">↑ 4% from last month</div>
+              </div>
+            </div>
+          </div>
+
           <div className="tabs-header">
             <button 
               className={`tab-button ${activeTab === 'feed' ? 'active' : ''}`}
@@ -306,7 +349,12 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
                                 </span>
                               </td>
                               <td>
-                                <button className="action-btn primary table-edit-btn">Edit</button>
+                                <button 
+                                  className="action-btn primary table-view-btn"
+                                  onClick={() => onNavigateToAssignment(assignment.id)}
+                                >
+                                  View
+                                </button>
                               </td>
                             </tr>
                           ))}

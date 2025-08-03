@@ -7,11 +7,13 @@ import SocraticDialogue from './components/SocraticDialogue/SocraticDialogue';
 import AssignmentCreator from './components/AssignmentCreator/AssignmentCreator';
 import TeacherDashboard from './components/TeacherDashboard/TeacherDashboard';
 import CourseDashboard from './components/TeacherDashboard/CourseDashboard';
+import AssignmentPage from './components/AssignmentPage/AssignmentPage';
 import Header from './components/Header';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [currentCourseId, setCurrentCourseId] = useState(null);
+  const [currentAssignmentId, setCurrentAssignmentId] = useState(null);
   const [showCreateDropdown, setShowCreateDropdown] = useState(false);
 
   const handleCreateSelection = (type) => {
@@ -44,6 +46,16 @@ function App() {
           courseId={currentCourseId}
           onNavigateBack={() => setCurrentPage('dashboard')}
           onNavigateToCreate={(type) => setCurrentPage('create-assignment')}
+          onNavigateToAssignment={(assignmentId) => {
+            setCurrentAssignmentId(assignmentId);
+            setCurrentPage('assignment-page');
+          }}
+        />;
+      case 'assignment-page':
+        return <AssignmentPage 
+          assignmentId={currentAssignmentId}
+          courseId={currentCourseId}
+          onNavigateBack={() => setCurrentPage('course-dashboard')}
         />;
       default:
         return <Home onNavigateToAssignment={(type) => setCurrentPage(type)} />;
@@ -52,7 +64,7 @@ function App() {
 
   return (
     <div className="App">
-      {currentPage !== 'create-assignment' && (
+      {currentPage !== 'create-assignment' && currentPage !== 'assignment-page' && (
         <Header 
           currentPage={currentPage} 
           onNavigateHome={() => setCurrentPage('home')} 
