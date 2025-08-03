@@ -372,9 +372,9 @@
   bottom: -2px;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(135deg, #4C05FF 0%, #C820C8 100%);
-  border-radius: 12px;
+  height: 1.5px;
+  background: #d1d5db;
+  border-radius: 2px;
 }
 
 
