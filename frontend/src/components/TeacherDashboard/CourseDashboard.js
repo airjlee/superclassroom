@@ -179,9 +179,6 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavig
         <div className="dashboard-content">
           <div className="analytics-summary">
             <div className="analytics-card">
-              <div className="analytics-icon">
-                <span className="material-icons">stars</span>
-              </div>
               <div className="analytics-content">
                 <h3>Superscore</h3>
                 <div className="analytics-value">84%</div>
@@ -189,9 +186,6 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavig
               </div>
             </div>
             <div className="analytics-card">
-              <div className="analytics-icon">
-                <span className="material-icons">psychology</span>
-              </div>
               <div className="analytics-content">
                 <h3>AI Engagement Rate</h3>
                 <div className="analytics-value">87%</div>
@@ -221,9 +215,6 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavig
               </div>
             </div>
             <div className="analytics-card">
-              <div className="analytics-icon">
-                <span className="material-icons">grade</span>
-              </div>
               <div className="analytics-content">
                 <h3>Class Average</h3>
                 <div className="analytics-value">88%</div>
