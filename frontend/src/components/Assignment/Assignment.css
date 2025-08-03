@@ -3,7 +3,7 @@
   width: 100vw;
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
+  background-color: #f8f9fa;
 }
 
 .assignment-container.resizing {
@@ -14,7 +14,7 @@
 .assignment-main {
   flex: 1;
   display: flex;
-  background-color: #ffffff;
+  background-color: #f8f9fa;
 }
 
 .assignment-content {
@@ -23,14 +23,14 @@
   justify-content: center;
   align-items: center;
   padding: 40px 24px;
-  background-color: #ffffff;
+  background-color: #f8f9fa;
   transition: all 0.3s ease;
 }
 
 .question-container {
   max-width: 600px;
   width: 100%;
-  background-color: #ffffff;
+  background-color: #f8f9fa;
   padding: 40px;
 }
 

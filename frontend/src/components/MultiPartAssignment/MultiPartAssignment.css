@@ -4,7 +4,7 @@
   grid-template-columns: var(--sidebar-width, 320px) 4px 1fr;
   height: 100vh;
   width: 100vw;
-  background-color: #ffffff;
+  background-color: #f8f9fa;
   overflow: hidden;
 }
 
@@ -54,7 +54,7 @@
   justify-content: center;
   align-items: flex-start;
   padding: 40px 24px;
-  background-color: #ffffff;
+  background-color: #f8f9fa;
   overflow-y: auto;
   min-height: 0;
 }
@@ -62,7 +62,7 @@
 .centered-content-wrapper {
   max-width: 800px;
   width: 100%;
-  background-color: #ffffff;
+  background-color: #f8f9fa;
 }
 
 /* Chat Divider */
