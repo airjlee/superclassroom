@@ -177,28 +177,28 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
         </div>
 
         <div className="dashboard-content">
+          <div className="tabs-header">
+            <button 
+              className={`tab-button ${activeTab === 'feed' ? 'active' : ''}`}
+              onClick={() => setActiveTab('feed')}
+            >
+              Feed
+            </button>
+            <button 
+              className={`tab-button ${activeTab === 'assignments' ? 'active' : ''}`}
+              onClick={() => setActiveTab('assignments')}
+            >
+              Assignments
+            </button>
+            <button 
+              className={`tab-button ${activeTab === 'students' ? 'active' : ''}`}
+              onClick={() => setActiveTab('students')}
+            >
+              Students
+            </button>
+          </div>
+          
           <div className="tabs-container">
-            <div className="tabs-header">
-              <button 
-                className={`tab-button ${activeTab === 'feed' ? 'active' : ''}`}
-                onClick={() => setActiveTab('feed')}
-              >
-                Feed
-              </button>
-              <button 
-                className={`tab-button ${activeTab === 'assignments' ? 'active' : ''}`}
-                onClick={() => setActiveTab('assignments')}
-              >
-                Assignments
-              </button>
-              <button 
-                className={`tab-button ${activeTab === 'students' ? 'active' : ''}`}
-                onClick={() => setActiveTab('students')}
-              >
-                Students
-              </button>
-            </div>
-            
             <div className="tab-content">
               {activeTab === 'feed' && (
                 <div className="feed-content">
@@ -361,6 +361,12 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate }) => {
             </div>
           </div>
         </div>
+        
+        <footer className="dashboard-footer">
+          <div className="footer-content">
+            <span className="footer-text">Superclassroom © 2024</span>
+          </div>
+        </footer>
       </div>
     </div>
   );
