@@ -49,7 +49,6 @@ const Header = ({ currentPage, onNavigateHome, onNavigateToCreator, onNavigateTo
                   className="dropdown-item"
                   onClick={() => onNavigateToCreator('SuperConcept')}
                 >
-                  <span className="item-icon">📚</span>
                   <div className="item-content">
                     <span className="item-title">SuperConcept</span>
                     <span className="item-description">Interactive lesson with AI guidance</span>
@@ -59,7 +58,6 @@ const Header = ({ currentPage, onNavigateHome, onNavigateToCreator, onNavigateTo
                   className="dropdown-item"
                   onClick={() => onNavigateToCreator('SuperQuiz')}
                 >
-                  <span className="item-icon">📝</span>
                   <div className="item-content">
                     <span className="item-title">SuperQuiz</span>
                     <span className="item-description">Assessment with intelligent feedback</span>
