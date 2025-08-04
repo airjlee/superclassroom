@@ -237,7 +237,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
       <div className="activity-analytics">
         <div className="analytics-header">
           <span className="material-icons">analytics</span>
-          <h3>Activity analytics</h3>
+          <h3>Performance Summary</h3>
         </div>
         <div className="analytics-content">
           <div className="analytics-column strengths">
