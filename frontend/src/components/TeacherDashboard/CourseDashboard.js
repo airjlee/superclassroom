@@ -180,35 +180,35 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavig
           <div className="analytics-summary">
             <div className="analytics-card">
               <div className="analytics-content">
-                <h3>Superscore</h3>
+                <h3>Superscore Average</h3>
                 <div className="analytics-value">84%</div>
                 <div className="analytics-trend positive">↑ 6% from last month</div>
               </div>
             </div>
             <div className="analytics-card">
               <div className="analytics-content">
-                <h3>AI Engagement Rate</h3>
-                <div className="analytics-value">87%</div>
-                <div className="analytics-trend positive">↑ 12% from last month</div>
+                <h3>Misuse Flags to Review</h3>
+                <div className="analytics-value">4</div>
+                <div className="analytics-trend negative">↑ 2 from last week</div>
               </div>
             </div>
             <div className="analytics-card pie-chart-card">
               <div className="analytics-content">
-                <h3>Assignment Distribution</h3>
+                <h3>Time Spent Using AI</h3>
                 <div className="pie-chart-container">
                   <div className="pie-chart"></div>
                   <div className="pie-legend">
                     <div className="legend-item">
-                      <div className="legend-color quiz"></div>
-                      <span>SuperQuiz (60%)</span>
+                      <div className="legend-color ai"></div>
+                      <span>AI Assisted (45%)</span>
                     </div>
                     <div className="legend-item">
-                      <div className="legend-color concept"></div>
-                      <span>SuperConcept (30%)</span>
+                      <div className="legend-color active"></div>
+                      <span>Active Work (40%)</span>
                     </div>
                     <div className="legend-item">
-                      <div className="legend-color other"></div>
-                      <span>Other (10%)</span>
+                      <div className="legend-color idle"></div>
+                      <span>Idle (15%)</span>
                     </div>
                   </div>
                 </div>
@@ -271,20 +271,25 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavig
                     </div>
                     <div className="feed-items">
                       {filteredFeedItems.map(item => (
-                        <div key={item.id} className="feed-item">
-                          <div className="feed-header">
-                            <div className="feed-title-container">
-                              <span className="material-icons feed-icon">{getFeedIcon(item.type)}</span>
-                              <h3>{item.title}</h3>
-                            </div>
-                            <div className="feed-meta">
-                              {item.author && <span className="feed-author">{item.author}</span>}
+                        <div key={item.id} className={`feed-item ${item.source === 'instructor' ? 'system' : 'user'}`}>
+                          <div className="feed-avatar">
+                            {item.source === 'instructor' ? (
+                              <span className="material-icons">{getFeedIcon(item.type)}</span>
+                            ) : (
+                              item.author?.split(' ').map(n => n[0]).join('')
+                            )}
+                          </div>
+                          <div className="feed-content">
+                            <div className="feed-header">
+                              <span className="feed-author">{item.source === 'instructor' ? 'System' : item.author}</span>
                               <span className="feed-time">{item.time}</span>
                             </div>
-                          </div>
-                          <p>{item.content}</p>
-                          <div className="feed-footer">
-                            <span className="feed-replies">{item.replies} {item.replies === 1 ? 'reply' : 'replies'}</span>
+                            <div className="feed-message">
+                              {item.content}
+                            </div>
+                            <div className="feed-footer">
+                              <span className="feed-replies">{item.replies} {item.replies === 1 ? 'reply' : 'replies'}</span>
+                            </div>
                           </div>
                         </div>
                       ))}
