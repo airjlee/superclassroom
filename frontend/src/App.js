@@ -45,7 +45,7 @@ function App() {
       case 'socratic':
         return <SocraticDialogue onNavigateHome={() => setCurrentPage('home')} />;
       case 'create-assignment':
-        return <AssignmentCreator />;
+        return <AssignmentCreator onNavigateBack={() => setCurrentPage('course-dashboard')} />;
       case 'dashboard':
         return <TeacherDashboard onNavigateToCourse={(courseId) => {
           setCurrentCourseId(courseId);
@@ -81,7 +81,7 @@ function App() {
 
   return (
     <div className="App">
-      {currentPage !== 'create-assignment' && currentPage !== 'assignment' && (
+      {currentPage !== 'assignment' && (
         <Header 
           currentPage={currentPage} 
           onNavigateHome={() => setCurrentPage('home')} 

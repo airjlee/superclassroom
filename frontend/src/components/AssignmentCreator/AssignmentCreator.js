@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
 import './AssignmentCreator.css';
-import QuestionBuilder from './QuestionBuilder';
 
-const AssignmentCreator = () => {
+const AssignmentCreator = ({ onNavigateBack }) => {
   const [assignment, setAssignment] = useState({
     title: '',
-    description: '',
-    subject: '',
-    difficulty: 'medium',
-    timeLimit: 30,
-    questions: []
+    description: 'This assignment covers the fundamental concepts of limits and continuity in calculus.',
+    startDate: '2025-07-20',
+    startTime: '09:00',
+    dueDate: '2025-07-24',
+    dueTime: '23:59',
+    courseTitle: 'Calculus I',
+    sections: [
+      {
+        id: 'superquiz-1',
+        type: 'superquiz',
+        title: 'Superquiz 1'
+      },
+      {
+        id: 'superconcept-1',
+        type: 'superconcept',
+        title: 'Superconcept 1'
+      }
+    ]
   });
 
-  const [currentStep, setCurrentStep] = useState('details'); // 'details', 'questions', 'preview'
-  const [showQuestionBuilder, setShowQuestionBuilder] = useState(false);
+  const [draggedSection, setDraggedSection] = useState(null);
+  const [dragOverSection, setDragOverSection] = useState(null);
+  const [dateInputValue, setDateInputValue] = useState('');
+  const [isEditingDate, setIsEditingDate] = useState(false);
 
   const handleAssignmentChange = (field, value) => {
     setAssignment(prev => ({
@@ -22,289 +36,246 @@ const AssignmentCreator = () => {
     }));
   };
 
-  const addQuestion = (question) => {
-    setAssignment(prev => ({
-      ...prev,
-      questions: [...prev.questions, { ...question, id: Date.now() }]
-    }));
-    setShowQuestionBuilder(false);
+  const handleDragStart = (e, sectionId) => {
+    setDraggedSection(sectionId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.target.classList.add('dragging');
   };
 
-  const removeQuestion = (questionId) => {
-    setAssignment(prev => ({
-      ...prev,
-      questions: prev.questions.filter(q => q.id !== questionId)
-    }));
+  const handleDragOver = (e, sectionId) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (sectionId !== draggedSection) {
+      setDragOverSection(sectionId);
+    }
+  };
+
+  const handleDragLeave = (e, sectionId) => {
+    if (sectionId === dragOverSection) {
+      setDragOverSection(null);
+    }
+  };
+
+  const handleDragEnd = (e) => {
+    e.target.classList.remove('dragging');
+    setDraggedSection(null);
+    setDragOverSection(null);
+  };
+
+  const handleDrop = (e, targetSectionId) => {
+    e.preventDefault();
+    if (draggedSection && draggedSection !== targetSectionId) {
+      const sections = [...assignment.sections];
+      const draggedIndex = sections.findIndex(s => s.id === draggedSection);
+      const targetIndex = sections.findIndex(s => s.id === targetSectionId);
+      
+      const [draggedItem] = sections.splice(draggedIndex, 1);
+      sections.splice(targetIndex, 0, draggedItem);
+      
+      setAssignment(prev => ({
+        ...prev,
+        sections
+      }));
+    }
+    setDraggedSection(null);
+    setDragOverSection(null);
   };
 
   const handlePublish = () => {
-    // Here you would save the assignment to your backend
     console.log('Publishing assignment:', assignment);
     alert('Assignment published successfully!');
   };
 
-  const isValidAssignment = () => {
-    return assignment.title.trim() && 
-           assignment.description.trim() && 
-           assignment.subject.trim() && 
-           assignment.questions.length > 0;
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { 
+      weekday: 'long', 
+      month: 'long', 
+      day: 'numeric' 
+    };
+    return date.toLocaleDateString('en-US', options);
+  };
+
+  const getDueDateMonth = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+  };
+
+  const getDueDateDay = (dateString) => {
+    const date = new Date(dateString);
+    return date.getDate();
+  };
+
+  const formatTime = (timeString) => {
+    const [hours, minutes] = timeString.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+    return `${displayHour}:${minutes} ${ampm}`;
+  };
+
+  const handleDateFocus = () => {
+    setIsEditingDate(true);
+    setDateInputValue('');
+  };
+
+  const handleDateBlur = () => {
+    setIsEditingDate(false);
+    setDateInputValue('');
+  };
+
+  const handleDateKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      // For demo: change to July 31 when anything is typed and enter is pressed
+      handleAssignmentChange('dueDate', '2025-07-31');
+      setIsEditingDate(false);
+      setDateInputValue('');
+    } else if (e.key === 'Escape') {
+      setIsEditingDate(false);
+      setDateInputValue('');
+    }
   };
 
   return (
-    <div className="assignment-creator">
-      <header className="creator-header">
-        <div className="logo">superclassroom</div>
-        <div className="header-actions">
-          <button className="btn-secondary">Save Draft</button>
-          <button 
-            className={`btn-primary ${!isValidAssignment() ? 'disabled' : ''}`}
-            onClick={handlePublish}
-            disabled={!isValidAssignment()}
-          >
-            Publish Assignment
-          </button>
-        </div>
-      </header>
-
-      <div className="creator-content">
-        {/* Navigation Steps */}
-        <div className="step-navigation">
-          <div 
-            className={`step ${currentStep === 'details' ? 'active' : ''}`}
-            onClick={() => setCurrentStep('details')}
-          >
-            <span className="step-number">1</span>
-            <span className="step-label">Assignment Details</span>
-          </div>
-          <div 
-            className={`step ${currentStep === 'questions' ? 'active' : ''}`}
-            onClick={() => setCurrentStep('questions')}
-          >
-            <span className="step-number">2</span>
-            <span className="step-label">Add Questions</span>
-          </div>
-          <div 
-            className={`step ${currentStep === 'preview' ? 'active' : ''}`}
-            onClick={() => setCurrentStep('preview')}
-          >
-            <span className="step-number">3</span>
-            <span className="step-label">Preview & Publish</span>
-          </div>
-        </div>
-
-        {/* Step Content */}
-        <div className="step-content">
-          {currentStep === 'details' && (
-            <div className="assignment-details">
-              <h2>Assignment Details</h2>
-              
-              <div className="form-group">
-                <label htmlFor="title">Assignment Title *</label>
-                <input
-                  type="text"
-                  id="title"
-                  value={assignment.title}
-                  onChange={(e) => handleAssignmentChange('title', e.target.value)}
-                  placeholder="Enter assignment title"
-                  className="form-input"
-                />
+    <div className="assignment-creator-page">
+      <div className="assignment-creator-header">
+        <div className="assignment-creator-header-info">
+          <div className="assignment-title-section">
+            <div className="title-and-badge">
+              <div className="assignment-badges">
+                <span className="assignment-type-badge superconcept">
+                  <span className="material-icons assignment-type-icon">article</span>
+                  Superconcept
+                </span>
+                <span className="assignment-type-badge superquiz">
+                  <span className="material-icons assignment-type-icon">edit</span>
+                  Superquiz
+                </span>
+                <span className="assignment-type-badge add">
+                  <span className="material-icons assignment-type-icon">add</span>
+                  Add
+                </span>
               </div>
+              <input
+                type="text"
+                className="assignment-title-input"
+                value={assignment.title}
+                onChange={(e) => handleAssignmentChange('title', e.target.value)}
+                placeholder="Assignment Title"
+              />
+            </div>
+            <div className="header-actions">
+              <button className="action-button secondary" onClick={onNavigateBack}>
+                <span className="material-icons">close</span>
+                Cancel
+              </button>
+              <button className="action-button primary" onClick={handlePublish}>
+                <span className="material-icons">publish</span>
+                Publish
+              </button>
+            </div>
+          </div>
+          <input
+            type="text"
+            className="assignment-course-input"
+            value={assignment.courseTitle}
+            onChange={(e) => handleAssignmentChange('courseTitle', e.target.value)}
+            placeholder="Course Title"
+          />
+          <textarea
+            className="assignment-description-input"
+            value={assignment.description}
+            onChange={(e) => handleAssignmentChange('description', e.target.value)}
+            placeholder="Describe what students will learn and accomplish"
+            rows="3"
+          />
+        </div>
 
-              <div className="form-group">
-                <label htmlFor="description">Description *</label>
-                <textarea
-                  id="description"
-                  value={assignment.description}
-                  onChange={(e) => handleAssignmentChange('description', e.target.value)}
-                  placeholder="Describe what students will learn and accomplish"
-                  className="form-textarea"
-                  rows="4"
-                />
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="subject">Subject *</label>
-                  <select
-                    id="subject"
-                    value={assignment.subject}
-                    onChange={(e) => handleAssignmentChange('subject', e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Select subject</option>
-                    <option value="mathematics">Mathematics</option>
-                    <option value="calculus">Calculus</option>
-                    <option value="algebra">Algebra</option>
-                    <option value="geometry">Geometry</option>
-                    <option value="physics">Physics</option>
-                    <option value="chemistry">Chemistry</option>
-                    <option value="computer-science">Computer Science</option>
-                  </select>
+        <div className="assignment-meta">
+          <div className="date-section">
+            <div className="date-item">
+              <div className="date-label">Start Date</div>
+              <div className="due-date-section">
+                <div className="due-date-calendar">
+                  <div className="due-date-month">{getDueDateMonth(assignment.startDate)}</div>
+                  <div className="due-date-day">{getDueDateDay(assignment.startDate)}</div>
                 </div>
-
-                <div className="form-group">
-                  <label htmlFor="difficulty">Difficulty Level</label>
-                  <select
-                    id="difficulty"
-                    value={assignment.difficulty}
-                    onChange={(e) => handleAssignmentChange('difficulty', e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="timeLimit">Time Limit (minutes)</label>
+                <div className="due-date-details">
                   <input
-                    type="number"
-                    id="timeLimit"
-                    value={assignment.timeLimit}
-                    onChange={(e) => handleAssignmentChange('timeLimit', parseInt(e.target.value))}
-                    min="5"
-                    max="180"
-                    className="form-input"
+                    type="text"
+                    className="due-date-title-input"
+                    value={formatDate(assignment.startDate)}
+                    readOnly
                   />
+                  <div className="due-date-time">{formatTime(assignment.startTime)}</div>
                 </div>
-              </div>
-
-              <div className="step-actions">
-                <button 
-                  className="btn-primary"
-                  onClick={() => setCurrentStep('questions')}
-                  disabled={!assignment.title.trim() || !assignment.description.trim() || !assignment.subject.trim()}
-                >
-                  Continue to Questions
-                </button>
               </div>
             </div>
-          )}
-
-          {currentStep === 'questions' && (
-            <div className="questions-section">
-              <div className="section-header">
-                <h2>Assignment Questions</h2>
-                <button 
-                  className="btn-primary"
-                  onClick={() => setShowQuestionBuilder(true)}
-                >
-                  Add Question
-                </button>
-              </div>
-
-              {assignment.questions.length === 0 ? (
-                <div className="empty-state">
-                  <div className="empty-icon">📝</div>
-                  <h3>No questions added yet</h3>
-                  <p>Start building your assignment by adding your first question.</p>
-                  <button 
-                    className="btn-primary"
-                    onClick={() => setShowQuestionBuilder(true)}
-                  >
-                    Add Your First Question
-                  </button>
+            <div className="date-item">
+              <div className="date-label">Due Date</div>
+              <div className="due-date-section">
+                <div className="due-date-calendar">
+                  <div className="due-date-month">{getDueDateMonth(assignment.dueDate)}</div>
+                  <div className="due-date-day">{getDueDateDay(assignment.dueDate)}</div>
                 </div>
-              ) : (
-                <div className="questions-list">
-                  {assignment.questions.map((question, index) => (
-                    <div key={question.id} className="question-card">
-                      <div className="question-header">
-                        <span className="question-number">Question {index + 1}</span>
-                        <span className="question-type">{question.type}</span>
-                        <button 
-                          className="btn-remove"
-                          onClick={() => removeQuestion(question.id)}
-                        >
-                          ×
-                        </button>
-                      </div>
-                      <div className="question-preview">
-                        <p>{question.text}</p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="due-date-details">
+                  <input
+                    type="text"
+                    className="due-date-title-input"
+                    value={isEditingDate ? dateInputValue : formatDate(assignment.dueDate)}
+                    onChange={(e) => setDateInputValue(e.target.value)}
+                    onFocus={handleDateFocus}
+                    onBlur={handleDateBlur}
+                    onKeyDown={handleDateKeyPress}
+                    placeholder="Due Date"
+                  />
+                  <div className="due-date-time">{formatTime(assignment.dueTime)}</div>
                 </div>
-              )}
-
-              {assignment.questions.length > 0 && (
-                <div className="step-actions">
-                  <button 
-                    className="btn-secondary"
-                    onClick={() => setCurrentStep('details')}
-                  >
-                    Back
-                  </button>
-                  <button 
-                    className="btn-primary"
-                    onClick={() => setCurrentStep('preview')}
-                  >
-                    Preview Assignment
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {currentStep === 'preview' && (
-            <div className="preview-section">
-              <h2>Assignment Preview</h2>
-              <div className="assignment-summary">
-                <h3>{assignment.title}</h3>
-                <p>{assignment.description}</p>
-                <div className="assignment-meta">
-                  <span>Subject: {assignment.subject}</span>
-                  <span>Difficulty: {assignment.difficulty}</span>
-                  <span>Time Limit: {assignment.timeLimit} minutes</span>
-                  <span>Questions: {assignment.questions.length}</span>
-                </div>
-              </div>
-
-              <div className="questions-preview">
-                {assignment.questions.map((question, index) => (
-                  <div key={question.id} className="preview-question">
-                    <h4>Question {index + 1}</h4>
-                    <p>{question.text}</p>
-                    {question.type === 'multiple-choice' && (
-                      <div className="options-preview">
-                        {question.options.map((option, optIndex) => (
-                          <div key={optIndex} className="option-preview">
-                            {String.fromCharCode(65 + optIndex)}. {option.text}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <div className="step-actions">
-                <button 
-                  className="btn-secondary"
-                  onClick={() => setCurrentStep('questions')}
-                >
-                  Back to Questions
-                </button>
-                <button 
-                  className="btn-primary"
-                  onClick={handlePublish}
-                >
-                  Publish Assignment
-                </button>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
 
-      {/* Question Builder Modal */}
-      {showQuestionBuilder && (
-        <QuestionBuilder
-          onSave={addQuestion}
-          onCancel={() => setShowQuestionBuilder(false)}
-        />
-      )}
+      <div className="assignment-creator-content">
+        <div className="divider"></div>
+        
+        <div className="sections-container">
+          <h3 className="components-title">
+            <span className="material-icons components-icon">widgets</span>
+            Components
+          </h3>
+          <div className="sections-grid">
+            {assignment.sections.map((section) => (
+              <div
+                key={section.id}
+                className={`section-card ${section.type} ${
+                  draggedSection === section.id ? 'dragging' : ''
+                } ${
+                  dragOverSection === section.id ? 'drag-over' : ''
+                }`}
+                draggable
+                onDragStart={(e) => handleDragStart(e, section.id)}
+                onDragOver={(e) => handleDragOver(e, section.id)}
+                onDragLeave={(e) => handleDragLeave(e, section.id)}
+                onDrop={(e) => handleDrop(e, section.id)}
+                onDragEnd={handleDragEnd}
+              >
+                <div className="section-card-content">
+                  <span className="material-icons section-icon">
+                    {section.type === 'superconcept' ? 'article' : 'edit'}
+                  </span>
+                  <span className="section-title">{section.title}</span>
+                </div>
+              </div>
+            ))}
+            <button className="add-block-button">
+              <span className="material-icons">add</span>
+              <span>Add</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
