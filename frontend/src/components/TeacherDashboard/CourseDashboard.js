@@ -42,10 +42,10 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavig
 
   // Mock assignments data
   const assignments = [
-    { id: 1, title: 'Limits and Continuity', type: 'Quiz', startDate: '2024-01-10', dueDate: '2024-01-15', submissions: 23, totalStudents: 28, status: 'completed' },
-    { id: 2, title: 'Derivative Rules', type: 'Concept', startDate: '2024-01-12', dueDate: '2024-01-18', submissions: 25, totalStudents: 28, status: 'pending' },
-    { id: 3, title: 'Chain Rule Practice', type: 'Quiz', startDate: '2024-01-15', dueDate: '2024-01-22', submissions: 20, totalStudents: 28, status: 'pending' },
-    { id: 4, title: 'Integration Basics', type: 'Concept', startDate: '2024-01-20', dueDate: '2024-01-25', submissions: 0, totalStudents: 28, status: 'draft' },
+    { id: 1, title: 'Limits and Continuity', type: 'Superquiz', startDate: '2024-01-10', dueDate: '2024-01-15', submissions: 23, totalStudents: 28, status: 'completed' },
+    { id: 2, title: 'Derivative Rules', type: 'Superconcept', startDate: '2024-01-12', dueDate: '2024-01-18', submissions: 25, totalStudents: 28, status: 'pending' },
+    { id: 3, title: 'Chain Rule Practice', type: 'Superquiz', startDate: '2024-01-15', dueDate: '2024-01-22', submissions: 20, totalStudents: 28, status: 'pending' },
+    { id: 4, title: 'Integration Basics', type: 'Superconcept', startDate: '2024-01-20', dueDate: '2024-01-25', submissions: 0, totalStudents: 28, status: 'draft' },
   ];
 
   // Mock feed data

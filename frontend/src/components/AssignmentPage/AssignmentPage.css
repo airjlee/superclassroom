@@ -97,19 +97,26 @@
 
 .assignment-type-badge {
   padding: 0.375rem 0.875rem;
+  margin-bottom: 0.5rem;
   border-radius: 8px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: capitalize;
-  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
 }
 
-.assignment-type-badge.quiz {
+.assignment-type-icon {
+  font-size: 0.875rem !important;
+}
+
+.assignment-type-badge.superquiz {
   background-color: #e3f2fd;
   color: #1565c0;
 }
 
-.assignment-type-badge.concept {
+.assignment-type-badge.superconcept {
   background-color: #f3e5f5;
   color: #7b1fa2;
 }
@@ -381,13 +388,13 @@
   margin: 0 auto;
 }
 
-.analytics-cards {
+.assignment-analytics .analytics-cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
 }
 
-.analytics-card {
+.assignment-analytics .analytics-card {
   background: transparent;
   border: none;
   border-radius: 0;
@@ -396,11 +403,11 @@
   transition: none;
 }
 
-.analytics-card:hover {
+.assignment-analytics .analytics-card:hover {
   box-shadow: none;
 }
 
-.analytics-card h4 {
+.assignment-analytics .analytics-card h4 {
   margin: 0 0 0.5rem 0;
   font-size: 0.75rem;
   font-weight: 400;
@@ -409,7 +416,7 @@
   letter-spacing: 0;
 }
 
-.metric-value {
+.assignment-analytics .metric-value {
   font-size: 1.75rem;
   font-weight: 600;
   color: #1a1a1a;
@@ -417,7 +424,7 @@
   line-height: 1;
 }
 
-.metric-change {
+.assignment-analytics .metric-change {
   font-size: 0.6875rem;
   font-weight: 400;
   display: flex;
@@ -425,38 +432,38 @@
   gap: 0.25rem;
 }
 
-.metric-change.positive {
+.assignment-analytics .metric-change.positive {
   color: #28a745;
 }
 
-.metric-change.negative {
+.assignment-analytics .metric-change.negative {
   color: #dc3545;
 }
 
-.chart-container {
+.assignment-analytics .chart-container {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.pie-chart {
+.assignment-analytics .pie-chart {
   flex-shrink: 0;
 }
 
-.chart-legend {
+.assignment-analytics .chart-legend {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   font-size: 0.75rem;
 }
 
-.legend-item {
+.assignment-analytics .legend-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.legend-color {
+.assignment-analytics .legend-color {
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -464,7 +471,7 @@
 }
 
 @media (max-width: 1024px) {
-  .analytics-cards {
+  .assignment-analytics .analytics-cards {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -474,16 +481,16 @@
     padding: 1rem;
   }
   
-  .analytics-cards {
+  .assignment-analytics .analytics-cards {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
   
-  .analytics-card {
+  .assignment-analytics .analytics-card {
     padding: 0;
   }
   
-  .chart-container {
+  .assignment-analytics .chart-container {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
@@ -504,28 +511,30 @@
   padding: 0 4rem;
   display: flex;
   gap: 0;
+  justify-content: center;
 }
 
 .assignment-page-tabs-inner .tab-button {
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   background: none;
   border: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #6c757d;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: #8e9499;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   transition: all 0.2s ease;
 }
 
 .assignment-page-tabs-inner .tab-button:hover {
-  color: #495057;
+  color: #6c757d;
   background-color: transparent;
 }
 
 .assignment-page-tabs-inner .tab-button.active {
-  color: #8b5cf6;
-  border-bottom-color: #8b5cf6;
+  color: #495057;
+  border-bottom-color: #495057;
+  font-weight: 500;
 }
 
 .assignment-page-content {
@@ -619,38 +628,10 @@
 .submissions-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
-.submissions-summary {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
 
-.summary-card {
-  background: transparent;
-  padding: 0;
-  border: none;
-  text-align: left;
-}
-
-.summary-card h4 {
-  margin: 0 0 0.5rem 0;
-  color: #6c757d;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.summary-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
-}
 
 .submissions-table-container {
   background: transparent;
@@ -661,7 +642,7 @@
 .submissions-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 .submissions-table th {
@@ -738,9 +719,10 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding-top: 1rem;
 }
 
-.analytics-grid {
+.assignment-page .analytics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
@@ -750,6 +732,7 @@
   background: transparent;
   padding: 0;
   border: none;
+  margin-bottom: 2rem;
 }
 
 .assignment-page .analytics-card h4 {
@@ -822,8 +805,7 @@
     overflow-x: auto;
   }
   
-  .submissions-summary,
-  .analytics-grid {
+  .assignment-page .analytics-grid {
     grid-template-columns: 1fr;
   }
   

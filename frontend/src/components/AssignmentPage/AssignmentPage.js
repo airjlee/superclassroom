@@ -6,7 +6,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
   const assignmentData = {
     1: {
       title: 'Limits and Continuity',
-      type: 'Quiz',
+      type: 'Superquiz',
       courseTitle: 'Biology 101',
       description: 'This assignment covers the fundamental concepts of limits and continuity in calculus.',
       startDate: '2024-01-10',
@@ -31,7 +31,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
     },
     2: {
       title: 'Derivative Rules',
-      type: 'Concept',
+      type: 'Superconcept',
       courseTitle: 'Biology 101',
       description: 'Understanding and applying basic derivative rules including power rule, product rule, and chain rule.',
       startDate: '2024-01-12',
@@ -56,7 +56,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
     },
     3: {
       title: 'Chain Rule Practice',
-      type: 'Quiz',
+      type: 'Superquiz',
       courseTitle: 'Biology 101',
       description: 'Practice problems focusing specifically on the chain rule for composite functions.',
       startDate: '2024-01-15',
@@ -81,7 +81,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
     },
     4: {
       title: 'Integration Basics',
-      type: 'Concept',
+      type: 'Superconcept',
       courseTitle: 'Biology 101',
       description: 'Introduction to integration as the reverse of differentiation.',
       startDate: '2024-01-20',
@@ -107,7 +107,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
   };
 
   const assignment = assignmentData[assignmentId];
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('submissions');
 
   if (!assignment) {
     return (
@@ -166,6 +166,9 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
           <div className="assignment-title-section">
             <div className="title-and-badge">
               <span className={`assignment-type-badge ${assignment.type.toLowerCase()}`}>
+                <span className="material-icons assignment-type-icon">
+                  {assignment.type.toLowerCase() === 'superquiz' ? 'edit' : 'article'}
+                </span>
                 {assignment.type}
               </span>
               <h1 className="assignment-title">{assignment.title}</h1>
@@ -312,16 +315,16 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
       <div className="assignment-page-tabs">
         <div className="assignment-page-tabs-inner">
           <button 
-            className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
-            onClick={() => setActiveTab('overview')}
-          >
-            Overview
-          </button>
-          <button 
             className={`tab-button ${activeTab === 'submissions' ? 'active' : ''}`}
             onClick={() => setActiveTab('submissions')}
           >
             Submissions
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('overview')}
+          >
+            Overview
           </button>
           <button 
             className={`tab-button ${activeTab === 'analytics' ? 'active' : ''}`}
@@ -360,21 +363,6 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
 
         {activeTab === 'submissions' && (
           <div className="submissions-content">
-            <div className="submissions-summary">
-              <div className="summary-card">
-                <h4>Total Submissions</h4>
-                <div className="summary-value">{assignment.submissionsCount}</div>
-              </div>
-              <div className="summary-card">
-                <h4>Pending Reviews</h4>
-                <div className="summary-value">{Math.max(0, assignment.submissionsCount - 15)}</div>
-              </div>
-              <div className="summary-card">
-                <h4>Average Score</h4>
-                <div className="summary-value">87%</div>
-              </div>
-            </div>
-            
             <div className="submissions-table-container">
               <table className="submissions-table">
                 <thead>
