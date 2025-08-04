@@ -28,6 +28,9 @@ const AssignmentCreator = ({ onNavigateBack }) => {
   const [dragOverSection, setDragOverSection] = useState(null);
   const [dateInputValue, setDateInputValue] = useState('');
   const [isEditingDate, setIsEditingDate] = useState(false);
+  const [aiStrictness, setAiStrictness] = useState(50);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [instructions, setInstructions] = useState('');
 
   const handleAssignmentChange = (field, value) => {
     setAssignment(prev => ({
@@ -240,39 +243,96 @@ const AssignmentCreator = ({ onNavigateBack }) => {
       <div className="assignment-creator-content">
         <div className="divider"></div>
         
-        <div className="sections-container">
-          <h3 className="components-title">
-            <span className="material-icons components-icon">widgets</span>
-            Components
-          </h3>
-          <div className="sections-grid">
-            {assignment.sections.map((section) => (
-              <div
-                key={section.id}
-                className={`section-card ${section.type} ${
-                  draggedSection === section.id ? 'dragging' : ''
-                } ${
-                  dragOverSection === section.id ? 'drag-over' : ''
-                }`}
-                draggable
-                onDragStart={(e) => handleDragStart(e, section.id)}
-                onDragOver={(e) => handleDragOver(e, section.id)}
-                onDragLeave={(e) => handleDragLeave(e, section.id)}
-                onDrop={(e) => handleDrop(e, section.id)}
-                onDragEnd={handleDragEnd}
-              >
-                <div className="section-card-content">
-                  <span className="material-icons section-icon">
-                    {section.type === 'superconcept' ? 'article' : 'edit'}
-                  </span>
-                  <span className="section-title">{section.title}</span>
-                </div>
+        <div className="settings-sections">
+          <div className="ai-settings-section">
+            <h3 className="ai-settings-title">
+              <span className="material-icons ai-settings-icon">smart_toy</span>
+              AI Settings
+            </h3>
+            <div className="ai-strictness-container">
+              <div className="ai-strictness-header">
+                <span className="ai-strictness-label">Strictness</span>
+                <span className="ai-strictness-value">{aiStrictness}%</span>
               </div>
-            ))}
-            <button className="add-block-button">
-              <span className="material-icons">add</span>
-              <span>Add</span>
-            </button>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={aiStrictness}
+                onChange={(e) => setAiStrictness(parseInt(e.target.value))}
+                className="ai-strictness-slider"
+              />
+              <div className="ai-strictness-description">
+                Controls how strictly the AI evaluates student responses. Higher values mean more rigorous assessment.
+              </div>
+              
+              <div className="instructions-section">
+                {!showInstructions ? (
+                  <button 
+                    className="add-instructions-button"
+                    onClick={() => setShowInstructions(true)}
+                  >
+                    <span className="material-icons">add</span>
+                    Add Instructions
+                  </button>
+                ) : (
+                  <div className="instructions-editor">
+                    <div className="instructions-header">
+                      <span className="instructions-label">Instructions</span>
+                      <button 
+                        className="close-instructions-button"
+                        onClick={() => setShowInstructions(false)}
+                      >
+                        <span className="material-icons">close</span>
+                      </button>
+                    </div>
+                    <textarea
+                      className="instructions-textarea"
+                      value={instructions}
+                      onChange={(e) => setInstructions(e.target.value)}
+                      placeholder="Add specific instructions for students..."
+                      rows="4"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <div className="sections-container">
+            <h3 className="components-title">
+              <span className="material-icons components-icon">widgets</span>
+              Components
+            </h3>
+            <div className="sections-grid">
+              {assignment.sections.map((section) => (
+                <div
+                  key={section.id}
+                  className={`section-card ${section.type} ${
+                    draggedSection === section.id ? 'dragging' : ''
+                  } ${
+                    dragOverSection === section.id ? 'drag-over' : ''
+                  }`}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, section.id)}
+                  onDragOver={(e) => handleDragOver(e, section.id)}
+                  onDragLeave={(e) => handleDragLeave(e, section.id)}
+                  onDrop={(e) => handleDrop(e, section.id)}
+                  onDragEnd={handleDragEnd}
+                >
+                  <div className="section-card-content">
+                    <span className="material-icons section-icon">
+                      {section.type === 'superconcept' ? 'article' : 'edit'}
+                    </span>
+                    <span className="section-title">{section.title}</span>
+                  </div>
+                </div>
+              ))}
+              <button className="add-block-button">
+                <span className="material-icons">add</span>
+                <span>Add</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
