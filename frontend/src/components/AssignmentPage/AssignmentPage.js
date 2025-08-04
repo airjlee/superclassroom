@@ -404,163 +404,163 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack, onNavigateToSu
                   <tr>
                     <td>Alice Brown</td>
                     <td>2024-01-14 3:45 PM</td>
-                    <td>95%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Alice Brown', 1)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Alice Brown', 1)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>John Davis</td>
                     <td>2024-01-15 11:22 AM</td>
                     <td>-</td>
                     <td><span className="status-badge pending">Pending</span></td>
-                    <td><button className="action-btn primary">Grade</button></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('John Davis', 2)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Sarah Miller</td>
                     <td>2024-01-14 8:15 PM</td>
-                    <td>92%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Sarah Miller', 2)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Sarah Miller', 3)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Michael Chen</td>
                     <td>2024-01-15 2:10 PM</td>
-                    <td>88%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Michael Chen', 3)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Michael Chen', 4)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Emma Johnson</td>
                     <td>2024-01-14 1:30 PM</td>
-                    <td>97%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Emma Johnson', 4)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Emma Johnson', 5)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>David Wilson</td>
                     <td>2024-01-15 9:45 AM</td>
                     <td>-</td>
                     <td><span className="status-badge pending">Pending</span></td>
-                    <td><button className="action-btn primary">Grade</button></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('David Wilson', 17)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Lisa Garcia</td>
                     <td>2024-01-14 7:20 PM</td>
-                    <td>91%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Lisa Garcia', 5)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Lisa Garcia', 6)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Ryan Thompson</td>
                     <td>2024-01-14 4:55 PM</td>
-                    <td>85%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Ryan Thompson', 6)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Ryan Thompson', 7)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Jessica Wang</td>
                     <td>2024-01-15 6:30 PM</td>
                     <td>-</td>
                     <td><span className="status-badge pending">Pending</span></td>
-                    <td><button className="action-btn primary">Grade</button></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Jessica Wang', 18)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Alex Rodriguez</td>
                     <td>2024-01-14 10:15 AM</td>
-                    <td>89%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Alex Rodriguez', 7)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Alex Rodriguez', 8)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Sophia Lee</td>
                     <td>2024-01-14 6:45 PM</td>
-                    <td>94%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Sophia Lee', 8)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Sophia Lee', 9)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Marcus Smith</td>
                     <td>2024-01-15 1:20 PM</td>
                     <td>-</td>
                     <td><span className="status-badge pending">Pending</span></td>
-                    <td><button className="action-btn primary">Grade</button></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Marcus Smith', 19)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Olivia Martinez</td>
                     <td>2024-01-14 5:10 PM</td>
-                    <td>93%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Olivia Martinez', 9)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Olivia Martinez', 10)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>James Anderson</td>
                     <td>2024-01-14 2:35 PM</td>
-                    <td>87%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('James Anderson', 10)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('James Anderson', 11)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Ava Taylor</td>
                     <td>2024-01-15 4:15 PM</td>
                     <td>-</td>
                     <td><span className="status-badge pending">Pending</span></td>
-                    <td><button className="action-btn primary">Grade</button></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Ava Taylor', 20)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Noah Jackson</td>
                     <td>2024-01-14 9:25 AM</td>
-                    <td>90%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Noah Jackson', 11)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Noah Jackson', 12)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Mia Williams</td>
                     <td>2024-01-14 11:50 AM</td>
-                    <td>96%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Mia Williams', 12)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Mia Williams', 13)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Ethan Clark</td>
                     <td>2024-01-15 12:40 PM</td>
                     <td>-</td>
                     <td><span className="status-badge pending">Pending</span></td>
-                    <td><button className="action-btn primary">Grade</button></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Ethan Clark', 21)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Grace Lewis</td>
                     <td>2024-01-14 3:20 PM</td>
-                    <td>84%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Grace Lewis', 13)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Grace Lewis', 14)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Lucas Hall</td>
                     <td>2024-01-15 8:30 AM</td>
                     <td>-</td>
                     <td><span className="status-badge pending">Pending</span></td>
-                    <td><button className="action-btn primary">Grade</button></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Lucas Hall', 22)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Isabella Young</td>
                     <td>2024-01-14 7:55 PM</td>
-                    <td>91%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Isabella Young', 14)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Isabella Young', 15)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>William King</td>
                     <td>2024-01-14 12:15 PM</td>
-                    <td>86%</td>
-                    <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('William King', 15)}>View</button></td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('William King', 16)}>Grade</button></td>
                   </tr>
                   <tr>
                     <td>Charlotte Wright</td>
                     <td>2024-01-15 3:50 PM</td>
                     <td>-</td>
                     <td><span className="status-badge pending">Pending</span></td>
-                    <td><button className="action-btn primary">Grade</button></td>
+                    <td><button className="action-btn primary" onClick={() => handleViewSubmission('Charlotte Wright', 23)}>Grade</button></td>
                   </tr>
                 </tbody>
               </table>

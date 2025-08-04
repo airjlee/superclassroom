@@ -12,8 +12,8 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
       assignmentType: 'Superquiz',
       courseTitle: 'Biology 101',
       submittedDate: '2024-01-14 3:45 PM',
-      score: 95,
-      status: 'graded',
+      score: null,
+      status: 'pending',
       timeSpent: '18 minutes',
       attempts: 1,
       submission: {
@@ -179,21 +179,7 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
             </div>
           </div>
           
-          <div className="score-section">
-            <div className="score-display">
-              <div className={`score-circle ${getScoreColor(submission.score)}`}>
-                <span className="score-value">{submission.score}%</span>
-              </div>
-            </div>
-            <div className="score-details">
-              <div className="score-title">Final Score</div>
-              <div className="score-status">
-                <span className={`status-badge ${submission.status}`}>
-                  {submission.status === 'graded' ? 'Graded' : 'Pending'}
-                </span>
-              </div>
-            </div>
-          </div>
+
 
           <div className="time-section">
             <div className="meta-icon">
@@ -205,13 +191,34 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
             </div>
           </div>
 
-          <div className="attempts-section">
-            <div className="meta-icon">
-              <span className="material-icons">refresh</span>
+
+        </div>
+      </div>
+
+      <div className="performance-summary-section">
+        <div className="performance-header">
+          <span className="material-icons">assessment</span>
+          <h3>Performance Summary</h3>
+        </div>
+        
+        <div className="strengths-section">
+          <h4>Strengths</h4>
+          <p>Alice <span className="highlight-green">correctly applied the limit definition</span> and <span className="highlight-green">showed clear step-by-step work</span>. She <span className="highlight-green">demonstrated strong algebraic manipulation skills</span>, <span className="highlight-green">providing detailed explanations of her reasoning</span> throughout the assignment.</p>
+        </div>
+        
+        <div className="areas-improvement-section">
+          <h4>Areas of Improvement</h4>
+          <p>Alice <span className="highlight-orange">struggled with factoring techniques</span> in problem 2. She <span className="highlight-orange">showed some confusion with limit notation</span> and <span className="highlight-orange">provided incomplete justifications</span> for her final answers in the last two problems.</p>
+        </div>
+        
+        <div className="superscore-section">
+          <div className="superscore-main">
+            <div className="superscore-circle-large superscore-excellent">
+              <span className="superscore-number-large">9.4</span>
             </div>
-            <div className="meta-details">
-              <div className="meta-title">Attempts</div>
-              <div className="meta-value">{submission.attempts}</div>
+            <div className="superscore-summary">
+              <h4>Superclassroom AI Superscore®</h4>
+              <p>This student demonstrates exceptional understanding of limit concepts with a beneficial use of AI.</p>
             </div>
           </div>
         </div>
@@ -236,6 +243,12 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
             onClick={() => setActiveTab('analytics')}
           >
             Analytics
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'ai-log' ? 'active' : ''}`}
+            onClick={() => setActiveTab('ai-log')}
+          >
+            AI Log
           </button>
         </div>
       </div>
@@ -344,19 +357,69 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
                 <div className="analytics-trend neutral">Average for assignment</div>
               </div>
               <div className="analytics-card">
-                <h4>Attempts Used</h4>
-                <div className="analytics-value">{submission.attempts}</div>
-                <div className="analytics-trend positive">First attempt success</div>
+                <h4>Submission Status</h4>
+                <div className="analytics-value">Pending</div>
+                <div className="analytics-trend neutral">Awaiting grading</div>
               </div>
               <div className="analytics-card">
                 <h4>Class Rank</h4>
-                <div className="analytics-value">3rd</div>
-                <div className="analytics-trend positive">Top 10%</div>
+                <div className="analytics-value">-</div>
+                <div className="analytics-trend neutral">Not yet ranked</div>
               </div>
               <div className="analytics-card">
                 <h4>Time vs Class</h4>
-                <div className="analytics-value">-6 min</div>
-                <div className="analytics-trend positive">Faster than average</div>
+                <div className="analytics-value">-</div>
+                <div className="analytics-trend neutral">Analysis pending</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'ai-log' && (
+          <div className="ai-log-content">
+            <div className="ai-log-section">
+              <h3>AI Processing Log</h3>
+              <div className="log-entries">
+                <div className="log-entry">
+                  <div className="log-timestamp">2024-01-14 3:46 PM</div>
+                  <div className="log-type analysis">Analysis</div>
+                  <div className="log-message">Started automated evaluation of student submission for "Limits and Continuity"</div>
+                </div>
+                <div className="log-entry">
+                  <div className="log-timestamp">2024-01-14 3:46 PM</div>
+                  <div className="log-type processing">Processing</div>
+                  <div className="log-message">Analyzing mathematical notation and problem-solving approach</div>
+                </div>
+                <div className="log-entry">
+                  <div className="log-timestamp">2024-01-14 3:46 PM</div>
+                  <div className="log-type validation">Validation</div>
+                  <div className="log-message">Validated algebraic steps: factorization (x² - 4) = (x + 2)(x - 2) ✓</div>
+                </div>
+                <div className="log-entry">
+                  <div className="log-timestamp">2024-01-14 3:46 PM</div>
+                  <div className="log-type validation">Validation</div>
+                  <div className="log-message">Confirmed limit evaluation: lim(x→2) = 4 ✓</div>
+                </div>
+                <div className="log-entry">
+                  <div className="log-timestamp">2024-01-14 3:47 PM</div>
+                  <div className="log-type insight">Insight</div>
+                  <div className="log-message">Generated strength analysis: Excellent recognition of indeterminate form</div>
+                </div>
+                <div className="log-entry">
+                  <div className="log-timestamp">2024-01-14 3:47 PM</div>
+                  <div className="log-type insight">Insight</div>
+                  <div className="log-message">Identified improvement area: Could mention alternative approaches</div>
+                </div>
+                <div className="log-entry">
+                  <div className="log-timestamp">2024-01-14 3:47 PM</div>
+                  <div className="log-type score">Scoring</div>
+                  <div className="log-message">AI Superscore calculated: 93.5/100 based on rubric criteria</div>
+                </div>
+                <div className="log-entry">
+                  <div className="log-timestamp">2024-01-14 3:47 PM</div>
+                  <div className="log-type complete">Complete</div>
+                  <div className="log-message">AI analysis completed. Ready for instructor review.</div>
+                </div>
               </div>
             </div>
           </div>
