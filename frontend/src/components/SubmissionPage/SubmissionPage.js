@@ -107,10 +107,6 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
     return (
       <div className="submission-page">
         <div className="submission-page-header">
-          <button className="back-button" onClick={onNavigateBack}>
-            <span className="material-icons">arrow_back</span>
-            Back to Assignment
-          </button>
         </div>
         <div className="submission-page-content">
           <div className="submission-not-found">
@@ -152,27 +148,11 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
   return (
     <div className="submission-page">
       <div className="submission-page-header">
-        <button className="back-button" onClick={onNavigateBack}>
-          <span className="material-icons">arrow_back</span>
-          Back to Assignment
-        </button>
         <div className="submission-header-info">
           <div className="submission-title-section">
             <div className="title-and-badge">
-              <div className="assignment-badges">
-                <span className="assignment-type-badge superconcept">
-                  <span className="material-icons assignment-type-icon">article</span>
-                  Superconcept
-                </span>
-                <span className={`assignment-type-badge ${submission.assignmentType.toLowerCase()}`}>
-                  <span className="material-icons assignment-type-icon">
-                    {submission.assignmentType.toLowerCase() === 'superquiz' ? 'edit' : 'article'}
-                  </span>
-                  {submission.assignmentType}
-                </span>
-              </div>
-              <h1 className="submission-title">{submission.assignmentTitle}</h1>
-              <p className="submission-student">Submission by {submission.studentName}</p>
+              <h1 className="submission-title">{submission.studentName}'s</h1>
+              <p className="submission-student">Submission for Limits and Continuity</p>
             </div>
             <div className="header-actions">
               <button className="action-button secondary">
