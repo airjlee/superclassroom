@@ -350,6 +350,8 @@ const Assignment = ({ onNavigateHome }) => {
     }
   };
 
+  const [socraticComplete, setSocraticComplete] = useState(false);
+
   const canClickActionButton = () => {
     if (currentQuestion === 0) {
       if (!isSubmitted) {
@@ -358,8 +360,8 @@ const Assignment = ({ onNavigateHome }) => {
         return true; // Can proceed to next question
       }
     } else {
-      // For Socratic Dialogue (Q2), check if understanding is 100%
-      return window.socraticUnderstandingScore === 100;
+      // For Socratic Dialogue (Q2), check if understanding is 100% and socraticComplete is true
+      return window.socraticUnderstandingScore === 100 && socraticComplete;
     }
   };
 
@@ -371,7 +373,12 @@ const Assignment = ({ onNavigateHome }) => {
         handleNextQuestion();
       }
     } else {
-      handleNextQuestion(); // This will navigate home
+      // If socraticComplete, go home
+      if (socraticComplete) {
+        onNavigateHome();
+      } else {
+        handleNextQuestion(); // fallback
+      }
     }
   };
 
@@ -397,13 +404,14 @@ const Assignment = ({ onNavigateHome }) => {
           >
             {getActionButtonText()}
           </button>
-          <button 
-            className={`ai-help-button ${currentQuestion === 1 ? 'disabled' : ''}`}
+          <img 
+            src="/diamond-icon.png" 
+            alt="AI Help" 
+            className={`ai-help-icon-button ${currentQuestion === 1 ? 'disabled' : ''}`}
             onClick={handleShowTutor}
-            disabled={currentQuestion === 1}
-          >
-            Get AI Help
-          </button>
+            title="Get AI Help"
+            style={{ cursor: currentQuestion === 1 ? 'not-allowed' : 'pointer' }}
+          />
           <button 
             className="back-button-small"
             onClick={onNavigateHome}
@@ -524,9 +532,10 @@ const Assignment = ({ onNavigateHome }) => {
             /* Question 2: Socratic Dialogue */
             <div className="socratic-wrapper">
               <SocraticDialogue 
-                onNavigateHome={() => {}} 
+                onNavigateHome={onNavigateHome}
                 onUnderstandingChange={(score) => {
                   window.socraticUnderstandingScore = score;
+                  if (score === 100) setSocraticComplete(true);
                 }}
               />
             </div>

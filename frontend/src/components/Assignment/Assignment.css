@@ -134,6 +134,42 @@
   border: none;
 }
 
+/* AI Help Icon Button */
+.ai-help-icon-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.2);
+}
+
+.ai-help-icon-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ai-help-icon-button:active {
+  transform: translateY(0) scale(1.02);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ai-help-icon-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.ai-help-icon-button.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .back-button-small {
   width: 40px;
   height: 40px;
@@ -272,20 +308,27 @@
 
 .sidebar-back-button {
   width: 100%;
-  background: #6c757d;
-  color: white;
-  border: none;
-  padding: 10px 16px;
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  padding: 12px 16px;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .sidebar-back-button:hover {
-  background: #5a6268;
-  transform: translateY(-1px);
+  background: #e9ecef;
+}
+
+.sidebar-back-button:active {
+  background: #dee2e6;
 }
 
 /* Main Assignment Area */

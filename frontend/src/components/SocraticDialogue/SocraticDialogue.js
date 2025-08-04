@@ -125,84 +125,58 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
     if (initialResponse.trim() !== '') {
       setHasSubmittedInitial(true);
       
+      // Get the first response from the getAIResponse array
+      const firstAIResponse = getAIResponse('', 1); // conversationLength = 1 for the first response
+      
       // Add initial response to chat history and show chat immediately
       const initialChatHistory = [
         { sender: 'student', message: initialResponse },
-        { sender: 'ai', message: 'Excellent! You\'ve touched on something really important - that linear independence helps us "capture the full behavior" of the differential equation.\n\nLet me ask you this: What does it mean mathematically for a second-order differential equation to have "full behavior"? In other words, how many independent pieces of information do you think we need to completely describe all possible solutions?' }
+        { sender: 'ai', message: firstAIResponse }
       ];
-
+  
       setShowChat(true);
       setChatHistory(initialChatHistory);
     }
   };
 
   const getAIResponse = (userMessage, conversationLength) => {
-    const lowerMessage = userMessage.toLowerCase();
+    // Fixed responses array - outputs in order regardless of input
+    const responses = [
+      "Great intuition! You've identified that continuity is about avoiding \"jumps or breaks.\"\n\nLet me ask you this: When you say the limit and function value \"should be the same,\" what exactly do you mean by \"the limit\"? If I'm approaching a point from different directions, what should happen?",
+      
+      "Excellent! You're talking about the limit existing, which means the left-hand and right-hand limits must be equal.\n\nNow here's a key question: Suppose I have a function where the left and right limits both equal 5 as x approaches 2. Does that automatically make the function continuous at x = 2?",
+      
+      "Hmm, let me give you a specific example. Consider this function:\nf(x) = 5 for all x ≠ 2, but f(2) = 10\n\nWhat's the limit as x approaches 2? And what's the function value at x = 2?",
+      
+      "Exactly! So even though the limit exists and equals 5, the function isn't continuous at x = 2.\n\nThis tells us that for continuity, we need more than just the limit to exist. What additional condition do you think we need?",
+      
+      "Perfect! So we're building up the definition of continuity piece by piece.\n\nBut wait - there's actually one more condition we haven't talked about yet. What if the function wasn't even defined at x = 2? Could we talk about continuity there?",
+      
+      "Excellent reasoning! So for continuity at a point, the function must first be defined there.\n\nNow, let me ask you this: If I have a function that satisfies all our conditions - it's defined at a point, the limit exists, and the limit equals the function value - but then I change just the function value at that one point, what happens to continuity?",
+      
+      "Right! And what type of discontinuity would that be? Think about what the graph would look like.",
+      
+      "Good thinking! Actually, it would be what we call a \"removable discontinuity\" - like a single point that's out of place. The limit still exists, but the function value doesn't match.\n\nNow here's the deeper question: Why do you think mathematicians care so much about this precise definition of continuity? What does it allow us to do?",
+      
+      "You're on the right track! Think about it this way: if a function is continuous on an interval, what can you say about its behavior? Can you make any predictions about what happens between two points?",
+      
+      "Exactly! Continuity gives us predictability. If a function is continuous, we know it doesn't have any sudden jumps or breaks.\n\nNow, let's connect this back to limits: Why do you think the limit and function value need to be equal for continuity? What would happen if they weren't?",
+      
+      "Perfect! You've really grasped the connection. The limit tells us what the function is approaching, and the function value tells us what it actually is at that point.\n\nFor continuity, these must match - otherwise, there's a gap or jump. This is why the precise definition matters so much in calculus and analysis.",
+      
+      "Excellent work! You've successfully explored the relationship between limits and continuity. You understand that:\n\n• Continuity requires the function to be defined at the point\n• The limit must exist at that point\n• The limit must equal the function value\n\nThis foundational understanding will serve you well in calculus and beyond!"
+    ];
     
-    // Response based on conversation stage and content
-    if (conversationLength <= 2) {
-      if (lowerMessage.includes('two') || lowerMessage.includes('2')) {
-        return 'Good instinct on the "two"! You\'re absolutely right for second-order equations.\n\nHere\'s a way to think about it: If I gave you a second-order differential equation and said "find the specific solution," what additional information would I need to give you to pin down exactly which solution I want?';
-      }
-      return 'Let me help guide your thinking. For a second-order differential equation, think about how many pieces of information you typically need. What\'s your guess?';
+    // Calculate response index accounting for initial messages
+    // conversationLength includes: initial student message + initial AI response + subsequent user messages
+    // We want to skip the initial AI response (index 0) and start from the first chat response (index 1)
+    const responseIndex = Math.floor((conversationLength - 2) / 2) + 1; // -2 to account for initial messages, +1 to start from second response
+    
+    if (responseIndex < responses.length) {
+      return responses[responseIndex];
+    } else {
+      return responses[responses.length - 1]; // Return last response for any additional messages
     }
-    
-    if (conversationLength <= 4) {
-      if (lowerMessage.includes('initial') || lowerMessage.includes('condition')) {
-        return 'Exactly! Initial conditions. And for a second-order equation, how many initial conditions do you think I\'d typically need to give you?\n\nOnce you answer that, I think we\'ll start to see why that number "two" you guessed earlier is so important...';
-      }
-      return 'Think about what extra information would help you find one specific solution out of infinitely many possible solutions...';
-    }
-    
-    if (conversationLength <= 6) {
-      if (lowerMessage.includes('two') || lowerMessage.includes('2')) {
-        return 'Perfect! So we need two initial conditions to pin down a unique solution to a second-order differential equation.\n\nNow here\'s the key connection: If our general solution has two arbitrary constants - like y = c₁y₁ + c₂y₂ - and we have two initial conditions, we can solve for those constants and get our specific solution.\n\nBut what do you think would happen if y₁ and y₂ weren\'t linearly independent? What would that mean for our ability to satisfy any given pair of initial conditions?';
-      }
-      return 'For a second-order equation, how many initial conditions do you typically need?';
-    }
-    
-    if (conversationLength <= 8) {
-      if (lowerMessage.includes('can\'t') || lowerMessage.includes('cannot') || lowerMessage.includes('constant')) {
-        return 'Exactly! You only have one effective constant instead of two.\n\nNow here\'s the critical question: If you have only one constant to determine, but you need to satisfy two initial conditions, what\'s the problem?';
-      }
-      return 'Think about what happens when functions aren\'t linearly independent - how many effective constants would you really have?';
-    }
-    
-    if (conversationLength <= 10) {
-      if (lowerMessage.includes('one') || lowerMessage.includes('apply')) {
-        return 'Close! Actually, you can still apply both initial conditions - you can still write down the two equations.\n\nBut here\'s the real issue: what happens when you try to solve that system of two equations but you only have one unknown constant?';
-      }
-      return 'What\'s the mathematical problem when you have only one constant but two initial conditions to satisfy?';
-    }
-    
-    if (conversationLength <= 12) {
-      if (lowerMessage.includes('not sure') || lowerMessage.includes('don\'t know')) {
-        return 'Think about it this way: you\'d have two equations but only one unknown.\n\nIn general, what happens when you have more equations than unknowns in a system? Is such a system always guaranteed to have a solution?';
-      }
-      return 'Consider: two equations, one unknown. What kind of system is that?';
-    }
-    
-    if (conversationLength <= 14) {
-      if (lowerMessage.includes('no solution') || lowerMessage.includes('overdetermined')) {
-        return 'Exactly! Most of the time there\'s no solution - the system is overdetermined.\n\nSo this connects back to your original insight about "capturing the full behavior." If your functions aren\'t linearly independent, you can\'t satisfy arbitrary initial conditions, which means you\'re missing some of the possible behaviors of the differential equation.\n\nNow, can you see why repeated roots create a special problem? What would happen if you tried to use e^(2x) and e^(2x) as your two "solutions" for a repeated root r = 2?';
-      }
-      return 'What happens when you have more equations than unknowns?';
-    }
-    
-    if (conversationLength <= 16) {
-      if (lowerMessage.includes('dependent') || lowerMessage.includes('initial condition')) {
-        return 'Beautifully put! You\'ve connected all the pieces.\n\nNow, try answering the original question again: Why do you think linear independence is important for general solutions when dealing with repeated roots in ODEs?\n\nGo ahead and give me your full understanding now - I\'m excited to hear how you\'d explain it!';
-      }
-      return 'Think about what happens when you use the same solution twice - like e^(2x) and e^(2x). What does that do to your general solution?';
-    }
-    
-    // Final response for comprehensive answer
-    if (lowerMessage.includes('overdetermined') || lowerMessage.includes('capture') || lowerMessage.includes('behavior')) {
-      return 'Excellent! You\'ve absolutely nailed it. You\'ve connected all the key pieces:\n\n• The need for enough independent constants to match the number of initial conditions\n• How repeated roots create the risk of linear dependence\n• The mathematical consequence - an overdetermined system\n• The bigger picture - that we need to capture the full solution space\n\nThis is exactly the kind of deep understanding that will serve you well. You\'ve moved from a vague sense that "we need the right solution" to a precise understanding of why linear independence is mathematically necessary.\n\n✓ Assignment Complete!';
-    }
-    
-    // Default encouraging response
-    return 'You\'re on the right track! Can you elaborate on that thought and connect it back to what we\'ve been discussing about initial conditions?';
   };
 
   const handleChatSubmit = (e) => {
@@ -383,6 +357,9 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
               />
               <button onClick={handleChatSubmit} className="chat-send-button" disabled={isAITyping}>
                 Send
+              </button>
+              <button className="ai-help-circle-button" title="Get AI Help">
+                <img src="/diamond-icon.png" alt="AI Help" className="ai-help-icon" />
               </button>
             </div>
             {showEndModal && (
