@@ -497,45 +497,45 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
                 <div className="modal-breakdown">
                   <div className="breakdown-item">
                     <div className="breakdown-label">
-                      <span className="material-icons">psychology</span>
-                      Problem Understanding
+                      <span className="material-icons">timer</span>
+                      Time Spent on Model
                     </div>
-                    <div className="breakdown-score">9.2/10</div>
+                    <div className="breakdown-score time-spent">18 min</div>
                     <div className="breakdown-description">
-                      Alice effectively used AI to break down complex limit problems and understand the underlying concepts.
+                      Alice spent appropriate time engaging with the AI model, showing thoughtful interaction.
                     </div>
                   </div>
                   
                   <div className="breakdown-item">
                     <div className="breakdown-label">
-                      <span className="material-icons">lightbulb</span>
-                      Solution Strategy
+                      <span className="material-icons">chat</span>
+                      Prompt Quality
                     </div>
-                    <div className="breakdown-score">8.7/10</div>
+                    <div className="breakdown-score prompt-quality">Good</div>
                     <div className="breakdown-description">
-                      Demonstrated good use of AI to explore different approaches and select optimal solution methods.
+                      Demonstrated excellent prompt engineering with clear, specific questions and follow-ups.
                     </div>
                   </div>
                   
                   <div className="breakdown-item">
                     <div className="breakdown-label">
-                      <span className="material-icons">edit</span>
-                      Implementation
+                      <span className="material-icons">warning</span>
+                      Misuse Flags
                     </div>
-                    <div className="breakdown-score">8.5/10</div>
+                    <div className="breakdown-score misuse-flags">1 Flag</div>
                     <div className="breakdown-description">
-                      Successfully implemented AI-suggested solutions while maintaining mathematical rigor and clarity.
+                      Clean interaction with no misuse detection flags raised during the session.
                     </div>
                   </div>
                   
                   <div className="breakdown-item">
                     <div className="breakdown-label">
-                      <span className="material-icons">verified</span>
-                      Verification
+                      <span className="material-icons">forum</span>
+                      Depth of Conversation
                     </div>
-                    <div className="breakdown-score">8.9/10</div>
+                    <div className="breakdown-score depth-conversation">Good</div>
                     <div className="breakdown-description">
-                      Used AI effectively to verify solutions and catch potential errors in reasoning or calculation.
+                      Showed deep engagement with multi-turn conversations and detailed follow-up questions.
                     </div>
                   </div>
                 </div>
