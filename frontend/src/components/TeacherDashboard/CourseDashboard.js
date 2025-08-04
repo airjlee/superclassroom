@@ -180,7 +180,7 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavig
           <div className="analytics-summary">
             <div className="analytics-card">
               <div className="analytics-content">
-                <h3>Superscore Average</h3>
+                <h3>Superscore® Average</h3>
                 <div className="analytics-value">84%</div>
                 <div className="analytics-trend positive">↑ 6% from last month</div>
               </div>
@@ -194,7 +194,7 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavig
             </div>
             <div className="analytics-card pie-chart-card">
               <div className="analytics-content">
-                <h3>Time Spent Using AI</h3>
+                <h3>Assignment Time Distribution</h3>
                 <div className="pie-chart-container">
                   <div className="pie-chart"></div>
                   <div className="pie-legend">
