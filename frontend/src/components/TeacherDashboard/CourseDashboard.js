@@ -11,7 +11,7 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavig
   // Mock course data - in real app this would come from API
   const courseData = {
     1: { name: 'Calculus I', subject: 'Mathematics', students: 28, color: '#4A90E2' },
-    2: { name: 'Biology 101', subject: 'Science', students: 35, color: '#7ED321' },
+    2: { name: 'Calculus I', subject: 'Mathematics', students: 35, color: '#7ED321' },
     3: { name: 'World History', subject: 'Social Studies', students: 32, color: '#F5A623' },
     4: { name: 'English Literature', subject: 'Language Arts', students: 25, color: '#9013FE' }
   };

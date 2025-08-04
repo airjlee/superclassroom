@@ -10,7 +10,7 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
       submissionId: 'SUB-001',
       assignmentTitle: 'Limits and Continuity',
       assignmentType: 'Superquiz',
-      courseTitle: 'Biology 101',
+      courseTitle: 'Calculus I',
       submittedDate: '2024-01-14 3:45 PM',
       score: null,
       status: 'pending',
@@ -58,6 +58,7 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
 
   const submission = submissionData[submissionId];
   const [activeTab, setActiveTab] = useState('submission');
+  const [showSuperscoreModal, setShowSuperscoreModal] = useState(false);
 
   // Scroll to top when component mounts or submissionId changes
   useEffect(() => {
@@ -213,7 +214,11 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
         
         <div className="superscore-section">
                       <div className="superscore-main">
-              <div className="superscore-circle-large superscore-excellent">
+              <div 
+                className="superscore-circle-large superscore-excellent"
+                onClick={() => setShowSuperscoreModal(true)}
+                style={{ cursor: 'pointer' }}
+              >
                 <svg className="superscore-progress" width="120" height="120" viewBox="0 0 120 120">
                   <circle 
                     cx="60" 
@@ -448,6 +453,97 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
           </div>
         )}
       </div>
+      
+      {/* Superscore Modal */}
+      {showSuperscoreModal && (
+        <div className="modal-overlay" onClick={() => setShowSuperscoreModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="modal-close-small"
+              onClick={() => setShowSuperscoreModal(false)}
+            >
+              <span className="material-icons">close</span>
+            </button>
+            
+            <div className="modal-body">
+              <div className="modal-layout">
+                <div className="modal-superscore-circle">
+                  <svg className="superscore-progress-modal" width="200" height="200" viewBox="0 0 200 200">
+                    <circle 
+                      cx="100" 
+                      cy="100" 
+                      r="90" 
+                      fill="transparent" 
+                      stroke="#e9ecef" 
+                      strokeWidth="8"
+                    />
+                    <circle 
+                      className="superscore-progress-circle-modal"
+                      cx="100" 
+                      cy="100" 
+                      r="90" 
+                      fill="transparent" 
+                      stroke="#90EE90" 
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                      strokeDasharray="565.487"
+                      strokeDashoffset="565.487"
+                      transform="rotate(-90 100 100)"
+                    />
+                  </svg>
+                  <span className="superscore-number-modal">8.8</span>
+                </div>
+                
+                <div className="modal-breakdown">
+                  <div className="breakdown-item">
+                    <div className="breakdown-label">
+                      <span className="material-icons">psychology</span>
+                      Problem Understanding
+                    </div>
+                    <div className="breakdown-score">9.2/10</div>
+                    <div className="breakdown-description">
+                      Alice effectively used AI to break down complex limit problems and understand the underlying concepts.
+                    </div>
+                  </div>
+                  
+                  <div className="breakdown-item">
+                    <div className="breakdown-label">
+                      <span className="material-icons">lightbulb</span>
+                      Solution Strategy
+                    </div>
+                    <div className="breakdown-score">8.7/10</div>
+                    <div className="breakdown-description">
+                      Demonstrated good use of AI to explore different approaches and select optimal solution methods.
+                    </div>
+                  </div>
+                  
+                  <div className="breakdown-item">
+                    <div className="breakdown-label">
+                      <span className="material-icons">edit</span>
+                      Implementation
+                    </div>
+                    <div className="breakdown-score">8.5/10</div>
+                    <div className="breakdown-description">
+                      Successfully implemented AI-suggested solutions while maintaining mathematical rigor and clarity.
+                    </div>
+                  </div>
+                  
+                  <div className="breakdown-item">
+                    <div className="breakdown-label">
+                      <span className="material-icons">verified</span>
+                      Verification
+                    </div>
+                    <div className="breakdown-score">8.9/10</div>
+                    <div className="breakdown-description">
+                      Used AI effectively to verify solutions and catch potential errors in reasoning or calculation.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

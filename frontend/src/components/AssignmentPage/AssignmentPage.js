@@ -7,7 +7,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack, onNavigateToSu
     1: {
       title: 'Limits and Continuity',
       type: 'Superquiz',
-      courseTitle: 'Biology 101',
+      courseTitle: 'Calculus I',
       description: 'This assignment covers the fundamental concepts of limits and continuity in calculus.',
       startDate: '2024-01-10',
       dueDate: '2024-01-15',
@@ -32,7 +32,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack, onNavigateToSu
     2: {
       title: 'Derivative Rules',
       type: 'Superconcept',
-      courseTitle: 'Biology 101',
+      courseTitle: 'Calculus I',
       description: 'Understanding and applying basic derivative rules including power rule, product rule, and chain rule.',
       startDate: '2024-01-12',
       dueDate: '2024-01-18',
@@ -57,7 +57,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack, onNavigateToSu
     3: {
       title: 'Chain Rule Practice',
       type: 'Superquiz',
-      courseTitle: 'Biology 101',
+      courseTitle: 'Calculus I',
       description: 'Practice problems focusing specifically on the chain rule for composite functions.',
       startDate: '2024-01-15',
       dueDate: '2024-01-22',
@@ -82,7 +82,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack, onNavigateToSu
     4: {
       title: 'Integration Basics',
       type: 'Superconcept',
-      courseTitle: 'Biology 101',
+      courseTitle: 'Calculus I',
       description: 'Introduction to integration as the reverse of differentiation.',
       startDate: '2024-01-20',
       dueDate: '2024-01-25',

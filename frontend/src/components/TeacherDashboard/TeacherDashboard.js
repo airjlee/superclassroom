@@ -35,7 +35,7 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
   const courses = [
     {
       id: 1,
-      name: 'Linear Algebra',
+      name: 'Calculus I',
       subject: 'Mathematics',
       students: 28,
       color: '#4A90E2'
