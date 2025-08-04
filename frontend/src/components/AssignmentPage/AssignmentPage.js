@@ -396,6 +396,146 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
                     <td><span className="status-badge graded">Graded</span></td>
                     <td><button className="action-btn secondary">View</button></td>
                   </tr>
+                  <tr>
+                    <td>Michael Chen</td>
+                    <td>2024-01-15 2:10 PM</td>
+                    <td>88%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>Emma Johnson</td>
+                    <td>2024-01-14 1:30 PM</td>
+                    <td>97%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>David Wilson</td>
+                    <td>2024-01-15 9:45 AM</td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary">Grade</button></td>
+                  </tr>
+                  <tr>
+                    <td>Lisa Garcia</td>
+                    <td>2024-01-14 7:20 PM</td>
+                    <td>91%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>Ryan Thompson</td>
+                    <td>2024-01-14 4:55 PM</td>
+                    <td>85%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>Jessica Wang</td>
+                    <td>2024-01-15 6:30 PM</td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary">Grade</button></td>
+                  </tr>
+                  <tr>
+                    <td>Alex Rodriguez</td>
+                    <td>2024-01-14 10:15 AM</td>
+                    <td>89%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>Sophia Lee</td>
+                    <td>2024-01-14 6:45 PM</td>
+                    <td>94%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>Marcus Smith</td>
+                    <td>2024-01-15 1:20 PM</td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary">Grade</button></td>
+                  </tr>
+                  <tr>
+                    <td>Olivia Martinez</td>
+                    <td>2024-01-14 5:10 PM</td>
+                    <td>93%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>James Anderson</td>
+                    <td>2024-01-14 2:35 PM</td>
+                    <td>87%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>Ava Taylor</td>
+                    <td>2024-01-15 4:15 PM</td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary">Grade</button></td>
+                  </tr>
+                  <tr>
+                    <td>Noah Jackson</td>
+                    <td>2024-01-14 9:25 AM</td>
+                    <td>90%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>Mia Williams</td>
+                    <td>2024-01-14 11:50 AM</td>
+                    <td>96%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>Ethan Clark</td>
+                    <td>2024-01-15 12:40 PM</td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary">Grade</button></td>
+                  </tr>
+                  <tr>
+                    <td>Grace Lewis</td>
+                    <td>2024-01-14 3:20 PM</td>
+                    <td>84%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>Lucas Hall</td>
+                    <td>2024-01-15 8:30 AM</td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary">Grade</button></td>
+                  </tr>
+                  <tr>
+                    <td>Isabella Young</td>
+                    <td>2024-01-14 7:55 PM</td>
+                    <td>91%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>William King</td>
+                    <td>2024-01-14 12:15 PM</td>
+                    <td>86%</td>
+                    <td><span className="status-badge graded">Graded</span></td>
+                    <td><button className="action-btn secondary">View</button></td>
+                  </tr>
+                  <tr>
+                    <td>Charlotte Wright</td>
+                    <td>2024-01-15 3:50 PM</td>
+                    <td>-</td>
+                    <td><span className="status-badge pending">Pending</span></td>
+                    <td><button className="action-btn primary">Grade</button></td>
+                  </tr>
                 </tbody>
               </table>
             </div>
