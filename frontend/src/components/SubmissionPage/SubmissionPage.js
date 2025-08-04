@@ -203,24 +203,47 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
         
         <div className="strengths-section">
           <h4>Strengths</h4>
-          <p>Alice <span className="highlight-green">correctly applied the limit definition</span> and <span className="highlight-green">showed clear step-by-step work</span>. She <span className="highlight-green">demonstrated strong algebraic manipulation skills</span>, <span className="highlight-green">providing detailed explanations of her reasoning</span> throughout the assignment.</p>
+          <p>Alice <span className="highlight-green">demonstrated excellent understanding of continuity</span> and <span className="highlight-green">correctly identified removable discontinuities</span>. She <span className="highlight-green">showed strong intuition for limit behavior</span> and <span className="highlight-green">effectively used graphical reasoning</span> to support her solutions.</p>
         </div>
         
         <div className="areas-improvement-section">
           <h4>Areas of Improvement</h4>
-          <p>Alice <span className="highlight-orange">struggled with factoring techniques</span> in problem 2. She <span className="highlight-orange">showed some confusion with limit notation</span> and <span className="highlight-orange">provided incomplete justifications</span> for her final answers in the last two problems.</p>
+          <p>Alice <span className="highlight-orange">needs more practice with indeterminate forms</span> in problem 3. She <span className="highlight-orange">struggled with L'Hôpital's rule applications</span> and <span className="highlight-orange">could improve her formal limit proofs</span> for more complex functions.</p>
         </div>
         
         <div className="superscore-section">
-          <div className="superscore-main">
-            <div className="superscore-circle-large superscore-excellent">
-              <span className="superscore-number-large">9.4</span>
+                      <div className="superscore-main">
+              <div className="superscore-circle-large superscore-excellent">
+                <svg className="superscore-progress" width="120" height="120" viewBox="0 0 120 120">
+                  <circle 
+                    cx="60" 
+                    cy="60" 
+                    r="54" 
+                    fill="transparent" 
+                    stroke="#e9ecef" 
+                    strokeWidth="6"
+                  />
+                  <circle 
+                    className="superscore-progress-circle"
+                    cx="60" 
+                    cy="60" 
+                    r="54" 
+                    fill="transparent" 
+                    stroke="#90EE90" 
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    strokeDasharray="339.292"
+                    strokeDashoffset="339.292"
+                    transform="rotate(-90 60 60)"
+                  />
+                </svg>
+                <span className="superscore-number-large">8.8</span>
+              </div>
+              <div className="superscore-summary">
+                <h4>AI Usage Superscore®</h4>
+                <p>This student was able to use the AI effectively to walk through the assignment.</p>
+              </div>
             </div>
-            <div className="superscore-summary">
-              <h4>Superclassroom AI Superscore®</h4>
-              <p>This student demonstrates exceptional understanding of limit concepts with a beneficial use of AI.</p>
-            </div>
-          </div>
         </div>
       </div>
 
