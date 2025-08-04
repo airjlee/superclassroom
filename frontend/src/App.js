@@ -81,7 +81,7 @@ function App() {
 
   return (
     <div className="App">
-      {currentPage !== 'create-assignment' && (
+      {currentPage !== 'create-assignment' && currentPage !== 'assignment' && (
         <Header 
           currentPage={currentPage} 
           onNavigateHome={() => setCurrentPage('home')} 

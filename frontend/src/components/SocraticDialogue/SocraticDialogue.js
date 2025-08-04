@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './SocraticDialogue.css';
 import ProgressBar from 'progressbar.js';
 
-const SocraticDialogue = ({ onNavigateHome }) => {
+const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
   const [initialResponse, setInitialResponse] = useState('');
   const [hasSubmittedInitial, setHasSubmittedInitial] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
@@ -19,6 +19,7 @@ const SocraticDialogue = ({ onNavigateHome }) => {
   const progressBarInstance = useRef(null);
   const [showProgress, setShowProgress] = useState(true); // controls progress bar/score visibility
   const chatEndRef = useRef(null); // for autoscroll
+  const chatHistoryRef = useRef(null); // for chat container scroll
   const chatInputRef = useRef(null); // for auto-focusing input
 
   const conceptualQuestion = "Why do you think linear independence is important for general solutions when dealing with repeated roots in ODEs?";
@@ -31,12 +32,7 @@ const SocraticDialogue = ({ onNavigateHome }) => {
     return () => clearTimeout(timerRef.current);
   }, [timerStarted, timeLeft]);
 
-  // Format timer as MM:SS
-  const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-    const s = (seconds % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
-  };
+
 
   // Dummy understanding assessment (for demo only)
   const assessUnderstanding = (userMessage) => {
@@ -44,14 +40,22 @@ const SocraticDialogue = ({ onNavigateHome }) => {
 
     // Increase score based on key terms
     const lowerMessage = userMessage.toLowerCase();
-    if (lowerMessage.includes('initial condition')) increment += 10;
-    if (lowerMessage.includes('independent') || lowerMessage.includes('dependence')) increment += 10;
-    if (lowerMessage.includes('overdetermined') || lowerMessage.includes('system')) increment += 10;
+    if (lowerMessage.includes('initial condition')) increment += 15;
+    if (lowerMessage.includes('independent') || lowerMessage.includes('dependence')) increment += 15;
+    if (lowerMessage.includes('overdetermined') || lowerMessage.includes('system')) increment += 15;
+    if (lowerMessage.includes('dimension') || lowerMessage.includes('solution')) increment += 10;
+    if (lowerMessage.includes('linear') || lowerMessage.includes('basis')) increment += 10;
 
     // Small bonus for any message
-    increment += Math.random() * 10;
+    increment += Math.random() * 15;
 
-    setUnderstandingScore(prev => Math.min(100, prev + increment));
+    const newScore = Math.min(100, understandingScore + increment);
+    setUnderstandingScore(newScore);
+    
+    // Notify parent component of understanding score change
+    if (onUnderstandingChange) {
+      onUnderstandingChange(newScore);
+    }
   };
 
   // New: progress is always understandingScore / 100
@@ -73,9 +77,9 @@ const SocraticDialogue = ({ onNavigateHome }) => {
           svgStyle: { width: '100%', height: '100%' },
         });
       }
-      // Only animate if there's a significant change (more than 5%)
+      // Only animate if there's a significant change (more than 5%) OR if reaching 100%
       const currentProgress = progressBarInstance.current.value();
-      if (Math.abs(progress - currentProgress) > 0.05) {
+      if (Math.abs(progress - currentProgress) > 0.05 || progress === 1.0) {
         progressBarInstance.current.animate(progress, { duration: 800 });
       }
     }
@@ -97,8 +101,11 @@ const SocraticDialogue = ({ onNavigateHome }) => {
 
   // Auto-scroll chat to bottom when chatHistory or isAITyping changes
   useEffect(() => {
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (chatHistoryRef.current) {
+      chatHistoryRef.current.scrollTo({
+        top: chatHistoryRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   }, [chatHistory, isAITyping]);
 
@@ -207,20 +214,79 @@ const SocraticDialogue = ({ onNavigateHome }) => {
       setChatHistory([...chatHistory, { sender: 'student', message: chatMessage }]);
       setChatMessage('');
       setIsAITyping(true);
+      
+      // Auto-scroll after adding user message
       setTimeout(() => {
-        setIsAITyping(false);
-        setChatHistory((prev) => [...prev, { sender: 'ai', message: aiResponse }]);
+        if (chatHistoryRef.current) {
+          chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+        }
+      }, 100);
+      
+      setTimeout(() => {
+        // Add empty AI message first
+        setChatHistory((prev) => [...prev, { sender: 'ai', message: '', isTyping: true }]);
+        
+        // Type out the response character by character
+        let currentText = '';
+        const typeInterval = setInterval(() => {
+          if (currentText.length < aiResponse.length) {
+            currentText += aiResponse[currentText.length];
+            setChatHistory(prev => {
+              const newHistory = [...prev];
+              newHistory[newHistory.length - 1] = { 
+                sender: 'ai', 
+                message: currentText,
+                isTyping: true 
+              };
+              return newHistory;
+            });
+          } else {
+            clearInterval(typeInterval);
+            setChatHistory(prev => {
+              const newHistory = [...prev];
+              newHistory[newHistory.length - 1] = { 
+                sender: 'ai', 
+                message: currentText,
+                isTyping: false 
+              };
+              return newHistory;
+            });
+            setIsAITyping(false);
+          }
+        }, 8); // Very fast typing speed - 8ms per character
+        
+        // Auto-scroll after AI response with longer delay
+        setTimeout(() => {
+          if (chatHistoryRef.current) {
+            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+          }
+        }, 300);
+        
+        // Additional scroll to ensure we're at the very bottom
+        setTimeout(() => {
+          if (chatHistoryRef.current) {
+            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+          }
+        }, 500);
+        
+        // Force scroll to bottom after DOM updates
+        setTimeout(() => {
+          if (chatHistoryRef.current) {
+            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+            // Force a reflow to ensure scroll position is applied
+            void chatHistoryRef.current.offsetHeight;
+            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+          }
+        }, 800);
       }, 1000 + Math.random() * 2000); // 1-3s delay
     }
   };
 
-  const handleBackToHome = () => {
-    onNavigateHome();
-  };
+
 
   const handleContinue = () => {
     setShowEndModal(false);
-    setShowProgress(false); // Hide progress bar and score
+    // Progress bar will persist - removed setShowProgress(false)
   };
 
   const handleGoHome = () => {
@@ -270,42 +336,34 @@ const SocraticDialogue = ({ onNavigateHome }) => {
         {/* Chat Phase */}
         {showChat && (
           <div className="socratic-chat-container">
-            <div className="chat-header modern-flex-header no-icon">
-              <div className="header-main">
-                <h3 className="header-title">Socratic Dialogue</h3>
-                <p className="header-subtitle">
-                  {showProgress 
-                    ? "Let's explore this concept together through questions and dialogue."
-                    : "Continue exploring - no time limits, just learning!"
-                  }
-                </p>
-              </div>
-              {showProgress && (
-                <div className="progress-section">
-                  <div className="progress-bar-container">
-                    <div ref={progressBarRef} className="progress-bar-element" />
-                  </div>
-                  <div className="progress-label">{Math.round(progress * 100)}%</div>
+            {showProgress && (
+              <div className="progress-section-top">
+                <div className="progress-bar-container">
+                  <div ref={progressBarRef} className="progress-bar-element" />
                 </div>
-              )}
+                <div className="progress-label">{Math.round(progress * 100)}%</div>
+              </div>
+            )}
+            <div className="chat-header-minimal">
             </div>
-            <div className="chat-history">
+            <div className="chat-history" ref={chatHistoryRef}>
               {chatHistory.map((chat, index) => (
                 <div key={index} className={`chat-message ${chat.sender}`}>
+                  {chat.sender === 'ai' && <div className="ai-icon"></div>}
                   <div className="message-content">
                     {chat.message}
+                    {chat.isTyping && chat.message.length > 0 && <span className="typing-cursor">|</span>}
+                    {chat.isTyping && chat.message.length === 0 && (
+                      <div className="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
-              {isAITyping && (
-                <div className="chat-message ai typing-indicator">
-                  <div className="message-content">
-                    <span className="typing-dots">
-                      <span>.</span><span>.</span><span>.</span>
-                    </span>
-                  </div>
-                </div>
-              )}
+
               <div ref={chatEndRef} />
             </div>
             <div className="chat-input-form">
@@ -330,17 +388,11 @@ const SocraticDialogue = ({ onNavigateHome }) => {
             {showEndModal && (
               <div className="end-modal-overlay">
                 <div className="end-modal-content">
-                  <h2>Session Complete</h2>
-                  <p>Your understanding score: <b>{understandingScore}/100</b></p>
-                  <p>
-                    {understandingScore === 100 
-                      ? "Excellent work! You've mastered this concept."
-                      : "Good progress! You can continue exploring or try again later."
-                    }
-                  </p>
+                  <h2>Complete</h2>
+                  <p>Understanding: {Math.round(understandingScore)}%</p>
                   <div className="end-modal-buttons">
-                    <button className="continue-btn" onClick={handleContinue}>Continue Chatting</button>
-                    <button className="home-btn" onClick={handleGoHome}>Go Back Home</button>
+                    <button className="continue-btn" onClick={handleContinue}>Continue</button>
+                    <button className="home-btn" onClick={handleGoHome}>Back</button>
                   </div>
                 </div>
               </div>
