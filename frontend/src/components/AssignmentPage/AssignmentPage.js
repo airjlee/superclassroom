@@ -241,7 +241,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
         </div>
         <div className="analytics-content">
           <div className="analytics-column strengths">
-            <h4 className="analytics-title">STRENGTHS</h4>
+            <h4 className="analytics-title">Strengths</h4>
             <p>
               Most students <span className="highlight-green">correctly applied the limit definition</span> and 
               <span className="highlight-green">showed clear step-by-step work</span>. Several students 
@@ -250,12 +250,61 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
             </p>
           </div>
           <div className="analytics-column improvements">
-            <h4 className="analytics-title">AREAS OF IMPROVEMENT</h4>
+            <h4 className="analytics-title">Areas of Improvement</h4>
             <p>
               Most students <span className="highlight-orange">struggled with factoring techniques</span>. 
               Many students <span className="highlight-orange">showed confusion with limit notation</span> and 
               <span className="highlight-orange">provided incomplete justifications</span> for their final answers.
             </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="assignment-analytics">
+        <div className="analytics-cards">
+          <div className="analytics-card">
+            <h4>Superscore average</h4>
+            <div className="metric-value">87%</div>
+            <div className="metric-change positive">↑ 5% from last assignment</div>
+          </div>
+          <div className="analytics-card">
+            <h4>Misuse Flags to Review</h4>
+            <div className="metric-value">2</div>
+            <div className="metric-change negative">↑ 1 from last assignment</div>
+          </div>
+          <div className="analytics-card">
+            <h4>Time Distribution</h4>
+            <div className="chart-container">
+              <div className="pie-chart">
+                <svg width="80" height="80" viewBox="0 0 80 80">
+                  <circle cx="40" cy="40" r="35" fill="transparent" stroke="#8b5cf6" strokeWidth="10" 
+                    strokeDasharray="99 220" strokeDashoffset="0" transform="rotate(-90 40 40)" />
+                  <circle cx="40" cy="40" r="35" fill="transparent" stroke="#06b6d4" strokeWidth="10" 
+                    strokeDasharray="88 220" strokeDashoffset="-99" transform="rotate(-90 40 40)" />
+                  <circle cx="40" cy="40" r="35" fill="transparent" stroke="#e5e7eb" strokeWidth="10" 
+                    strokeDasharray="33 220" strokeDashoffset="-187" transform="rotate(-90 40 40)" />
+                </svg>
+              </div>
+              <div className="chart-legend">
+                <div className="legend-item">
+                  <span className="legend-color" style={{backgroundColor: '#8b5cf6'}}></span>
+                  <span>AI Assisted (45%)</span>
+                </div>
+                <div className="legend-item">
+                  <span className="legend-color" style={{backgroundColor: '#06b6d4'}}></span>
+                  <span>Active Work (40%)</span>
+                </div>
+                <div className="legend-item">
+                  <span className="legend-color" style={{backgroundColor: '#e5e7eb'}}></span>
+                  <span>Idle (15%)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="analytics-card">
+            <h4>Assignment median</h4>
+            <div className="metric-value">84%</div>
+            <div className="metric-change positive">↑ 3% from last assignment</div>
           </div>
         </div>
       </div>
