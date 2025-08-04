@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AssignmentPage.css';
 
-const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
+const AssignmentPage = ({ assignmentId, courseId, onNavigateBack, onNavigateToSubmission }) => {
   // Mock assignment data - in real app this would come from API based on assignmentId
   const assignmentData = {
     1: {
@@ -164,18 +164,39 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
     return Math.round((assignment.submissionsCount / assignment.totalStudents) * 100);
   };
 
+  const handleViewSubmission = (studentName, submissionId) => {
+    // Scroll to top when View button is clicked
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    if (document.scrollingElement) {
+      document.scrollingElement.scrollTop = 0;
+    }
+    
+    if (onNavigateToSubmission) {
+      onNavigateToSubmission(submissionId, assignmentId, studentName);
+    }
+  };
+
   return (
     <div className="assignment-page">
       <div className="assignment-page-header">
         <div className="assignment-header-info">
           <div className="assignment-title-section">
             <div className="title-and-badge">
-              <span className={`assignment-type-badge ${assignment.type.toLowerCase()}`}>
-                <span className="material-icons assignment-type-icon">
-                  {assignment.type.toLowerCase() === 'superquiz' ? 'edit' : 'article'}
+              <div className="assignment-badges">
+                <span className="assignment-type-badge superconcept">
+                  <span className="material-icons assignment-type-icon">article</span>
+                  Superconcept
                 </span>
-                {assignment.type}
-              </span>
+                <span className={`assignment-type-badge ${assignment.type.toLowerCase()}`}>
+                  <span className="material-icons assignment-type-icon">
+                    {assignment.type.toLowerCase() === 'superquiz' ? 'edit' : 'article'}
+                  </span>
+                  {assignment.type}
+                </span>
+              </div>
               <h1 className="assignment-title">{assignment.title}</h1>
             </div>
             <div className="header-actions">
@@ -385,7 +406,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
                     <td>2024-01-14 3:45 PM</td>
                     <td>95%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Alice Brown', 1)}>View</button></td>
                   </tr>
                   <tr>
                     <td>John Davis</td>
@@ -399,21 +420,21 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
                     <td>2024-01-14 8:15 PM</td>
                     <td>92%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Sarah Miller', 2)}>View</button></td>
                   </tr>
                   <tr>
                     <td>Michael Chen</td>
                     <td>2024-01-15 2:10 PM</td>
                     <td>88%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Michael Chen', 3)}>View</button></td>
                   </tr>
                   <tr>
                     <td>Emma Johnson</td>
                     <td>2024-01-14 1:30 PM</td>
                     <td>97%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Emma Johnson', 4)}>View</button></td>
                   </tr>
                   <tr>
                     <td>David Wilson</td>
@@ -427,14 +448,14 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
                     <td>2024-01-14 7:20 PM</td>
                     <td>91%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Lisa Garcia', 5)}>View</button></td>
                   </tr>
                   <tr>
                     <td>Ryan Thompson</td>
                     <td>2024-01-14 4:55 PM</td>
                     <td>85%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Ryan Thompson', 6)}>View</button></td>
                   </tr>
                   <tr>
                     <td>Jessica Wang</td>
@@ -448,14 +469,14 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
                     <td>2024-01-14 10:15 AM</td>
                     <td>89%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Alex Rodriguez', 7)}>View</button></td>
                   </tr>
                   <tr>
                     <td>Sophia Lee</td>
                     <td>2024-01-14 6:45 PM</td>
                     <td>94%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Sophia Lee', 8)}>View</button></td>
                   </tr>
                   <tr>
                     <td>Marcus Smith</td>
@@ -469,14 +490,14 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
                     <td>2024-01-14 5:10 PM</td>
                     <td>93%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Olivia Martinez', 9)}>View</button></td>
                   </tr>
                   <tr>
                     <td>James Anderson</td>
                     <td>2024-01-14 2:35 PM</td>
                     <td>87%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('James Anderson', 10)}>View</button></td>
                   </tr>
                   <tr>
                     <td>Ava Taylor</td>
@@ -490,14 +511,14 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
                     <td>2024-01-14 9:25 AM</td>
                     <td>90%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Noah Jackson', 11)}>View</button></td>
                   </tr>
                   <tr>
                     <td>Mia Williams</td>
                     <td>2024-01-14 11:50 AM</td>
                     <td>96%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Mia Williams', 12)}>View</button></td>
                   </tr>
                   <tr>
                     <td>Ethan Clark</td>
@@ -511,7 +532,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
                     <td>2024-01-14 3:20 PM</td>
                     <td>84%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Grace Lewis', 13)}>View</button></td>
                   </tr>
                   <tr>
                     <td>Lucas Hall</td>
@@ -525,14 +546,14 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
                     <td>2024-01-14 7:55 PM</td>
                     <td>91%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('Isabella Young', 14)}>View</button></td>
                   </tr>
                   <tr>
                     <td>William King</td>
                     <td>2024-01-14 12:15 PM</td>
                     <td>86%</td>
                     <td><span className="status-badge graded">Graded</span></td>
-                    <td><button className="action-btn secondary">View</button></td>
+                    <td><button className="action-btn secondary" onClick={() => handleViewSubmission('William King', 15)}>View</button></td>
                   </tr>
                   <tr>
                     <td>Charlotte Wright</td>
