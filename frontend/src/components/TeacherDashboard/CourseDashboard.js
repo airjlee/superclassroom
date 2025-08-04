@@ -181,7 +181,7 @@ const CourseDashboard = ({ courseId, onNavigateBack, onNavigateToCreate, onNavig
             <div className="analytics-card">
               <div className="analytics-content">
                 <h3>Superscore® Average</h3>
-                <div className="analytics-value">84%</div>
+                <div className="analytics-value">8.4</div>
                 <div className="analytics-trend positive">↑ 6% from last month</div>
               </div>
             </div>
