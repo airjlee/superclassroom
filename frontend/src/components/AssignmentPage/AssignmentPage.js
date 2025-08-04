@@ -6,7 +6,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
   const assignmentData = {
     1: {
       title: 'Limits and Continuity',
-      type: 'SuperQuiz',
+      type: 'Quiz',
       courseTitle: 'Biology 101',
       description: 'This assignment covers the fundamental concepts of limits and continuity in calculus.',
       startDate: '2024-01-10',
@@ -31,7 +31,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
     },
     2: {
       title: 'Derivative Rules',
-      type: 'SuperConcept',
+      type: 'Concept',
       courseTitle: 'Biology 101',
       description: 'Understanding and applying basic derivative rules including power rule, product rule, and chain rule.',
       startDate: '2024-01-12',
@@ -56,7 +56,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
     },
     3: {
       title: 'Chain Rule Practice',
-      type: 'SuperQuiz',
+      type: 'Quiz',
       courseTitle: 'Biology 101',
       description: 'Practice problems focusing specifically on the chain rule for composite functions.',
       startDate: '2024-01-15',
@@ -81,7 +81,7 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
     },
     4: {
       title: 'Integration Basics',
-      type: 'SuperConcept',
+      type: 'Concept',
       courseTitle: 'Biology 101',
       description: 'Introduction to integration as the reverse of differentiation.',
       startDate: '2024-01-20',
@@ -135,16 +135,40 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
     return 'low';
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { 
+      weekday: 'long', 
+      month: 'long', 
+      day: 'numeric' 
+    };
+    return date.toLocaleDateString('en-US', options);
+  };
+
+  const getDueDateMonth = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+  };
+
+  const getDueDateDay = (dateString) => {
+    const date = new Date(dateString);
+    return date.getDate();
+  };
+
+  const getSubmissionPercentage = () => {
+    return Math.round((assignment.submissionsCount / assignment.totalStudents) * 100);
+  };
+
   return (
     <div className="assignment-page">
       <div className="assignment-page-header">
         <div className="assignment-header-info">
           <div className="assignment-title-section">
             <div className="title-and-badge">
-              <h1 className="assignment-title">{assignment.title}</h1>
               <span className={`assignment-type-badge ${assignment.type.toLowerCase()}`}>
                 {assignment.type}
               </span>
+              <h1 className="assignment-title">{assignment.title}</h1>
             </div>
             <div className="header-actions">
               <button className="action-button secondary">
@@ -162,19 +186,76 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
         </div>
 
         <div className="assignment-meta">
-          <div className="meta-item">
-            <span className="meta-label">Start Date:</span>
-            <span className="meta-value">{assignment.startDate}</span>
+          <div className="due-date-section">
+            <div className="due-date-calendar">
+              <div className="due-date-month">{getDueDateMonth(assignment.dueDate)}</div>
+              <div className="due-date-day">{getDueDateDay(assignment.dueDate)}</div>
+            </div>
+            <div className="due-date-details">
+              <div className="due-date-title">{formatDate(assignment.dueDate)}</div>
+              <div className="due-date-time">11:59 PM</div>
+            </div>
           </div>
-          <div className="meta-item">
-            <span className="meta-label">Due Date:</span>
-            <span className="meta-value">{assignment.dueDate}</span>
+          <div className="submissions-section">
+            <div className="submissions-box">
+              <div className="progress-circle">
+                <svg className="progress-ring" width="40" height="40">
+                  <circle
+                    className="progress-ring-circle-bg"
+                    stroke="#e9ecef"
+                    strokeWidth="3"
+                    fill="transparent"
+                    r="18"
+                    cx="20"
+                    cy="20"
+                  />
+                  <circle
+                    className="progress-ring-circle"
+                    stroke="#8b5cf6"
+                    strokeWidth="3"
+                    fill="transparent"
+                    r="18"
+                    cx="20"
+                    cy="20"
+                    style={{
+                      strokeDasharray: `${2 * Math.PI * 18}`,
+                      strokeDashoffset: `${2 * Math.PI * 18 * (1 - getSubmissionPercentage() / 100)}`
+                    }}
+                  />
+                </svg>
+                <div className="progress-percentage">{getSubmissionPercentage()}%</div>
+              </div>
+            </div>
+            <div className="submissions-details">
+              <div className="submissions-title">Submissions</div>
+              <div className="submissions-count">{assignment.submissionsCount} of {assignment.totalStudents}</div>
+            </div>
           </div>
-          <div className="meta-item">
-            <span className="meta-label">Submissions:</span>
-            <span className={`meta-value submissions-${getSubmissionStatus()}`}>
-              {assignment.submissionsCount} of {assignment.totalStudents}
-            </span>
+        </div>
+      </div>
+
+      <div className="activity-analytics">
+        <div className="analytics-header">
+          <span className="material-icons">analytics</span>
+          <h3>Activity analytics</h3>
+        </div>
+        <div className="analytics-content">
+          <div className="analytics-column strengths">
+            <h4 className="analytics-title">STRENGTHS</h4>
+            <p>
+              Most students <span className="highlight-green">correctly applied the limit definition</span> and 
+              <span className="highlight-green">showed clear step-by-step work</span>. Several students 
+              <span className="highlight-green">demonstrated strong algebraic manipulation skills</span>, 
+              with many <span className="highlight-green">providing detailed explanations of their reasoning</span>.
+            </p>
+          </div>
+          <div className="analytics-column improvements">
+            <h4 className="analytics-title">AREAS OF IMPROVEMENT</h4>
+            <p>
+              Most students <span className="highlight-orange">struggled with factoring techniques</span>. 
+              Many students <span className="highlight-orange">showed confusion with limit notation</span> and 
+              <span className="highlight-orange">provided incomplete justifications</span> for their final answers.
+            </p>
           </div>
         </div>
       </div>

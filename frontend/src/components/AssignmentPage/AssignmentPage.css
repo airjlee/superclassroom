@@ -83,8 +83,9 @@
 
 .title-and-badge {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
 }
 
 .assignment-title {
@@ -96,19 +97,19 @@
 
 .assignment-type-badge {
   padding: 0.375rem 0.875rem;
-  border-radius: 20px;
+  border-radius: 8px;
   font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 0.5px;
 }
 
-.assignment-type-badge.superquiz {
+.assignment-type-badge.quiz {
   background-color: #e3f2fd;
   color: #1565c0;
 }
 
-.assignment-type-badge.superconcept {
+.assignment-type-badge.concept {
   background-color: #f3e5f5;
   color: #7b1fa2;
 }
@@ -129,6 +130,7 @@
 
 .assignment-meta {
   display: flex;
+  align-items: center;
   gap: 2rem;
   flex-wrap: wrap;
 }
@@ -163,6 +165,215 @@
 
 .meta-value.submissions-low {
   color: #dc3545;
+}
+
+/* Due Date Section Styles */
+.due-date-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.due-date-calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #495057;
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-width: 60px;
+  min-height: 60px;
+}
+
+.due-date-month {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.due-date-day {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.due-date-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.due-date-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.due-date-time {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+.submissions-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.submissions-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #8b5cf6;
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-width: 60px;
+  min-height: 60px;
+}
+
+.progress-circle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.35s;
+  transform-origin: 50% 50%;
+}
+
+.progress-percentage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #8b5cf6;
+}
+
+.submissions-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.submissions-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.submissions-count {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Activity Analytics Section */
+.activity-analytics {
+  background: #ffffff;
+  margin: 2rem 0 1rem 0;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.analytics-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.analytics-header .material-icons {
+  font-size: 1.25rem;
+  color: #6c757d;
+}
+
+.analytics-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.analytics-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.analytics-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.analytics-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.strengths .analytics-title {
+  color: #28a745;
+}
+
+.improvements .analytics-title {
+  color: #fd7e14;
+}
+
+.analytics-column p {
+  margin: 0;
+  line-height: 1.6;
+  color: #495057;
+  font-size: 0.95rem;
+}
+
+.highlight-green {
+  background-color: rgba(40, 167, 69, 0.15);
+  color: #28a745;
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.highlight-orange {
+  background-color: rgba(253, 126, 20, 0.15);
+  color: #fd7e14;
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .analytics-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .activity-analytics {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
 }
 
 .assignment-page-tabs {
