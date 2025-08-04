@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AssignmentPage.css';
 
 const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
@@ -108,6 +108,11 @@ const AssignmentPage = ({ assignmentId, courseId, onNavigateBack }) => {
 
   const assignment = assignmentData[assignmentId];
   const [activeTab, setActiveTab] = useState('submissions');
+
+  // Scroll to top when component mounts or assignmentId changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [assignmentId]);
 
   if (!assignment) {
     return (
