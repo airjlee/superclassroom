@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './TeacherDashboard.css';
 
 // Utility functions to lighten or darken a hex color
@@ -26,10 +26,22 @@ const adjustColor = (hex, amt) => {
 const lightenColor = (hex, percent = 20) => adjustColor(hex, Math.round(2.55 * percent));
 const darkenColor = (hex, percent = 20) => adjustColor(hex, -Math.round(2.55 * percent));
 
-const TeacherDashboard = ({ onNavigateToCourse }) => {
+const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [buttonPosition, setButtonPosition] = useState(32); // 2rem = 32px
+  const [showMentions, setShowMentions] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState('');
+  const [selectedMentionIndex, setSelectedMentionIndex] = useState(0);
+  const [cursorPosition, setCursorPosition] = useState(0);
+  const [mentionType, setMentionType] = useState(''); // 'course' or 'assignment'
+  const [showPlusDropdown, setShowPlusDropdown] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const fileInputRef = useRef(null);
+  const searchInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFading, setIsFading] = useState(false);
+  const [isFadingIn, setIsFadingIn] = useState(true);
   
   // Mock courses data - in real app this would come from API
   const courses = [
@@ -63,6 +75,200 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
     }
   ];
 
+  const assignmentTypes = [
+    {
+      id: 'superconcept',
+      name: 'Superconcept',
+      color: '#7b1fa2'
+    },
+    {
+      id: 'superquiz',
+      name: 'Superquiz',
+      color: '#1565c0'
+    }
+  ];
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    setCursorPosition(e.target.selectionStart);
+    
+    // Check if @ was typed for courses
+    const atIndex = value.lastIndexOf('@');
+    const hashIndex = value.lastIndexOf('#');
+    
+    if (atIndex !== -1 && (hashIndex === -1 || atIndex > hashIndex)) {
+      const queryAfterAt = value.substring(atIndex + 1);
+      setMentionQuery(queryAfterAt);
+      setShowMentions(true);
+      setSelectedMentionIndex(0);
+      setMentionType('course');
+    } else if (hashIndex !== -1 && (atIndex === -1 || hashIndex > atIndex)) {
+      const queryAfterHash = value.substring(hashIndex + 1);
+      setMentionQuery(queryAfterHash);
+      setShowMentions(true);
+      setSelectedMentionIndex(0);
+      setMentionType('assignment');
+    } else {
+      setShowMentions(false);
+      setMentionQuery('');
+      setSelectedMentionIndex(0);
+      setMentionType('');
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (showMentions) {
+      const options = mentionType === 'course' ? filteredCourses : filteredAssignmentTypes;
+      if (options.length > 0) {
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          handleMentionSelect(options[selectedMentionIndex].name, mentionType);
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          setSelectedMentionIndex((prev) => 
+            prev < options.length - 1 ? prev + 1 : 0
+          );
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          setSelectedMentionIndex((prev) => 
+            prev > 0 ? prev - 1 : options.length - 1
+          );
+        } else if (e.key === 'Enter' && selectedMentionIndex >= 0) {
+          e.preventDefault();
+          handleMentionSelect(options[selectedMentionIndex].name, mentionType);
+        }
+      }
+    } else if (e.key === 'Enter' && searchQuery.trim() && !isLoading) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const handleMentionSelect = (name, type) => {
+    const symbol = type === 'course' ? '@' : '#';
+    const symbolIndex = searchQuery.lastIndexOf(symbol);
+    const beforeSymbol = searchQuery.substring(0, symbolIndex);
+    const newQuery = beforeSymbol + name + ' ';
+    setSearchQuery(newQuery);
+    setShowMentions(false);
+    setMentionQuery('');
+    setSelectedMentionIndex(0);
+    setMentionType('');
+  };
+
+  const filteredCourses = courses.filter(course =>
+    course.name.toLowerCase().includes(mentionQuery.toLowerCase())
+  );
+
+  const filteredAssignmentTypes = assignmentTypes.filter(type =>
+    type.name.toLowerCase().includes(mentionQuery.toLowerCase())
+  );
+
+  const handlePlusClick = () => {
+    setShowPlusDropdown(!showPlusDropdown);
+  };
+
+  const handleFileUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+    setSelectedFiles(prev => [...prev, ...files]);
+    // Here you would typically upload the file to your server
+    console.log('Files selected:', files.map(f => f.name));
+    setShowPlusDropdown(false);
+    // Focus the search input after file upload
+    setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 100);
+  };
+
+  const handleClickOutside = (event) => {
+    if (!event.target.closest('.plus-button-container')) {
+      setShowPlusDropdown(false);
+    }
+  };
+
+  // Add event listener for clicking outside
+  React.useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  // Handle fade-in animation
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsFadingIn(false);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleSend = () => {
+    if (searchQuery.trim()) {
+      setIsLoading(true);
+      // Simulate API call for 3 seconds total
+      setTimeout(() => {
+        setIsLoading(false);
+        setSearchQuery('');
+        setIsFading(true);
+        // Navigate to assignment creation page after fade
+        setTimeout(() => {
+          // Navigate to assignment creation page
+          onNavigateToCreate();
+        }, 500); // Wait for fade animation to complete
+      }, 3000);
+    }
+  };
+
+  const renderSearchContent = () => {
+    const parts = searchQuery.split(/(@\w+|#\w+)/);
+    return parts.map((part, index) => {
+      if (part.startsWith('@')) {
+        const courseName = part.substring(1);
+        const course = courses.find(c => c.name.toLowerCase().includes(courseName.toLowerCase()));
+        if (course) {
+          return (
+            <span 
+              key={index}
+              className="course-badge"
+              style={{ 
+                backgroundColor: course.color === '#4A90E2' ? 'rgba(74, 144, 226, 0.1)' :
+                             course.color === '#7ED321' ? 'rgba(126, 211, 33, 0.1)' :
+                             course.color === '#F5A623' ? 'rgba(245, 166, 35, 0.1)' :
+                             'rgba(144, 19, 254, 0.1)',
+                color: course.color
+              }}
+            >
+              {course.name}
+            </span>
+          );
+        }
+      } else if (part.startsWith('#')) {
+        const typeName = part.substring(1);
+        const type = assignmentTypes.find(t => t.name.toLowerCase().includes(typeName.toLowerCase()));
+        if (type) {
+          return (
+            <span 
+              key={index}
+              className="course-badge"
+              style={{ 
+                backgroundColor: type.color === '#7b1fa2' ? 'rgba(123, 31, 162, 0.1)' : 'rgba(21, 101, 192, 0.1)',
+                color: type.color
+              }}
+            >
+              {type.name}
+            </span>
+          );
+        }
+      }
+      return part;
+    });
+  };
+
   const handleCourseClick = (courseId) => {
     onNavigateToCourse(courseId);
   };
@@ -78,7 +284,7 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
   };
 
   return (
-    <div className="teacher-dashboard">
+    <div className={`teacher-dashboard ${isFading ? 'fade-out' : isFadingIn ? '' : 'fade-in'}`}>
       <div className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
         <div 
           className="sidebar-border-hover"
@@ -151,15 +357,124 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
           {/* <p>Welcome back! Here's an overview of your courses.</p> */}
           
           <div className="search-container">
-            <div className="search-bar">
-              <span className="search-icon">⌘</span>
+            <div className={`search-bar ${selectedFiles.length > 0 ? 'has-files' : ''}`}>
+              <div className="plus-button-container">
+                <button 
+                  className="plus-button"
+                  onClick={handlePlusClick}
+                  type="button"
+                >
+                  <span className="plus-icon">+</span>
+                </button>
+                {showPlusDropdown && (
+                  <div className="plus-dropdown">
+                    <button 
+                      className="dropdown-item"
+                      onClick={handleFileUpload}
+                    >
+                      <span className="material-icons">upload_file</span>
+                      File Upload
+                    </button>
+                  </div>
+                )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  onChange={handleFileChange}
+                  style={{ display: 'none' }}
+                  accept="*/*"
+                  multiple
+                />
+              </div>
               <input
+                ref={searchInputRef}
                 type="text"
                 placeholder="Ask anything or @mention a specific course..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
+                onKeyDown={handleKeyDown}
                 className="search-input"
               />
+              <button 
+                className={`send-button ${isLoading ? 'loading' : ''}`}
+                onClick={handleSend}
+                disabled={!searchQuery.trim() || isLoading}
+                type="button"
+              >
+                {isLoading ? (
+                  <div className="loading-spinner"></div>
+                ) : (
+                  <span className="material-icons">send</span>
+                )}
+              </button>
+              {showMentions && (
+                <div 
+                  className="mentions-dropdown"
+                  style={{
+                    position: 'absolute',
+                    left: `${Math.min(cursorPosition * 8, 200)}px`,
+                    top: '100%',
+                    marginTop: '0.25rem'
+                  }}
+                >
+                  {mentionType === 'course' ? (
+                    filteredCourses.map((course, index) => (
+                      <button
+                        key={course.id}
+                        className={`mention-option ${index === selectedMentionIndex ? 'selected' : ''}`}
+                        onClick={() => handleMentionSelect(course.name, 'course')}
+                      >
+                        <span 
+                          className="course-badge"
+                          style={{ 
+                            backgroundColor: course.color === '#4A90E2' ? 'rgba(74, 144, 226, 0.1)' :
+                                         course.color === '#7ED321' ? 'rgba(126, 211, 33, 0.1)' :
+                                         course.color === '#F5A623' ? 'rgba(245, 166, 35, 0.1)' :
+                                         'rgba(144, 19, 254, 0.1)',
+                            color: course.color
+                          }}
+                        >
+                          {course.name}
+                        </span>
+                      </button>
+                    ))
+                  ) : (
+                    filteredAssignmentTypes.map((type, index) => (
+                      <button
+                        key={type.id}
+                        className={`mention-option ${index === selectedMentionIndex ? 'selected' : ''}`}
+                        onClick={() => handleMentionSelect(type.name, 'assignment')}
+                      >
+                        <span 
+                          className="course-badge"
+                          style={{ 
+                            backgroundColor: type.color === '#7b1fa2' ? 'rgba(123, 31, 162, 0.1)' : 'rgba(21, 101, 192, 0.1)',
+                            color: type.color
+                          }}
+                        >
+                          {type.name}
+                        </span>
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
+              {selectedFiles.length > 0 && (
+                <div className="file-badges-container">
+                  {selectedFiles.map((file, index) => (
+                    <div key={index} className="file-badge">
+                      <span className="file-badge-icon material-icons">description</span>
+                      <span className="file-badge-name">{file.name}</span>
+                      <button 
+                        className="file-badge-remove"
+                        onClick={() => setSelectedFiles(prev => prev.filter((_, i) => i !== index))}
+                      >
+                        <span className="material-icons">close</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

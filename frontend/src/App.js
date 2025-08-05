@@ -50,7 +50,7 @@ function App() {
         return <TeacherDashboard onNavigateToCourse={(courseId) => {
           setCurrentCourseId(courseId);
           setCurrentPage('course-dashboard');
-        }} />;
+        }} onNavigateToCreate={() => setCurrentPage('create-assignment')} />;
       case 'course-dashboard':
         return <CourseDashboard 
           courseId={currentCourseId}
