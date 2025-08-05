@@ -212,7 +212,7 @@
 }
 
 .assignment-sidebar {
-  width: 280px;
+  width: 240px;
   background: #f8f9fa;
   border-right: 1px solid #e1e5e9;
   display: flex;
@@ -337,41 +337,47 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 40px 20px;
+  padding: 40px 60px;
   overflow-y: auto;
   position: relative;
   min-width: 0;
   height: calc(100vh - 60px);
+  transition: padding-right 0.3s ease;
+}
+
+/* When chat is open, nudge the main content to the left */
+.assignment-main.chat-open {
+  padding-right: 440px;
 }
 
 .problem-panel {
-  max-width: 700px;
+  max-width: 550px;
   background: #ffffff;
   border-radius: 8px;
-  padding: 40px;
+  padding: 24px;
   position: relative;
   z-index: 1;
 }
 
 .problem-header h2 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: #2c3e50;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .problem-instructions {
-  font-size: 16px;
+  font-size: 14px;
   color: #6c757d;
-  margin-bottom: 30px;
-  line-height: 1.5;
+  margin-bottom: 20px;
+  line-height: 1.4;
 }
 
 .limit-problem {
   background: #f8f9fa;
   border-radius: 8px;
-  padding: 24px;
-  margin-bottom: 30px;
+  padding: 16px;
+  margin-bottom: 20px;
   border: 1px solid #e9ecef;
   display: flex;
   align-items: center;
@@ -381,27 +387,27 @@
 .math-input-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .math-expression {
-  font-size: 18px;
+  font-size: 16px;
   text-align: right;
 }
 
 .equals-sign {
-  font-size: 20px;
+  font-size: 18px;
   color: #2c3e50;
   font-weight: 500;
   padding: 0 2px;
 }
 
 .limit-input {
-  padding: 10px 12px;
-  font-size: 16px;
+  padding: 8px 10px;
+  font-size: 14px;
   border: 2px solid #dee2e6;
   border-radius: 4px;
-  width: 100px;
+  width: 80px;
   background: #ffffff;
   transition: all 0.2s ease;
 }
@@ -417,27 +423,27 @@
 }
 
 .justification-section {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .justification-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #2c3e50;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .options-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .option-card {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 16px;
+  gap: 8px;
+  padding: 12px;
   background: #ffffff;
   border: 1px solid #e9ecef;
   border-radius: 6px;
@@ -455,19 +461,19 @@
   border-color: #007bff;
   background: #f8f9fa;
   border-width: 2px;
-  padding: 15px;
+  padding: 11px;
 }
 
 .option-card.incorrect {
   border-color: #dc3545;
   border-width: 2px;
-  padding: 15px;
+  padding: 11px;
   background: #fff5f5;
 }
 
 .option-letter {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   background: transparent;
   border-radius: 50%;
   display: flex;
@@ -476,7 +482,7 @@
   font-weight: 600;
   color: #6c757d;
   flex-shrink: 0;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .option-card.selected .option-letter {
@@ -490,24 +496,25 @@
 
 .option-content {
   flex: 1;
-  font-size: 15px;
+  font-size: 14px;
   color: #2c3e50;
-  line-height: 1.4;
+  line-height: 1.3;
   text-align: center;
 }
 
 .result-section {
-  margin-top: 30px;
+  margin-top: 20px;
   text-align: center;
 }
 
 .success-message {
-  padding: 16px;
+  padding: 12px;
   background: #d4edda;
   color: #155724;
   border-radius: 6px;
   font-weight: 500;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  font-size: 14px;
 }
 
 /* Socratic Dialogue Wrapper */
@@ -544,62 +551,41 @@
 /* AI Tutor Panel - Resizable Overlay */
 .ai-tutor-panel {
   position: fixed;
-  right: 0;
-  top: 60px;
-  bottom: 0;
-  width: 500px;
+  right: 20px;
+  top: 80px;
+  bottom: 20px;
+  width: 400px;
   min-width: 350px;
-  max-width: 700px;
+  max-width: 600px;
   background: white;
-  border-left: 1px solid #e1e5e9;
+  border: 1px solid #e1e5e9;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   animation: slideInFromRight 0.3s ease-out;
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   z-index: 1000;
   pointer-events: auto;
   resize: horizontal;
   overflow: hidden;
   cursor: ew-resize;
-  height: calc(100vh - 60px);
-  min-height: 0;
+  height: calc(100vh - 100px);
+  min-height: 500px;
 }
 
 .ai-tutor-panel:hover {
-  border-left: 2px solid #007bff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
 .ai-tutor-panel::before {
   content: "";
   position: absolute;
-  left: 0;
   top: 0;
-  bottom: 0;
-  width: 4px;
-  background: transparent;
-  cursor: ew-resize;
-  z-index: 1001;
-}
-
-.ai-tutor-panel::after {
-  content: "⋮";
-  position: absolute;
-  left: -8px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #6c757d;
-  font-size: 16px;
-  background: white;
-  padding: 4px 2px;
-  border-radius: 2px;
-  cursor: ew-resize;
-  z-index: 1002;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.ai-tutor-panel:hover::after {
-  opacity: 1;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #4c05ff 0%, #c820c8 100%);
+  border-radius: 12px 12px 0 0;
 }
 
 @keyframes slideInFromRight {
@@ -795,6 +781,48 @@
   animation-delay: 0.3s;
 }
 
+/* Loading dots animation - appears before typing */
+.loading-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+}
+
+.loading-dots span {
+  height: 8px;
+  width: 8px;
+  background-color: #6b7280;
+  border-radius: 50%;
+  animation: loading 1.4s infinite ease-in-out;
+  opacity: 0.8;
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes loading {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-8px) scale(1.2);
+    opacity: 1;
+  }
+}
+
 @keyframes typing {
   0%,
   60%,
@@ -874,21 +902,25 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .assignment-sidebar {
-    width: 240px;
+    width: 200px;
   }
 
   .assignment-main {
-    padding: 30px 15px;
+    padding: 40px 40px;
+  }
+
+  .assignment-main.chat-open {
+    padding-right: 390px;
   }
 
   .problem-panel {
-    padding: 30px;
+    max-width: 600px;
   }
 
   .ai-tutor-panel {
-    width: 450px;
+    width: 350px;
     min-width: 300px;
-    max-width: 550px;
+    right: 15px;
   }
 }
 
@@ -903,48 +935,62 @@
 
   .assignment-sidebar {
     width: 100%;
+    height: auto;
     max-height: 200px;
-    overflow-y: auto;
+    order: 2;
   }
 
   .assignment-main {
-    padding: 20px 15px;
+    order: 1;
+    padding: 20px 20px;
+    height: auto;
+    min-height: calc(100vh - 260px);
+  }
+
+  /* On mobile, don't nudge the content since chat becomes a modal */
+  .assignment-main.chat-open {
+    padding-right: 20px;
   }
 
   .problem-panel {
-    padding: 20px;
+    max-width: 100%;
   }
 
   .limit-problem {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+    gap: 16px;
   }
 
   .limit-input {
     width: 100%;
+    max-width: 200px;
   }
 
   .ai-tutor-panel {
     position: fixed;
-    left: 0;
-    right: 0;
-    width: auto;
-    min-width: auto;
-    max-width: none;
-    resize: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 400px;
+    height: 80vh;
+    max-height: 600px;
+    right: auto;
+    bottom: auto;
+    border-radius: 16px;
+    z-index: 2000;
   }
 
   .chat-history {
-    padding: 16px 16px 140px 16px; /* Even more bottom padding for mobile */
+    max-height: 60vh;
   }
 
   .chatbot-header {
-    padding: 20px 16px; /* Match mobile top bar padding */
+    padding: 16px 20px;
   }
 
   .ai-tutor-panel .chat-input-form {
-    padding: 16px 16px; /* Match mobile top bar padding */
+    padding: 16px 20px;
   }
 
   .top-bar-right {
@@ -952,8 +998,10 @@
   }
 
   .action-button,
-  .ai-help-button {
-    padding: 6px 12px;
+  .ai-help-icon-button,
+  .back-button-small {
+    padding: 8px 12px;
     font-size: 13px;
+    min-width: auto;
   }
 }

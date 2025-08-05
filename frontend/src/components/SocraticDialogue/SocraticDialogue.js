@@ -13,6 +13,7 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
   const timerRef = useRef(null);
   const [understandingScore, setUnderstandingScore] = useState(0);
   const [isAITyping, setIsAITyping] = useState(false);
+  const [isAILoading, setIsAILoading] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
   const [progress, setProgress] = useState(0);
   const progressBarRef = useRef(null);
@@ -181,13 +182,13 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
 
   const handleChatSubmit = (e) => {
     e.preventDefault();
-    if (chatMessage.trim() !== '') {
+    if (chatMessage.trim() !== '' && !isAITyping && !isAILoading) {
       if (!timerStarted) setTimerStarted(true); // Start timer on first message
       assessUnderstanding(chatMessage); // Assessment
       const aiResponse = getAIResponse(chatMessage, chatHistory.length);
       setChatHistory([...chatHistory, { sender: 'student', message: chatMessage }]);
       setChatMessage('');
-      setIsAITyping(true);
+      setIsAILoading(true);
       
       // Auto-scroll after adding user message
       setTimeout(() => {
@@ -196,63 +197,69 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
         }
       }, 100);
       
+      // Show loading dots for 1-2 seconds before starting to type
       setTimeout(() => {
-        // Add empty AI message first
-        setChatHistory((prev) => [...prev, { sender: 'ai', message: '', isTyping: true }]);
+        setIsAILoading(false);
+        setIsAITyping(true);
         
-        // Type out the response character by character
-        let currentText = '';
-        const typeInterval = setInterval(() => {
-          if (currentText.length < aiResponse.length) {
-            currentText += aiResponse[currentText.length];
-            setChatHistory(prev => {
-              const newHistory = [...prev];
-              newHistory[newHistory.length - 1] = { 
-                sender: 'ai', 
-                message: currentText,
-                isTyping: true 
-              };
-              return newHistory;
-            });
-          } else {
-            clearInterval(typeInterval);
-            setChatHistory(prev => {
-              const newHistory = [...prev];
-              newHistory[newHistory.length - 1] = { 
-                sender: 'ai', 
-                message: currentText,
-                isTyping: false 
-              };
-              return newHistory;
-            });
-            setIsAITyping(false);
-          }
-        }, 8); // Very fast typing speed - 8ms per character
-        
-        // Auto-scroll after AI response with longer delay
         setTimeout(() => {
-          if (chatHistoryRef.current) {
-            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-          }
-        }, 300);
-        
-        // Additional scroll to ensure we're at the very bottom
-        setTimeout(() => {
-          if (chatHistoryRef.current) {
-            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-          }
-        }, 500);
-        
-        // Force scroll to bottom after DOM updates
-        setTimeout(() => {
-          if (chatHistoryRef.current) {
-            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-            // Force a reflow to ensure scroll position is applied
-            void chatHistoryRef.current.offsetHeight;
-            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-          }
-        }, 800);
-      }, 1000 + Math.random() * 2000); // 1-3s delay
+          // Add empty AI message first
+          setChatHistory((prev) => [...prev, { sender: 'ai', message: '', isTyping: true }]);
+          
+          // Type out the response character by character
+          let currentText = '';
+          const typeInterval = setInterval(() => {
+            if (currentText.length < aiResponse.length) {
+              currentText += aiResponse[currentText.length];
+              setChatHistory(prev => {
+                const newHistory = [...prev];
+                newHistory[newHistory.length - 1] = { 
+                  sender: 'ai', 
+                  message: currentText,
+                  isTyping: true 
+                };
+                return newHistory;
+              });
+            } else {
+              clearInterval(typeInterval);
+              setChatHistory(prev => {
+                const newHistory = [...prev];
+                newHistory[newHistory.length - 1] = { 
+                  sender: 'ai', 
+                  message: currentText,
+                  isTyping: false 
+                };
+                return newHistory;
+              });
+              setIsAITyping(false);
+            }
+          }, 8); // Very fast typing speed - 8ms per character
+          
+          // Auto-scroll after AI response with longer delay
+          setTimeout(() => {
+            if (chatHistoryRef.current) {
+              chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+            }
+          }, 300);
+          
+          // Additional scroll to ensure we're at the very bottom
+          setTimeout(() => {
+            if (chatHistoryRef.current) {
+              chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+            }
+          }, 500);
+          
+          // Force scroll to bottom after DOM updates
+          setTimeout(() => {
+            if (chatHistoryRef.current) {
+              chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+              // Force a reflow to ensure scroll position is applied
+              void chatHistoryRef.current.offsetHeight;
+              chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+            }
+          }, 800);
+        }, 500 + Math.random() * 1000); // Reduced from 1-3s to 0.5-1.5s delay
+      }, 1000 + Math.random() * 1000); // 1-2 seconds of loading
     }
   };
 
@@ -296,14 +303,6 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
                 </button>
               </div>
             </div>
-            
-            <div className="question-illustration">
-              <img 
-                src="/albert_einstein.svg" 
-                alt="Albert Einstein illustration" 
-                className="einstein-svg"
-              />
-            </div>
           </div>
         )}
 
@@ -338,6 +337,20 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
                 </div>
               ))}
 
+              {/* Show loading dots when AI is loading */}
+              {isAILoading && (
+                <div className="chat-message ai">
+                  <div className="ai-icon"></div>
+                  <div className="message-content">
+                    <div className="loading-dots">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div ref={chatEndRef} />
             </div>
             <div className="chat-input-form">
@@ -348,18 +361,15 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
                 placeholder="Continue the dialogue..."
                 value={chatMessage}
                 onChange={(e) => setChatMessage(e.target.value)}
-                disabled={isAITyping}
+                disabled={isAITyping || isAILoading}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !isAITyping) {
+                  if (e.key === 'Enter' && !isAITyping && !isAILoading) {
                     handleChatSubmit(e);
                   }
                 }}
               />
-              <button onClick={handleChatSubmit} className="chat-send-button" disabled={isAITyping}>
+              <button onClick={handleChatSubmit} className="chat-send-button" disabled={isAITyping || isAILoading}>
                 Send
-              </button>
-              <button className="ai-help-circle-button" title="Get AI Help">
-                <img src="/diamond-icon.png" alt="AI Help" className="ai-help-icon" />
               </button>
             </div>
             {showEndModal && (

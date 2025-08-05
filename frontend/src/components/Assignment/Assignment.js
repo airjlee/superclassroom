@@ -63,6 +63,7 @@ const Assignment = ({ onNavigateHome }) => {
   const [chatHistory, setChatHistory] = useState([]);
   
   const [isAITyping, setIsAITyping] = useState(false);
+  const [isAILoading, setIsAILoading] = useState(false);
   const chatEndRef = useRef(null);
   const chatHistoryRef = useRef(null);
 
@@ -84,67 +85,73 @@ const Assignment = ({ onNavigateHome }) => {
   const startDemo = () => {
     setShowChatbot(true);
     setDemoStep(0);
-    setIsAITyping(true);
+    setIsAILoading(true);
     
-    // Start typing the first response immediately
+    // Show loading dots for 1-2 seconds before starting to type
     setTimeout(() => {
-      const firstResponse = demoResponses[0];
+      setIsAILoading(false);
+      setIsAITyping(true);
       
-      // Add empty AI message first
-      setChatHistory([{ sender: 'ai', message: '', isTyping: true }]);
-      
-      // Type out the response character by character
-      let currentText = '';
-      const typeInterval = setInterval(() => {
-        if (currentText.length < firstResponse.length) {
-          currentText += firstResponse[currentText.length];
-          setChatHistory(prev => {
-            const newHistory = [...prev];
-            newHistory[newHistory.length - 1] = { 
-              sender: 'ai', 
-              message: currentText,
-              isTyping: true 
-            };
-            return newHistory;
-          });
-        } else {
-          clearInterval(typeInterval);
-          setChatHistory(prev => {
-            const newHistory = [...prev];
-            newHistory[newHistory.length - 1] = { 
-              sender: 'ai', 
-              message: currentText,
-              isTyping: false 
-            };
-            return newHistory;
-          });
-          setIsAITyping(false);
-          setDemoStep(1); // Move to next response
-        }
-      }, 8); // Very fast typing speed - 8ms per character
-      
-      // Auto-scroll after AI response
+      // Start typing the first response immediately
       setTimeout(() => {
-        if (chatHistoryRef.current) {
-          chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-        }
-      }, 300);
-      
-      // Additional scroll to ensure we're at the very bottom
-      setTimeout(() => {
-        if (chatHistoryRef.current) {
-          chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-        }
-      }, 500);
-      
-      // Auto-focus the chat input after AI response
-      setTimeout(() => {
-        const chatInput = document.querySelector('.ai-tutor-panel .chat-input');
-        if (chatInput) {
-          chatInput.focus();
-        }
-      }, 1000);
-    }, 1000 + Math.random() * 2000);
+        const firstResponse = demoResponses[0];
+        
+        // Add empty AI message first
+        setChatHistory([{ sender: 'ai', message: '', isTyping: true }]);
+        
+        // Type out the response character by character
+        let currentText = '';
+        const typeInterval = setInterval(() => {
+          if (currentText.length < firstResponse.length) {
+            currentText += firstResponse[currentText.length];
+            setChatHistory(prev => {
+              const newHistory = [...prev];
+              newHistory[newHistory.length - 1] = { 
+                sender: 'ai', 
+                message: currentText,
+                isTyping: true 
+              };
+              return newHistory;
+            });
+          } else {
+            clearInterval(typeInterval);
+            setChatHistory(prev => {
+              const newHistory = [...prev];
+              newHistory[newHistory.length - 1] = { 
+                sender: 'ai', 
+                message: currentText,
+                isTyping: false 
+              };
+              return newHistory;
+            });
+            setIsAITyping(false);
+            setDemoStep(1); // Move to next response
+          }
+        }, 8); // Very fast typing speed - 8ms per character
+        
+        // Auto-scroll after AI response
+        setTimeout(() => {
+          if (chatHistoryRef.current) {
+            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+          }
+        }, 300);
+        
+        // Additional scroll to ensure we're at the very bottom
+        setTimeout(() => {
+          if (chatHistoryRef.current) {
+            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+          }
+        }, 500);
+        
+        // Auto-focus the chat input after AI response
+        setTimeout(() => {
+          const chatInput = document.querySelector('.ai-tutor-panel .chat-input');
+          if (chatInput) {
+            chatInput.focus();
+          }
+        }, 1000);
+      }, 1000 + Math.random() * 2000);
+    }, 1000 + Math.random() * 1000); // 1-2 seconds of loading
   };
 
   const handleSubmit = () => {
@@ -167,6 +174,7 @@ const Assignment = ({ onNavigateHome }) => {
     setChatHistory([]);
     setDemoStep(0);
     setIsAITyping(false);
+    setIsAILoading(false);
   };
 
   const handleShowTutor = () => {
@@ -223,8 +231,8 @@ const Assignment = ({ onNavigateHome }) => {
 
   const handleChatSubmit = (e) => {
     e.preventDefault();
-    if (chatMessage.trim() !== '' && !isAITyping) {
-      setIsAITyping(true);
+    if (chatMessage.trim() !== '' && !isAITyping && !isAILoading) {
+      setIsAILoading(true);
       setChatHistory(prev => ([
         ...prev,
         { sender: 'student', message: chatMessage }
@@ -238,77 +246,83 @@ const Assignment = ({ onNavigateHome }) => {
         }
       }, 100);
       
+      // Show loading dots for 1-2 seconds before starting to type
       setTimeout(() => {
-        const aiResponse = demoResponses[demoStep % demoResponses.length];
+        setIsAILoading(false);
+        setIsAITyping(true);
         
-        // Add empty AI message first
-        setChatHistory(prev => ([
-          ...prev,
-          { sender: 'ai', message: '', isTyping: true }
-        ]));
-        
-        // Type out the response character by character
-        let currentText = '';
-        const typeInterval = setInterval(() => {
-          if (currentText.length < aiResponse.length) {
-            currentText += aiResponse[currentText.length];
-            setChatHistory(prev => {
-              const newHistory = [...prev];
-              newHistory[newHistory.length - 1] = { 
-                sender: 'ai', 
-                message: currentText,
-                isTyping: true 
-              };
-              return newHistory;
-            });
-          } else {
-            clearInterval(typeInterval);
-            setChatHistory(prev => {
-              const newHistory = [...prev];
-              newHistory[newHistory.length - 1] = { 
-                sender: 'ai', 
-                message: currentText,
-                isTyping: false 
-              };
-              return newHistory;
-            });
-            setIsAITyping(false);
-            setDemoStep(demoStep + 1); // Increment demo step
-          }
-        }, 8); // Very fast typing speed - 8ms per character
-        
-        // Auto-scroll after AI response with longer delay
         setTimeout(() => {
-          if (chatHistoryRef.current) {
-            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-          }
-        }, 300);
-        
-        // Additional scroll to ensure we're at the very bottom
-        setTimeout(() => {
-          if (chatHistoryRef.current) {
-            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-          }
-        }, 500);
-        
-        // Force scroll to bottom after DOM updates
-        setTimeout(() => {
-          if (chatHistoryRef.current) {
-            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-            // Force a reflow to ensure scroll position is applied
-            void chatHistoryRef.current.offsetHeight;
-            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-          }
-        }, 800);
-        
-        // Auto-focus the chat input after AI response
-        setTimeout(() => {
-          const chatInput = document.querySelector('.ai-tutor-panel .chat-input');
-          if (chatInput) {
-            chatInput.focus();
-          }
-        }, 1000);
-      }, 1000 + Math.random() * 2000);
+          const aiResponse = demoResponses[demoStep % demoResponses.length];
+          
+          // Add empty AI message first
+          setChatHistory(prev => ([
+            ...prev,
+            { sender: 'ai', message: '', isTyping: true }
+          ]));
+          
+          // Type out the response character by character
+          let currentText = '';
+          const typeInterval = setInterval(() => {
+            if (currentText.length < aiResponse.length) {
+              currentText += aiResponse[currentText.length];
+              setChatHistory(prev => {
+                const newHistory = [...prev];
+                newHistory[newHistory.length - 1] = { 
+                  sender: 'ai', 
+                  message: currentText,
+                  isTyping: true 
+                };
+                return newHistory;
+              });
+            } else {
+              clearInterval(typeInterval);
+              setChatHistory(prev => {
+                const newHistory = [...prev];
+                newHistory[newHistory.length - 1] = { 
+                  sender: 'ai', 
+                  message: currentText,
+                  isTyping: false 
+                };
+                return newHistory;
+              });
+              setIsAITyping(false);
+              setDemoStep(demoStep + 1); // Increment demo step
+            }
+          }, 8); // Very fast typing speed - 8ms per character
+          
+          // Auto-scroll after AI response with longer delay
+          setTimeout(() => {
+            if (chatHistoryRef.current) {
+              chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+            }
+          }, 300);
+          
+          // Additional scroll to ensure we're at the very bottom
+          setTimeout(() => {
+            if (chatHistoryRef.current) {
+              chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+            }
+          }, 500);
+          
+          // Force scroll to bottom after DOM updates
+          setTimeout(() => {
+            if (chatHistoryRef.current) {
+              chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+              // Force a reflow to ensure scroll position is applied
+              void chatHistoryRef.current.offsetHeight;
+              chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+            }
+          }, 800);
+          
+          // Auto-focus the chat input after AI response
+          setTimeout(() => {
+            const chatInput = document.querySelector('.ai-tutor-panel .chat-input');
+            if (chatInput) {
+              chatInput.focus();
+            }
+          }, 1000);
+        }, 1000 + Math.random() * 2000);
+      }, 1000 + Math.random() * 1000); // 1-2 seconds of loading
       
       // Auto-scroll when typing starts
       setTimeout(() => {
@@ -440,7 +454,7 @@ const Assignment = ({ onNavigateHome }) => {
             <div className="question-list">
               {Array.from({length: totalQuestions}, (_, i) => (
                 <div key={i + 1} className={`question-item ${i === currentQuestion ? 'current' : ''}`}>
-                  <span className="question-number">Q{i + 1}</span>
+                  <span className="question-number">{i === 0 ? 'SQ1' : 'SC1'}</span>
                   <span className="question-status">
                     {i === currentQuestion ? 'Current' : i < currentQuestion ? 'Completed' : 'Unanswered'}
                   </span>
@@ -453,13 +467,13 @@ const Assignment = ({ onNavigateHome }) => {
                 onClick={onNavigateHome}
                 title="Back to Home"
               >
-                ← Back
+                Back
               </button>
             </div>
           </div>
         </div>
 
-        <main className="assignment-main">
+        <main className={`assignment-main ${showChatbot ? 'chat-open' : ''}`}>
           {/* Question Content */}
           {currentQuestion === 0 ? (
             /* Question 1: MCQ Limit Problem */
@@ -545,7 +559,7 @@ const Assignment = ({ onNavigateHome }) => {
           {showChatbot && currentQuestion === 0 && (
             <div className="ai-tutor-panel">
               <div className="chatbot-header">
-                <h3>Hello, Ronald</h3>
+                <h3>Hello, Alice</h3>
                 <p>I'm here to guide you through this problem.</p>
                 <button 
                   className="close-panel-btn"
@@ -591,6 +605,20 @@ const Assignment = ({ onNavigateHome }) => {
                     </div>
                   </div>
                 ))}
+
+                {/* Show loading dots when AI is loading */}
+                {isAILoading && (
+                  <div className="chat-message ai">
+                    <div className="ai-icon"></div>
+                    <div className="message-content">
+                      <div className="loading-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div ref={chatEndRef} />
               </div>

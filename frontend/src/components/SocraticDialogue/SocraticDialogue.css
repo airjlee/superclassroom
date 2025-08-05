@@ -38,24 +38,6 @@
   text-align: center;
 }
 
-.question-illustration {
-  position: absolute;
-  left: 80%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 280px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.einstein-svg {
-  width: 100%;
-  height: auto;
-  max-width: 280px;
-  max-height: 380px;
-}
-
 .question-badge {
   display: inline-block;
   background: linear-gradient(135deg, #4c05ff 0%, #c820c8 100%);
@@ -544,6 +526,48 @@
   animation-delay: 0.3s;
 }
 
+/* Loading dots animation - appears before typing */
+.loading-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+}
+
+.loading-dots span {
+  height: 8px;
+  width: 8px;
+  background-color: #6b7280;
+  border-radius: 50%;
+  animation: loading 1.4s infinite ease-in-out;
+  opacity: 0.8;
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes loading {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-8px) scale(1.2);
+    opacity: 1;
+  }
+}
+
 @keyframes typing {
   0%,
   60%,
@@ -662,16 +686,6 @@
     padding: 24px 16px;
   }
 
-  .question-illustration {
-    left: 75%;
-    width: 200px;
-  }
-
-  .einstein-svg {
-    max-width: 200px;
-    max-height: 280px;
-  }
-
   .conceptual-question {
     font-size: 20px;
   }
@@ -720,10 +734,6 @@
 @media (max-width: 480px) {
   .initial-question-container {
     padding: 20px 16px;
-  }
-
-  .question-illustration {
-    display: none;
   }
 
   .conceptual-question {
