@@ -276,7 +276,7 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
             className={`tab-button ${activeTab === 'ai-log' ? 'active' : ''}`}
             onClick={() => setActiveTab('ai-log')}
           >
-            AI Log
+            AI History
           </button>
         </div>
       </div>
@@ -405,49 +405,34 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
 
         {activeTab === 'ai-log' && (
           <div className="ai-log-content">
-            <div className="ai-log-section">
-              <h3>AI Processing Log</h3>
-              <div className="log-entries">
-                <div className="log-entry">
-                  <div className="log-timestamp">2024-01-14 3:46 PM</div>
-                  <div className="log-type analysis">Analysis</div>
-                  <div className="log-message">Started automated evaluation of student submission for "Limits and Continuity"</div>
-                </div>
-                <div className="log-entry">
-                  <div className="log-timestamp">2024-01-14 3:46 PM</div>
-                  <div className="log-type processing">Processing</div>
-                  <div className="log-message">Analyzing mathematical notation and problem-solving approach</div>
-                </div>
-                <div className="log-entry">
-                  <div className="log-timestamp">2024-01-14 3:46 PM</div>
-                  <div className="log-type validation">Validation</div>
-                  <div className="log-message">Validated algebraic steps: factorization (x² - 4) = (x + 2)(x - 2) ✓</div>
-                </div>
-                <div className="log-entry">
-                  <div className="log-timestamp">2024-01-14 3:46 PM</div>
-                  <div className="log-type validation">Validation</div>
-                  <div className="log-message">Confirmed limit evaluation: lim(x→2) = 4 ✓</div>
-                </div>
-                <div className="log-entry">
-                  <div className="log-timestamp">2024-01-14 3:47 PM</div>
-                  <div className="log-type insight">Insight</div>
-                  <div className="log-message">Generated strength analysis: Excellent recognition of indeterminate form</div>
-                </div>
-                <div className="log-entry">
-                  <div className="log-timestamp">2024-01-14 3:47 PM</div>
-                  <div className="log-type insight">Insight</div>
-                  <div className="log-message">Identified improvement area: Could mention alternative approaches</div>
-                </div>
-                <div className="log-entry">
-                  <div className="log-timestamp">2024-01-14 3:47 PM</div>
-                  <div className="log-type score">Scoring</div>
-                  <div className="log-message">AI Superscore calculated: 93.5/100 based on rubric criteria</div>
-                </div>
-                <div className="log-entry">
-                  <div className="log-timestamp">2024-01-14 3:47 PM</div>
-                  <div className="log-type complete">Complete</div>
-                  <div className="log-message">AI analysis completed. Ready for instructor review.</div>
-                </div>
+            <div className="ai-history-section">
+              <h3>Alice Brown's Chat History</h3>
+              <div className="transcript-content plain-text-transcript">
+                <div><span className="speaker user">Alice</span><br />I think that for ODEs, it is important that our general solution is <span className="strength">linearly independent so that it can capture the full behavior of the ODE, and therefore get the right solution</span></div>
+                <div><span className="speaker superclassroom">AI</span><br />Excellent! You've touched on something really important - that <span className="strength">linear independence helps us "capture the full behavior" of the differential equation</span>.
+<br /><br />Let me ask you this: What does it mean mathematically for a second-order differential equation to have "full behavior"? In other words, how many independent pieces of information do you think we need to completely describe all possible solutions?</div>
+                <div><span className="speaker user">Alice</span><br />It means that our general solution is the correct representation of the differential equations? <span className="weakness">I'm not entirely sure</span>. I'm guessing <span className="strength">two, but I'm also not entirely sure why</span>.</div>
+                <div><span className="speaker superclassroom">AI</span><br />Good instinct on the "<span className="strength">two</span>"! You're absolutely right for second-order equations.<br /><br />Here's a way to think about it: If I gave you a second-order differential equation and said "find the specific solution," what additional information would I need to give you to pin down exactly which solution I want?</div>
+                <div><span className="speaker user">Alice</span><br />The differential equation?</div>
+                <div><span className="speaker superclassroom">AI</span><br />Well, I'd give you the differential equation, of course! But think about this scenario: suppose I tell you the differential equation is y'' - 4y' + 4y = 0.<br /><br />Now, there are infinitely many functions that satisfy this equation. So if I want you to find one specific solution - not just any solution, but the exact one I have in mind - what extra information would I need to provide?</div>
+                <div><span className="speaker user">Alice</span><br /><span className="weakness-red" title="Student requested direct answer instead of working through the problem">Just give me the answer.</span></div>
+                <div><span className="speaker superclassroom">AI</span><br />You're almost there! What extra information would I need to provide?</div>
+                <div><span className="speaker user">Alice</span><br /><span className="strength">Initial conditions</span>?</div>
+                <div><span className="speaker superclassroom">AI</span><br />Exactly! <span className="strength">Initial conditions</span>. And for a second-order equation, how many initial conditions do you think I'd typically need to give you?<br />Once you answer that, I think we'll start to see why that number "<span className="strength">two</span>" you guessed earlier is so important...</div>
+                <div><span className="speaker user">Alice</span><br />two</div>
+                <div><span className="speaker superclassroom">AI</span><br />Perfect! So we need <span className="strength">two initial conditions to pin down a unique solution to a second-order differential equation</span>.<br /><br />Now here's the key connection: If our general solution has two arbitrary constants - like y = c₁y₁ + c₂y₂ - and we have two initial conditions, we can solve for those constants and get our specific solution.<br /><br />But what do you think would happen if y₁ and y₂ weren't linearly independent? What would that mean for our ability to satisfy any given pair of initial conditions?</div>
+                <div><span className="speaker user">Alice</span><br />We can't satisfy them, since we would only have <span className="weakness">constant</span>?</div>
+                <div><span className="speaker superclassroom">AI</span><br />Exactly! You only have one effective constant instead of two.<br />Now here's the critical question: If you have only one constant to determine, but you need to satisfy two initial conditions, what's the problem?</div>
+                <div><span className="speaker user">Alice</span><br />The problem is that we can only apply <span className="weakness">one initial condition</span></div>
+                <div><span className="speaker superclassroom">AI</span><br />Close! Actually, you can still apply both initial conditions - you can still write down the two equations.<br />But here's the real issue: what happens when you try to solve that system of two equations but you only have one unknown constant?</div>
+                <div><span className="speaker user">Alice</span><br /><span className="weakness">I'm not sure</span></div>
+                <div><span className="speaker superclassroom">AI</span><br />Think about it this way: you'd have two equations but only one unknown.<br />In general, what happens when you have more equations than unknowns in a system? Is such a system always guaranteed to have a solution?</div>
+                <div><span className="speaker user">Alice</span><br />There's no solution!</div>
+                <div><span className="speaker superclassroom">AI</span><br />Exactly! Most of the time there's no solution - the system is <span className="strength">overdetermined</span>.<br /><br />So this connects back to your original insight about "capturing the full behavior." If your functions aren't linearly independent, you can't satisfy arbitrary initial conditions, which means you're missing some of the possible behaviors of the differential equation.<br /><br />Now, can you see why repeated roots create a special problem? What would happen if you tried to use e^(2x) and e^(2x) as your two "solutions" for a repeated root r = 2?</div>
+                <div><span className="speaker user">Alice</span><br />Well, you're going to make a <span className="strength">linearly dependent general solution. Or, in other words, you're gonna get a solution with no way to incorporate all initial conditions</span>.</div>
+                <div><span className="speaker superclassroom">AI</span><br />Beautifully put! You've connected all the pieces.<br />Now, try answering the original question again: Why do you think linear independence is important for general solutions when dealing with repeated roots in ODEs?<br />Go ahead and give me your full understanding now - I'm excited to hear how you'd explain it!</div>
+                <div><span className="speaker user">Alice</span><br />In order to solve for a specific solution of an ODE, especially when using the characteristic equation method & finding repeated roots, ensuring <span className="strength">linear independence in the constructed general solution is necessary for applying initial condition constraints—without it, you would be creating a system of equations that is overdetermined that cannot be solved! In other words, the general solution can not fully capture the entire behavior of the original differential equation</span>.</div>
+                <div><span className="speaker superclassroom">AI</span><br />Excellent! You've absolutely nailed it. You've connected all the key pieces:<br />The need for enough independent constants to match the number of initial conditions<br />How repeated roots create the risk of linear dependence<br />The mathematical consequence - an overdetermined system<br />The bigger picture - that we need to capture the full solution space<br />This is exactly the kind of deep understanding that will serve you well. You've moved from a vague sense that "we need the right solution" to a precise understanding of why linear independence is mathematically necessary.</div>
               </div>
             </div>
           </div>
