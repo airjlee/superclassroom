@@ -1,10 +1,14 @@
 /* Assignment Creator Page Styles - scoped to avoid conflicts */
 .assignment-creator-page {
+  padding: 2rem;
+  background: #f8f9fa;
   min-height: calc(100vh - 60px);
-  background-color: #f8f9fa;
-  display: flex;
-  flex-direction: column;
-  margin-top: 60px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.assignment-creator-page.fade-in {
+  opacity: 1;
 }
 
 .assignment-creator-header {
@@ -162,10 +166,32 @@
 .action-button.primary {
   background-color: #7b1fa2;
   color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.action-button.primary:hover {
+.action-button.primary:hover:not(:disabled) {
   background-color: #6a1b9a;
+}
+
+.action-button.primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.action-button.primary.publishing {
+  background-color: #6b7280;
+}
+
+.action-button.primary.published {
+  background-color: #10b981;
 }
 
 .action-button.secondary {
@@ -596,6 +622,20 @@
 
 .add-block-button .material-icons {
   font-size: 1.25rem;
+}
+
+.publish-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Responsive Design */

@@ -26,7 +26,7 @@ const adjustColor = (hex, amt) => {
 const lightenColor = (hex, percent = 20) => adjustColor(hex, Math.round(2.55 * percent));
 const darkenColor = (hex, percent = 20) => adjustColor(hex, -Math.round(2.55 * percent));
 
-const TeacherDashboard = ({ onNavigateToCourse }) => {
+const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [buttonPosition, setButtonPosition] = useState(32); // 2rem = 32px
@@ -39,6 +39,9 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const fileInputRef = useRef(null);
   const searchInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFading, setIsFading] = useState(false);
+  const [isFadingIn, setIsFadingIn] = useState(true);
   
   // Mock courses data - in real app this would come from API
   const courses = [
@@ -136,6 +139,9 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
           handleMentionSelect(options[selectedMentionIndex].name, mentionType);
         }
       }
+    } else if (e.key === 'Enter' && searchQuery.trim() && !isLoading) {
+      e.preventDefault();
+      handleSend();
     }
   };
 
@@ -192,6 +198,31 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
+
+  // Handle fade-in animation
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsFadingIn(false);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleSend = () => {
+    if (searchQuery.trim()) {
+      setIsLoading(true);
+      // Simulate API call for 3 seconds total
+      setTimeout(() => {
+        setIsLoading(false);
+        setSearchQuery('');
+        setIsFading(true);
+        // Navigate to assignment creation page after fade
+        setTimeout(() => {
+          // Navigate to assignment creation page
+          onNavigateToCreate();
+        }, 500); // Wait for fade animation to complete
+      }, 3000);
+    }
+  };
 
   const renderSearchContent = () => {
     const parts = searchQuery.split(/(@\w+|#\w+)/);
@@ -253,7 +284,7 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
   };
 
   return (
-    <div className="teacher-dashboard">
+    <div className={`teacher-dashboard ${isFading ? 'fade-out' : isFadingIn ? '' : 'fade-in'}`}>
       <div className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
         <div 
           className="sidebar-border-hover"
@@ -364,6 +395,18 @@ const TeacherDashboard = ({ onNavigateToCourse }) => {
                 onKeyDown={handleKeyDown}
                 className="search-input"
               />
+              <button 
+                className={`send-button ${isLoading ? 'loading' : ''}`}
+                onClick={handleSend}
+                disabled={!searchQuery.trim() || isLoading}
+                type="button"
+              >
+                {isLoading ? (
+                  <div className="loading-spinner"></div>
+                ) : (
+                  <span className="material-icons">send</span>
+                )}
+              </button>
               {showMentions && (
                 <div 
                   className="mentions-dropdown"

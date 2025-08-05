@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AssignmentCreator.css';
 
 const AssignmentCreator = ({ onNavigateBack }) => {
+  const [isFadingIn, setIsFadingIn] = useState(true);
+  
+  // Handle fade-in animation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsFadingIn(false);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const [assignment, setAssignment] = useState({
     title: '',
     description: 'This assignment covers the fundamental concepts of limits and continuity in calculus.',
@@ -31,6 +41,8 @@ const AssignmentCreator = ({ onNavigateBack }) => {
   const [aiStrictness, setAiStrictness] = useState(50);
   const [showInstructions, setShowInstructions] = useState(false);
   const [instructions, setInstructions] = useState('');
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
 
   const handleAssignmentChange = (field, value) => {
     setAssignment(prev => ({
@@ -85,8 +97,16 @@ const AssignmentCreator = ({ onNavigateBack }) => {
   };
 
   const handlePublish = () => {
-    console.log('Publishing assignment:', assignment);
-    alert('Assignment published successfully!');
+    setIsPublishing(true);
+    // Simulate publishing process
+    setTimeout(() => {
+      setIsPublishing(false);
+      setIsPublished(true);
+      // Reset published state after 3 seconds
+      setTimeout(() => {
+        setIsPublished(false);
+      }, 3000);
+    }, 2000);
   };
 
   const formatDate = (dateString) => {
@@ -140,7 +160,7 @@ const AssignmentCreator = ({ onNavigateBack }) => {
   };
 
   return (
-    <div className="assignment-creator-page">
+    <div className={`assignment-creator-page ${isFadingIn ? '' : 'fade-in'}`}>
       <div className="assignment-creator-header">
         <div className="assignment-creator-header-info">
           <div className="assignment-title-section">
@@ -172,9 +192,24 @@ const AssignmentCreator = ({ onNavigateBack }) => {
                 <span className="material-icons">close</span>
                 Cancel
               </button>
-              <button className="action-button primary" onClick={handlePublish}>
-                <span className="material-icons">publish</span>
-                Publish
+              <button 
+                className={`action-button primary ${isPublishing ? 'publishing' : ''} ${isPublished ? 'published' : ''}`}
+                onClick={handlePublish}
+                disabled={isPublishing || isPublished}
+              >
+                {isPublishing ? (
+                  <div className="publish-spinner"></div>
+                ) : isPublished ? (
+                  <>
+                    <span className="material-icons">check</span>
+                    Published
+                  </>
+                ) : (
+                  <>
+                    <span className="material-icons">publish</span>
+                    Publish
+                  </>
+                )}
               </button>
             </div>
           </div>
