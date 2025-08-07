@@ -59,6 +59,30 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
   const submission = submissionData[submissionId];
   const [activeTab, setActiveTab] = useState('submission');
   const [showSuperscoreModal, setShowSuperscoreModal] = useState(false);
+  const [showStruggleDropdown, setShowStruggleDropdown] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
+  const [dropdownTimeout, setDropdownTimeout] = useState(null);
+  const [dropdownFadeIn, setDropdownFadeIn] = useState(false);
+
+  // Struggle examples data
+  const struggleExamples = [
+    {
+      quote: "Maybe a jump? Or like a hole in the graph?",
+      highlightedText: "hole in the graph"
+    },
+    {
+      quote: "The function goes crazy when x approaches 0 from the left side.",
+      highlightedText: "goes crazy"
+    },
+    {
+      quote: "I think the limit is getting close to 3, but I'm not sure if it actually reaches it.",
+      highlightedText: "getting close to 3"
+    },
+    {
+      quote: "The graph looks broken at x = 2, so maybe it's not continuous there?",
+      highlightedText: "looks broken"
+    }
+  ];
 
   // Scroll to top when component mounts or submissionId changes
   useEffect(() => {
@@ -104,6 +128,28 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
     setTimeout(scrollToTop, 200);
   }, [submissionId]);
 
+  // Click outside handler for dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.struggle-dropdown') && 
+          !event.target.closest('.struggle-trigger')) {
+        setShowStruggleDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (dropdownTimeout) {
+        clearTimeout(dropdownTimeout);
+      }
+    };
+  }, [dropdownTimeout]);
+
   if (!submission) {
     return (
       <div className="submission-page">
@@ -144,6 +190,67 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
 
   const getTotalMaxScore = () => {
     return submission.feedback.rubricScores.reduce((total, item) => total + item.maxScore, 0);
+  };
+
+  // Hover handler functions for struggle dropdown
+  const handleStruggleHover = (e) => {
+    const rect = e.target.getBoundingClientRect();
+    const dropdownWidth = 400;
+    const dropdownHeight = 300;
+    
+    let x = rect.left;
+    let y = rect.bottom + 5;
+    
+    // Adjust if would go off right edge
+    if (x + dropdownWidth > window.innerWidth) {
+      x = window.innerWidth - dropdownWidth - 10;
+    }
+    
+    // Adjust if would go off bottom edge
+    if (y + dropdownHeight > window.innerHeight) {
+      y = rect.top - dropdownHeight - 5;
+    }
+    
+    setDropdownPosition({ x, y });
+    // Add a 0.2 second delay before showing the dropdown
+    const timeout = setTimeout(() => {
+      setShowStruggleDropdown(true);
+      setDropdownFadeIn(true);
+    }, 200); // 200ms delay
+    setDropdownTimeout(timeout);
+  };
+
+  const handleStruggleLeave = () => {
+    // Cancel the show timeout if leaving before 1s
+    if (dropdownTimeout) {
+      clearTimeout(dropdownTimeout);
+      setDropdownTimeout(null);
+    }
+    // Set a timeout to close the dropdown after a short delay
+    const timeout = setTimeout(() => {
+      setShowStruggleDropdown(false);
+      setDropdownFadeIn(false);
+    }, 150); // 150ms delay
+    setDropdownTimeout(timeout);
+  };
+
+  const handleDropdownEnter = () => {
+    // Clear timeout when entering dropdown
+    if (dropdownTimeout) {
+      clearTimeout(dropdownTimeout);
+      setDropdownTimeout(null);
+    }
+    setShowStruggleDropdown(true);
+    setDropdownFadeIn(true);
+  };
+
+  const handleDropdownLeave = () => {
+    // Set timeout to close dropdown when leaving
+    const timeout = setTimeout(() => {
+      setShowStruggleDropdown(false);
+      setDropdownFadeIn(false);
+    }, 150); // 150ms delay
+    setDropdownTimeout(timeout);
   };
 
   return (
@@ -204,12 +311,18 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
         
         <div className="strengths-section">
           <h4>Strengths</h4>
-          <p>Alice <span className="highlight-green">demonstrated excellent understanding of continuity</span> and <span className="highlight-green">correctly identified removable discontinuities</span>. She <span className="highlight-green">showed strong intuition for limit behavior</span> and <span className="highlight-green">effectively used graphical reasoning</span> to support her solutions.</p>
+          <p>Alice <span className="highlight-green">demonstrated strong intuitive understanding</span> and <span className="highlight-green">showed excellent pattern recognition</span>. She consistently<span className="highlight-green">built on previous concepts</span>, with many responses <span className="highlight-green">connecting geometric and analytical perspective</span> effectively.</p>
         </div>
         
         <div className="areas-improvement-section">
           <h4>Areas of Improvement</h4>
-          <p>Alice <span className="highlight-orange">needs more practice with indeterminate forms</span> in problem 3. She <span className="highlight-orange">struggled with L'Hôpital's rule applications</span> and <span className="highlight-orange">could improve her formal limit proofs</span> for more complex functions.</p>
+          <p>Alice <span 
+            className="highlight-orange struggle-trigger"
+            onMouseEnter={handleStruggleHover}
+            onMouseLeave={handleStruggleLeave}
+          >
+            struggled with precise mathematical terminology
+          </span>. Many responses <span className="highlight-orange">showed hesitation with formal definitions</span> and <span className="highlight-orange">provided incomplete explanations</span> for their reasoning about discontinuity types.</p>
         </div>
         
         <div className="superscore-section">
@@ -251,6 +364,42 @@ const SubmissionPage = ({ submissionId, assignmentId, onNavigateBack }) => {
             </div>
         </div>
       </div>
+
+      {/* Struggle Dropdown */}
+      {showStruggleDropdown && (
+        <div 
+          className={`struggle-dropdown${dropdownFadeIn ? ' fade-in' : ''}`}
+          style={{
+            position: 'absolute',
+            left: `${dropdownPosition.x}px`,
+            top: `${dropdownPosition.y}px`,
+            zIndex: 1000
+          }}
+          onMouseEnter={handleDropdownEnter}
+          onMouseLeave={handleDropdownLeave}
+        >
+          <div className="struggle-dropdown-content">
+            <div className="dropdown-header" style={{ fontWeight: 700, fontSize: '1rem', marginBottom: '1rem', color: '#374151' }}>
+              Alice Brown's chat logs
+            </div>
+            {struggleExamples.map((example, index) => (
+              <div key={index} className="struggle-example">
+                <div className="chat-bubble">
+                  <div 
+                    className="student-quote"
+                    dangerouslySetInnerHTML={{
+                      __html: `"${example.quote.replace(
+                        example.highlightedText,
+                        `<span class=\"highlighted-text\">${example.highlightedText}</span>`
+                      )}"`
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="submission-page-tabs">
         <div className="submission-page-tabs-inner">
