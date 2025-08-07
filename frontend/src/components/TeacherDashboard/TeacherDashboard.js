@@ -163,17 +163,32 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
     return position;
   };
 
+  // Helper function to get accurate visual cursor position
+  const getAccurateCursorPosition = () => {
+    const selection = window.getSelection();
+    if (selection.rangeCount === 0 || !searchInputRef.current) return 0;
+    
+    const range = selection.getRangeAt(0);
+    const inputRect = searchInputRef.current.getBoundingClientRect();
+    
+    // Create a temporary range to measure the cursor position
+    const tempRange = range.cloneRange();
+    const rect = tempRange.getBoundingClientRect();
+    
+    // Calculate position relative to the input field
+    const relativePosition = rect.left - inputRect.left;
+    
+    // Ensure the position is within reasonable bounds
+    return Math.max(0, Math.min(relativePosition, inputRect.width - 50));
+  };
+
   const handleSearchChange = (e) => {
     const content = e.target.innerHTML;
     setSearchQuery(content);
     
-    // Get cursor position
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      const cursorPosition = getCursorPosition(e.target, range);
-      setCursorPosition(cursorPosition);
-    }
+    // Get accurate cursor position for dropdown positioning
+    const accuratePosition = getAccurateCursorPosition();
+    setCursorPosition(accuratePosition);
     
     // Check for @ or # triggers (only if not inside a tag)
     const textContent = e.target.textContent;
@@ -182,6 +197,7 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
     
     // Check if cursor is inside a tag
     let isInsideTag = false;
+    const selection = window.getSelection();
     if (selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       let parent = range.startContainer;
@@ -280,18 +296,71 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
         if (tagElement) {
           e.preventDefault();
           
+          // Store references before deletion
+          const beforeTag = tagElement.previousSibling;
+          const afterTag = tagElement.nextSibling;
+          
+          // Get the position where the tag was (before removal)
+          const tagPosition = getAccurateCursorPosition();
+          
           // Remove the tag element
           tagElement.remove();
+          
+          // Normalize the content to clean up any text node issues
+          searchInputRef.current.normalize();
           
           // Update the search query state
           setSearchQuery(searchInputRef.current.innerHTML);
           
-          // Set cursor position after tag removal
+          // Set cursor position exactly where the tag was deleted
           const newRange = document.createRange();
-          newRange.setStartAfter(tagElement.nextSibling || searchInputRef.current);
+          
+          // Find the appropriate text node and position after normalization
+          const walker = document.createTreeWalker(
+            searchInputRef.current,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+          );
+          
+          let node;
+          let currentPos = 0;
+          let targetNode = null;
+          let targetOffset = 0;
+          
+          while (node = walker.nextNode()) {
+            const nodeLength = node.length;
+            if (currentPos + nodeLength >= tagPosition) {
+              targetNode = node;
+              targetOffset = Math.min(tagPosition - currentPos, nodeLength);
+              break;
+            }
+            currentPos += nodeLength;
+          }
+          
+          if (targetNode) {
+            newRange.setStart(targetNode, targetOffset);
+          } else {
+            // Fallback: position cursor at the end of the content
+            newRange.selectNodeContents(searchInputRef.current);
+            newRange.collapse(false);
+          }
+          
           newRange.collapse(true);
           selection.removeAllRanges();
           selection.addRange(newRange);
+          
+          // CRITICAL FIX: Reset formatting state after tag deletion
+          // Clear any existing selection and ensure clean cursor state
+          selection.removeAllRanges();
+          const cleanRange = document.createRange();
+          cleanRange.setStart(newRange.startContainer, newRange.startOffset);
+          cleanRange.collapse(true);
+          selection.addRange(cleanRange);
+          
+          // Force the contenteditable to reset its formatting state
+          searchInputRef.current.blur();
+          searchInputRef.current.focus();
         }
       }
     }
@@ -434,6 +503,23 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  // Track cursor position changes for dropdown positioning
+  useEffect(() => {
+    const handleCursorMove = () => {
+      if (searchInputRef.current && document.activeElement === searchInputRef.current) {
+        const accuratePosition = getAccurateCursorPosition();
+        setCursorPosition(accuratePosition);
+      }
+    };
+
+    // Update position on selection change
+    document.addEventListener('selectionchange', handleCursorMove);
+    
+    return () => {
+      document.removeEventListener('selectionchange', handleCursorMove);
     };
   }, []);
 
@@ -584,6 +670,13 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
                 contentEditable="true"
                 onInput={handleSearchChange}
                 onKeyDown={handleKeyDown}
+                onClick={() => {
+                  // Update cursor position when user clicks
+                  setTimeout(() => {
+                    const accuratePosition = getAccurateCursorPosition();
+                    setCursorPosition(accuratePosition);
+                  }, 0);
+                }}
                 className="search-input"
                 data-placeholder="Ask anything or @mention a specific course..."
               />
@@ -604,9 +697,11 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
                   className="mentions-dropdown"
                   style={{
                     position: 'absolute',
-                    left: `${Math.min(cursorPosition * 8, 200)}px`,
+                    left: `${Math.max(0, Math.min(cursorPosition, window.innerWidth - 350))}px`,
                     top: '100%',
-                    marginTop: '0.25rem'
+                    marginTop: '0.25rem',
+                    maxWidth: '300px',
+                    minWidth: '200px'
                   }}
                 >
                   {mentionType === 'course' ? (
