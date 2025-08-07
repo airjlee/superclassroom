@@ -39,6 +39,8 @@ const AssignmentCreator = ({ onNavigateBack }) => {
   const [dateInputValue, setDateInputValue] = useState('');
   const [isEditingDate, setIsEditingDate] = useState(false);
   const [aiStrictness, setAiStrictness] = useState(50);
+  const [aiSensitivity, setAiSensitivity] = useState(50);
+  const [aiPatience, setAiPatience] = useState(50);
   const [showInstructions, setShowInstructions] = useState(false);
   const [instructions, setInstructions] = useState('');
   const [isPublishing, setIsPublishing] = useState(false);
@@ -102,6 +104,20 @@ const AssignmentCreator = ({ onNavigateBack }) => {
     setTimeout(() => {
       setIsPublishing(false);
       setIsPublished(true);
+      
+      // Include both slider values in the assignment data
+      const assignmentData = {
+        ...assignment,
+        aiSettings: {
+          strictness: aiStrictness,
+          sensitivity: aiSensitivity,
+          patience: aiPatience,
+          instructions: instructions
+        }
+      };
+      
+      console.log('Publishing assignment with AI settings:', assignmentData);
+      
       // Reset published state after 3 seconds
       setTimeout(() => {
         setIsPublished(false);
@@ -299,6 +315,40 @@ const AssignmentCreator = ({ onNavigateBack }) => {
               />
               <div className="ai-strictness-description">
                 Controls how strictly the AI evaluates student responses. Higher values mean more rigorous assessment.
+              </div>
+              
+              {/* NEW: Second Slider */}
+              <div className="ai-sensitivity-header">
+                <span className="ai-sensitivity-label">Sensitivity</span>
+                <span className="ai-sensitivity-value">{aiSensitivity}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={aiSensitivity}
+                onChange={(e) => setAiSensitivity(parseInt(e.target.value))}
+                className="ai-sensitivity-slider"
+              />
+              <div className="ai-sensitivity-description">
+                Controls how sensitive the AI is to student confusion. Higher values trigger more help.
+              </div>
+              
+              {/* NEW: Third Slider */}
+              <div className="ai-patience-header">
+                <span className="ai-patience-label">Patience</span>
+                <span className="ai-patience-value">{aiPatience}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={aiPatience}
+                onChange={(e) => setAiPatience(parseInt(e.target.value))}
+                className="ai-patience-slider"
+              />
+              <div className="ai-patience-description">
+                Controls how long the AI waits before offering hints. Higher values mean more time for students to think.
               </div>
               
               <div className="instructions-section">
