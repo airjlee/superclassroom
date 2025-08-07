@@ -1,26 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './TeacherDashboard.css';
 
-// Utility functions to lighten or darken a hex color
+// Helper function to adjust color brightness
 const adjustColor = (hex, amt) => {
-  let usePound = false;
-  let color = hex;
-  if (color[0] === '#') {
-    color = color.slice(1);
-    usePound = true;
-  }
-
-  let num = parseInt(color, 16);
-  let r = (num >> 16) + amt;
-  let g = (num >> 8 & 0x00ff) + amt;
-  let b = (num & 0x0000ff) + amt;
-
-  r = Math.max(Math.min(255, r), 0);
-  g = Math.max(Math.min(255, g), 0);
-  b = Math.max(Math.min(255, b), 0);
-
-  const newColor = (r << 16) | (g << 8) | b;
-  return (usePound ? '#' : '') + newColor.toString(16).padStart(6, '0');
+  const num = parseInt(hex.replace("#", ""), 16);
+  const r = (num >> 16) + amt;
+  const g = (num >> 8 & 0x00FF) + amt;
+  const b = (num & 0x0000FF) + amt;
+  return "#" + (0x1000000 + (r < 255 ? r < 1 ? 0 : r : 255) * 0x10000 +
+    (g < 255 ? g < 1 ? 0 : g : 255) * 0x100 +
+    (b < 255 ? b < 1 ? 0 : b : 255)).toString(16).slice(1);
 };
 
 const lightenColor = (hex, percent = 20) => adjustColor(hex, Math.round(2.55 * percent));
@@ -88,32 +77,142 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
     }
   ];
 
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    setCursorPosition(e.target.selectionStart);
-    
-    // Check if @ was typed for courses
-    const atIndex = value.lastIndexOf('@');
-    const hashIndex = value.lastIndexOf('#');
-    
-    if (atIndex !== -1 && (hashIndex === -1 || atIndex > hashIndex)) {
-      const queryAfterAt = value.substring(atIndex + 1);
-      setMentionQuery(queryAfterAt);
-      setShowMentions(true);
-      setSelectedMentionIndex(0);
-      setMentionType('course');
-    } else if (hashIndex !== -1 && (atIndex === -1 || hashIndex > atIndex)) {
-      const queryAfterHash = value.substring(hashIndex + 1);
-      setMentionQuery(queryAfterHash);
-      setShowMentions(true);
-      setSelectedMentionIndex(0);
-      setMentionType('assignment');
+  // Helper function to get background color for tags
+  const getBackgroundColor = (color) => {
+    const colorMap = {
+      '#4A90E2': 'rgba(74, 144, 226, 0.1)',
+      '#7ED321': 'rgba(126, 211, 33, 0.1)',
+      '#F5A623': 'rgba(245, 166, 35, 0.1)',
+      '#9013FE': 'rgba(144, 19, 254, 0.1)',
+      '#7b1fa2': 'rgba(123, 31, 162, 0.1)',
+      '#1565c0': 'rgba(21, 101, 192, 0.1)'
+    };
+    return colorMap[color] || 'rgba(74, 144, 226, 0.1)';
+  };
+
+  // Helper function to create formatted tag HTML
+  const createFormattedTag = (name, type) => {
+    if (type === 'course') {
+      const course = courses.find(c => c.name === name);
+      const color = course?.color || '#4A90E2';
+      const bgColor = getBackgroundColor(color);
+      
+      return `<span class="course-badge" style="background-color: ${bgColor}; color: ${color}; display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.875rem; border-radius: 8px; font-size: 0.75rem; font-weight: 500; text-transform: capitalize; margin: 0 0.25rem; user-select: none; cursor: default;">${name}</span>`;
     } else {
-      setShowMentions(false);
-      setMentionQuery('');
-      setSelectedMentionIndex(0);
-      setMentionType('');
+      const assignmentType = assignmentTypes.find(t => t.name === name);
+      const color = assignmentType?.color || '#7b1fa2';
+      const bgColor = getBackgroundColor(color);
+      
+      return `<span class="course-badge" style="background-color: ${bgColor}; color: ${color}; display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.875rem; border-radius: 8px; font-size: 0.75rem; font-weight: 500; text-transform: capitalize; margin: 0 0.25rem; user-select: none; cursor: default;">${name}</span>`;
+    }
+  };
+
+  // Helper function to set cursor position
+  const setCaretPosition = (element, position) => {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    
+    // Find the text node at the position
+    let currentPos = 0;
+    const walker = document.createTreeWalker(
+      element,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+    
+    let node;
+    while (node = walker.nextNode()) {
+      const nodeLength = node.length;
+      if (currentPos + nodeLength >= position) {
+        range.setStart(node, position - currentPos);
+        range.setEnd(node, position - currentPos);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        return;
+      }
+      currentPos += nodeLength;
+    }
+    
+    // If we get here, set to end of element
+    range.selectNodeContents(element);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
+
+  // Helper function to get cursor position
+  const getCursorPosition = (element, range) => {
+    let position = 0;
+    const walker = document.createTreeWalker(
+      element,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+    
+    let node;
+    while (node = walker.nextNode()) {
+      if (node === range.startContainer) {
+        position += range.startOffset;
+        break;
+      }
+      position += node.length;
+    }
+    
+    return position;
+  };
+
+  const handleSearchChange = (e) => {
+    const content = e.target.innerHTML;
+    setSearchQuery(content);
+    
+    // Get cursor position
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const cursorPosition = getCursorPosition(e.target, range);
+      setCursorPosition(cursorPosition);
+    }
+    
+    // Check for @ or # triggers (only if not inside a tag)
+    const textContent = e.target.textContent;
+    const atIndex = textContent.lastIndexOf('@');
+    const hashIndex = textContent.lastIndexOf('#');
+    
+    // Check if cursor is inside a tag
+    let isInsideTag = false;
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      let parent = range.startContainer;
+      while (parent && parent !== e.target) {
+        if (parent.classList && parent.classList.contains('course-badge')) {
+          isInsideTag = true;
+          break;
+        }
+        parent = parent.parentElement;
+      }
+    }
+    
+    if (!isInsideTag) {
+      if (atIndex !== -1 && (hashIndex === -1 || atIndex > hashIndex)) {
+        const queryAfterAt = textContent.substring(atIndex + 1);
+        setMentionQuery(queryAfterAt);
+        setShowMentions(true);
+        setSelectedMentionIndex(0);
+        setMentionType('course');
+      } else if (hashIndex !== -1 && (atIndex === -1 || hashIndex > atIndex)) {
+        const queryAfterHash = textContent.substring(hashIndex + 1);
+        setMentionQuery(queryAfterHash);
+        setShowMentions(true);
+        setSelectedMentionIndex(0);
+        setMentionType('assignment');
+      } else {
+        setShowMentions(false);
+        setMentionQuery('');
+        setSelectedMentionIndex(0);
+        setMentionType('');
+      }
     }
   };
 
@@ -143,14 +242,153 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
       e.preventDefault();
       handleSend();
     }
+    
+    // Enhanced backspace handling for tags
+    if (e.key === 'Backspace') {
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const startContainer = range.startContainer;
+        
+        // Find the tag element to delete
+        let tagElement = null;
+        
+        // Check if cursor is inside a tag
+        if (startContainer.nodeType === Node.TEXT_NODE) {
+          let parent = startContainer.parentElement;
+          while (parent && parent !== searchInputRef.current) {
+            if (parent.classList && parent.classList.contains('course-badge')) {
+              tagElement = parent;
+              break;
+            }
+            parent = parent.parentElement;
+          }
+        } else if (startContainer.nodeType === Node.ELEMENT_NODE) {
+          if (startContainer.classList && startContainer.classList.contains('course-badge')) {
+            tagElement = startContainer;
+          }
+        }
+        
+        // Check if cursor is right after a tag
+        if (!tagElement && startContainer.nodeType === Node.TEXT_NODE && range.startOffset === 0) {
+          const previousNode = startContainer.previousSibling;
+          if (previousNode && previousNode.classList && previousNode.classList.contains('course-badge')) {
+            tagElement = previousNode;
+          }
+        }
+        
+        if (tagElement) {
+          e.preventDefault();
+          
+          // Remove the tag element
+          tagElement.remove();
+          
+          // Update the search query state
+          setSearchQuery(searchInputRef.current.innerHTML);
+          
+          // Set cursor position after tag removal
+          const newRange = document.createRange();
+          newRange.setStartAfter(tagElement.nextSibling || searchInputRef.current);
+          newRange.collapse(true);
+          selection.removeAllRanges();
+          selection.addRange(newRange);
+        }
+      }
+    }
   };
 
   const handleMentionSelect = (name, type) => {
     const symbol = type === 'course' ? '@' : '#';
-    const symbolIndex = searchQuery.lastIndexOf(symbol);
-    const beforeSymbol = searchQuery.substring(0, symbolIndex);
-    const newQuery = beforeSymbol + name + ' ';
-    setSearchQuery(newQuery);
+    const textContent = searchInputRef.current.textContent;
+    const symbolIndex = textContent.lastIndexOf(symbol);
+    
+    // Get the current selection
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+    
+    // Find the trigger text to remove (from @ or # to current cursor position)
+    let triggerText = '';
+    let triggerStartNode = null;
+    let triggerStartOffset = 0;
+    
+    // Walk backwards from current position to find the start of the trigger
+    const walker = document.createTreeWalker(
+      searchInputRef.current,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+    
+    let currentPos = 0;
+    let node;
+    const cursorPosition = getCursorPosition(searchInputRef.current, range);
+    
+    while (node = walker.nextNode()) {
+      const nodeLength = node.length;
+      if (currentPos + nodeLength >= cursorPosition) {
+        // Found the text node containing the cursor
+        const offsetInNode = cursorPosition - currentPos;
+        
+        // Check if this node contains the trigger symbol
+        const nodeText = node.textContent;
+        const symbolPosInNode = nodeText.lastIndexOf(symbol);
+        
+        if (symbolPosInNode !== -1 && symbolPosInNode < offsetInNode) {
+          // Found the trigger text in this node
+          triggerStartNode = node;
+          triggerStartOffset = symbolPosInNode;
+          triggerText = nodeText.substring(symbolPosInNode, offsetInNode);
+        }
+        break;
+      }
+      currentPos += nodeLength;
+    }
+    
+    // Remove the trigger text
+    if (triggerStartNode) {
+      const triggerRange = document.createRange();
+      triggerRange.setStart(triggerStartNode, triggerStartOffset);
+      triggerRange.setEnd(range.startContainer, range.startOffset);
+      triggerRange.deleteContents();
+    }
+    
+    // Create the new tag HTML
+    const tagHtml = createFormattedTag(name, type);
+    
+    // Create a temporary container to hold the new tag
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = tagHtml;
+    const newTagElement = tempDiv.firstElementChild;
+    
+    // Insert the new tag at the current cursor position
+    range.insertNode(newTagElement);
+    
+    // Add a space after the tag
+    const spaceNode = document.createTextNode(' ');
+    range.setStartAfter(newTagElement);
+    range.insertNode(spaceNode);
+    
+    // Set cursor position after the space and reset formatting state
+    range.setStartAfter(spaceNode);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    
+    // CRITICAL FIX: Reset formatting state after tag insertion
+    // Clear any existing selection and ensure clean cursor state
+    selection.removeAllRanges();
+    const cleanRange = document.createRange();
+    cleanRange.setStartAfter(spaceNode);
+    cleanRange.collapse(true);
+    selection.addRange(cleanRange);
+    
+    // Force the contenteditable to reset its formatting state
+    searchInputRef.current.blur();
+    searchInputRef.current.focus();
+    
+    // Update the search query state
+    setSearchQuery(searchInputRef.current.innerHTML);
+    
     setShowMentions(false);
     setMentionQuery('');
     setSelectedMentionIndex(0);
@@ -192,7 +430,7 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
   };
 
   // Add event listener for clicking outside
-  React.useEffect(() => {
+  useEffect(() => {
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);
@@ -200,7 +438,7 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
   }, []);
 
   // Handle fade-in animation
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       setIsFadingIn(false);
     }, 100);
@@ -222,51 +460,6 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
         }, 500); // Wait for fade animation to complete
       }, 3000);
     }
-  };
-
-  const renderSearchContent = () => {
-    const parts = searchQuery.split(/(@\w+|#\w+)/);
-    return parts.map((part, index) => {
-      if (part.startsWith('@')) {
-        const courseName = part.substring(1);
-        const course = courses.find(c => c.name.toLowerCase().includes(courseName.toLowerCase()));
-        if (course) {
-          return (
-            <span 
-              key={index}
-              className="course-badge"
-              style={{ 
-                backgroundColor: course.color === '#4A90E2' ? 'rgba(74, 144, 226, 0.1)' :
-                             course.color === '#7ED321' ? 'rgba(126, 211, 33, 0.1)' :
-                             course.color === '#F5A623' ? 'rgba(245, 166, 35, 0.1)' :
-                             'rgba(144, 19, 254, 0.1)',
-                color: course.color
-              }}
-            >
-              {course.name}
-            </span>
-          );
-        }
-      } else if (part.startsWith('#')) {
-        const typeName = part.substring(1);
-        const type = assignmentTypes.find(t => t.name.toLowerCase().includes(typeName.toLowerCase()));
-        if (type) {
-          return (
-            <span 
-              key={index}
-              className="course-badge"
-              style={{ 
-                backgroundColor: type.color === '#7b1fa2' ? 'rgba(123, 31, 162, 0.1)' : 'rgba(21, 101, 192, 0.1)',
-                color: type.color
-              }}
-            >
-              {type.name}
-            </span>
-          );
-        }
-      }
-      return part;
-    });
   };
 
   const handleCourseClick = (courseId) => {
@@ -386,14 +579,13 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
                   multiple
                 />
               </div>
-              <input
+              <div
                 ref={searchInputRef}
-                type="text"
-                placeholder="Ask anything or @mention a specific course..."
-                value={searchQuery}
-                onChange={handleSearchChange}
+                contentEditable="true"
+                onInput={handleSearchChange}
                 onKeyDown={handleKeyDown}
                 className="search-input"
+                data-placeholder="Ask anything or @mention a specific course..."
               />
               <button 
                 className={`send-button ${isLoading ? 'loading' : ''}`}
