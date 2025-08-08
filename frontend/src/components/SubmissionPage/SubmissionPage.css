@@ -1358,24 +1358,24 @@
   }
 }
 
-/* Remove old conversation styles */
-.conversation-container,
-.conversation-message,
-.message-avatar,
-.message-bubble,
-.message-content {
+/* Remove old conversation styles (scoped to submission page only) */
+.submission-page .conversation-container,
+.submission-page .conversation-message,
+.submission-page .message-avatar,
+.submission-page .message-bubble,
+.submission-page .message-content {
   display: none;
 }
 
-/* Remove old highlighting styles */
-.strength,
-.weakness,
-.weakness-red {
+/* Remove old highlighting styles (scoped) */
+.submission-page .strength,
+.submission-page .weakness,
+.submission-page .weakness-red {
   display: none;
 }
 
-/* Enhanced speaker styles */
-.speaker {
+/* Enhanced speaker styles (scoped) */
+.submission-page .speaker {
   display: none; /* Hide old speaker labels */
 }
 

@@ -66,6 +66,7 @@ const Assignment = ({ onNavigateHome }) => {
   const [isAILoading, setIsAILoading] = useState(false);
   const chatEndRef = useRef(null);
   const chatHistoryRef = useRef(null);
+  const chatInputRef = useRef(null);
 
   // Demo Socratic Dialogue responses (in order)
   const demoResponses = [
@@ -91,14 +92,19 @@ const Assignment = ({ onNavigateHome }) => {
     setTimeout(() => {
       setIsAILoading(false);
       setIsAITyping(true);
+      // Immediately show an empty AI message so typing dots appear with no visual gap
+      setChatHistory([{ sender: 'ai', message: '', isTyping: true }]);
       
-      // Start typing the first response immediately
+      // Start typing the first response after a short delay to simulate thinking
       setTimeout(() => {
         const firstResponse = demoResponses[0];
         
-        // Add empty AI message first
-        setChatHistory([{ sender: 'ai', message: '', isTyping: true }]);
-        
+        // Ensure focus returns to input right before typing starts
+        setTimeout(() => {
+          const input = chatInputRef.current || document.querySelector('.ai-tutor-panel .chat-input');
+          input && input.focus();
+        }, 0);
+
         // Type out the response character by character
         let currentText = '';
         const typeInterval = setInterval(() => {
@@ -125,6 +131,11 @@ const Assignment = ({ onNavigateHome }) => {
               return newHistory;
             });
             setIsAITyping(false);
+            // Refocus input after AI finishes
+            setTimeout(() => {
+              const input = chatInputRef.current || document.querySelector('.ai-tutor-panel .chat-input');
+              input && input.focus();
+            }, 0);
             setDemoStep(1); // Move to next response
           }
         }, 8); // Very fast typing speed - 8ms per character
@@ -143,13 +154,7 @@ const Assignment = ({ onNavigateHome }) => {
           }
         }, 500);
         
-        // Auto-focus the chat input after AI response
-        setTimeout(() => {
-          const chatInput = document.querySelector('.ai-tutor-panel .chat-input');
-          if (chatInput) {
-            chatInput.focus();
-          }
-        }, 1000);
+        // Auto-focus already handled via chatInputRef
       }, 1000 + Math.random() * 2000);
     }, 1000 + Math.random() * 1000); // 1-2 seconds of loading
   };
@@ -229,6 +234,13 @@ const Assignment = ({ onNavigateHome }) => {
     }
   }, [isAITyping]);
 
+  // Auto-focus the chat input when panel is open and AI is not busy
+  useEffect(() => {
+    if (showChatbot && !isAITyping && !isAILoading && chatInputRef.current) {
+      chatInputRef.current.focus();
+    }
+  }, [showChatbot, isAITyping, isAILoading]);
+
   const handleChatSubmit = (e) => {
     e.preventDefault();
     if (chatMessage.trim() !== '' && !isAITyping && !isAILoading) {
@@ -246,21 +258,24 @@ const Assignment = ({ onNavigateHome }) => {
         }
       }, 100);
       
-      // Show loading dots for 1-2 seconds before starting to type
+      // Immediately show AI placeholder (single source of typing dots)
+      setChatHistory(prev => ([
+        ...prev,
+        { sender: 'ai', message: '', isTyping: true }
+      ]));
+
+      // Show loading/typing dots for 1-2 seconds before starting to type characters
       setTimeout(() => {
-        setIsAILoading(false);
         setIsAITyping(true);
+        setIsAILoading(false);
         
         setTimeout(() => {
           const aiResponse = demoResponses[demoStep % demoResponses.length];
+          // Focus input as typing begins
+          const input = chatInputRef.current || document.querySelector('.ai-tutor-panel .chat-input');
+          input && input.focus();
           
-          // Add empty AI message first
-          setChatHistory(prev => ([
-            ...prev,
-            { sender: 'ai', message: '', isTyping: true }
-          ]));
-          
-          // Type out the response character by character
+          // Type out the response character by character in the same placeholder message
           let currentText = '';
           const typeInterval = setInterval(() => {
             if (currentText.length < aiResponse.length) {
@@ -285,7 +300,10 @@ const Assignment = ({ onNavigateHome }) => {
                 };
                 return newHistory;
               });
-              setIsAITyping(false);
+               setIsAITyping(false);
+              // Focus input after typing completes
+              const inputDone = chatInputRef.current || document.querySelector('.ai-tutor-panel .chat-input');
+              inputDone && inputDone.focus();
               setDemoStep(demoStep + 1); // Increment demo step
             }
           }, 8); // Very fast typing speed - 8ms per character
@@ -322,7 +340,7 @@ const Assignment = ({ onNavigateHome }) => {
             }
           }, 1000);
         }, 1000 + Math.random() * 2000);
-      }, 1000 + Math.random() * 1000); // 1-2 seconds of loading
+      }, 1000 + Math.random() * 1000); // 1-2 seconds of loading/typing dots
       
       // Auto-scroll when typing starts
       setTimeout(() => {
@@ -606,19 +624,7 @@ const Assignment = ({ onNavigateHome }) => {
                   </div>
                 ))}
 
-                {/* Show loading dots when AI is loading */}
-                {isAILoading && (
-                  <div className="chat-message ai">
-                    <div className="ai-icon"></div>
-                    <div className="message-content">
-                      <div className="loading-dots">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                {/* No separate global loading block: typing dots are shown via the AI placeholder message */}
 
                 <div ref={chatEndRef} />
               </div>
@@ -627,6 +633,7 @@ const Assignment = ({ onNavigateHome }) => {
                 <input
                   type="text"
                   className="chat-input"
+                  ref={chatInputRef}
                   placeholder="What would you like help with?"
                   value={chatMessage}
                   onChange={(e) => setChatMessage(e.target.value)}

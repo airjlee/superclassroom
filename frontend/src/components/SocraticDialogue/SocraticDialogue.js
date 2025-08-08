@@ -199,13 +199,12 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
       
       // Show loading dots for 1-2 seconds before starting to type
       setTimeout(() => {
-        setIsAILoading(false);
         setIsAITyping(true);
+        // Add empty AI message immediately so the icon persists between loading dots and typing
+        setChatHistory((prev) => [...prev, { sender: 'ai', message: '', isTyping: true }]);
+        setIsAILoading(false);
         
         setTimeout(() => {
-          // Add empty AI message first
-          setChatHistory((prev) => [...prev, { sender: 'ai', message: '', isTyping: true }]);
-          
           // Type out the response character by character
           let currentText = '';
           const typeInterval = setInterval(() => {
@@ -337,19 +336,7 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
                 </div>
               ))}
 
-              {/* Show loading dots when AI is loading */}
-              {isAILoading && (
-                <div className="chat-message ai">
-                  <div className="ai-icon"></div>
-                  <div className="message-content">
-                    <div className="loading-dots">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* No separate global loading block: typing dots are shown via the AI placeholder message */}
 
               <div ref={chatEndRef} />
             </div>
