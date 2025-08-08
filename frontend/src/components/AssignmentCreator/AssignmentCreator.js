@@ -38,9 +38,9 @@ const AssignmentCreator = ({ onNavigateBack }) => {
   const [dragOverSection, setDragOverSection] = useState(null);
   const [dateInputValue, setDateInputValue] = useState('');
   const [isEditingDate, setIsEditingDate] = useState(false);
-  const [aiStrictness, setAiStrictness] = useState(50);
-  const [aiSensitivity, setAiSensitivity] = useState(50);
-  const [aiPatience, setAiPatience] = useState(50);
+  const [aiStrictness, setAiStrictness] = useState(5);
+  const [aiSensitivity, setAiSensitivity] = useState(5);
+  const [aiPatience, setAiPatience] = useState(5);
   const [showInstructions, setShowInstructions] = useState(false);
   const [instructions, setInstructions] = useState('');
   const [isPublishing, setIsPublishing] = useState(false);
@@ -303,12 +303,12 @@ const AssignmentCreator = ({ onNavigateBack }) => {
             <div className="ai-strictness-container">
               <div className="ai-strictness-header">
                 <span className="ai-strictness-label">Strictness</span>
-                <span className="ai-strictness-value">{aiStrictness}%</span>
+                <span className="ai-strictness-value">{aiStrictness}</span>
               </div>
               <input
                 type="range"
-                min="0"
-                max="100"
+                min="1"
+                max="10"
                 value={aiStrictness}
                 onChange={(e) => setAiStrictness(parseInt(e.target.value))}
                 className="ai-strictness-slider"
@@ -320,12 +320,12 @@ const AssignmentCreator = ({ onNavigateBack }) => {
               {/* NEW: Second Slider */}
               <div className="ai-sensitivity-header">
                 <span className="ai-sensitivity-label">Sensitivity</span>
-                <span className="ai-sensitivity-value">{aiSensitivity}%</span>
+                <span className="ai-sensitivity-value">{aiSensitivity}</span>
               </div>
               <input
                 type="range"
-                min="0"
-                max="100"
+                min="1"
+                max="10"
                 value={aiSensitivity}
                 onChange={(e) => setAiSensitivity(parseInt(e.target.value))}
                 className="ai-sensitivity-slider"
@@ -337,12 +337,12 @@ const AssignmentCreator = ({ onNavigateBack }) => {
               {/* NEW: Third Slider */}
               <div className="ai-patience-header">
                 <span className="ai-patience-label">Patience</span>
-                <span className="ai-patience-value">{aiPatience}%</span>
+                <span className="ai-patience-value">{aiPatience}</span>
               </div>
               <input
                 type="range"
-                min="0"
-                max="100"
+                min="1"
+                max="10"
                 value={aiPatience}
                 onChange={(e) => setAiPatience(parseInt(e.target.value))}
                 className="ai-patience-slider"
