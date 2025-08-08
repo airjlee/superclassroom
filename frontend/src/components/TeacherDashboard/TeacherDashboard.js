@@ -190,10 +190,10 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
     const accuratePosition = getAccurateCursorPosition();
     setCursorPosition(accuratePosition);
     
-    // Check for @ or # triggers (only if not inside a tag)
+    // Check for @ or / triggers (only if not inside a tag)
     const textContent = e.target.textContent;
     const atIndex = textContent.lastIndexOf('@');
-    const hashIndex = textContent.lastIndexOf('#');
+    const slashIndex = textContent.lastIndexOf('/');
     
     // Check if cursor is inside a tag
     let isInsideTag = false;
@@ -211,15 +211,15 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
     }
     
     if (!isInsideTag) {
-      if (atIndex !== -1 && (hashIndex === -1 || atIndex > hashIndex)) {
+      if (atIndex !== -1 && (slashIndex === -1 || atIndex > slashIndex)) {
         const queryAfterAt = textContent.substring(atIndex + 1);
         setMentionQuery(queryAfterAt);
         setShowMentions(true);
         setSelectedMentionIndex(0);
         setMentionType('course');
-      } else if (hashIndex !== -1 && (atIndex === -1 || hashIndex > atIndex)) {
-        const queryAfterHash = textContent.substring(hashIndex + 1);
-        setMentionQuery(queryAfterHash);
+      } else if (slashIndex !== -1 && (atIndex === -1 || slashIndex > atIndex)) {
+        const queryAfterSlash = textContent.substring(slashIndex + 1);
+        setMentionQuery(queryAfterSlash);
         setShowMentions(true);
         setSelectedMentionIndex(0);
         setMentionType('assignment');
@@ -367,7 +367,7 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
   };
 
   const handleMentionSelect = (name, type) => {
-    const symbol = type === 'course' ? '@' : '#';
+    const symbol = type === 'course' ? '@' : '/';
     const textContent = searchInputRef.current.textContent;
     const symbolIndex = textContent.lastIndexOf(symbol);
     
@@ -375,7 +375,7 @@ const TeacherDashboard = ({ onNavigateToCourse, onNavigateToCreate }) => {
     const selection = window.getSelection();
     const range = selection.getRangeAt(0);
     
-    // Find the trigger text to remove (from @ or # to current cursor position)
+    // Find the trigger text to remove (from @ or / to current cursor position)
     let triggerText = '';
     let triggerStartNode = null;
     let triggerStartOffset = 0;

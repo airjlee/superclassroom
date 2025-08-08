@@ -23,7 +23,7 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
   const chatHistoryRef = useRef(null); // for chat container scroll
   const chatInputRef = useRef(null); // for auto-focusing input
 
-  const conceptualQuestion = "Why do you think linear independence is important for general solutions when dealing with repeated roots in ODEs?";
+  const conceptualQuestion = "Why do you think the limit of a function at a point and the function's value at that point are related to continuity?";
 
   // Start timer after first student message
   useEffect(() => {
@@ -282,7 +282,7 @@ const SocraticDialogue = ({ onNavigateHome, onUnderstandingChange }) => {
         {!hasSubmittedInitial && (
           <div className="initial-question-container">
             <div className="question-content">
-              <div className="question-badge">Differential Equations</div>
+              <div className="question-badge">Limits and Continuity</div>
               <h1 className="conceptual-question">{conceptualQuestion}</h1>
               
               <div className="initial-response-section">
